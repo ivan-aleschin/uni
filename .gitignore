@@ -1,30 +1,115 @@
-# CMake / CLion
+# =========================
+# OS / Filesystem junk
+# =========================
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.Spotlight-V100/
+.Trashes/
+._*
+
+# =========================
+# Logs / runtime temp
+# =========================
+*.log
+*.tmp
+*.temp
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.python-version
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# =========================
+# CMake / C / C++
+# =========================
 cmake-build-*/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
+compile_commands.json
 build.ninja
 *.ninja
 *.obj
+*.o
+*.a
+*.so
+*.dll
 *.exe
-*.log
+*.out
 
-# Python
-__pycache__/
-*.pyc
-
-# Python virtualenv
-.venv/
-venv/
-env/
-
-# Visual Studio
+# =========================
+# MSVC / Visual Studio
+# =========================
 .vs/
+*.suo
+*.sdf
+*.VC.db
+*.user
+*.DotSettings.user
+*.csproj.user
+ipch/
+*.pch
+*.idb
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.iobj
+*.ipdb
+*.tlog
+*.dll.recipe
+*.vcxproj.user
 
+# Build output folders (common)
+bin/
+obj/
+**/Debug/
+**/Release/
+
+# =========================
 # JetBrains IDEs
+# =========================
 .idea/
+*.iml
 
-# Encoded/output artifacts (information-theory labs)
+# =========================
+# Java / Maven
+# =========================
+target/
+*.class
+*.jar
+
+# =========================
+# .NET / Test artifacts
+# =========================
+TestResults/
+packages/
+!packages/repositories.config
+
+# =========================
+# Quartus / EDA artifacts
+# =========================
+*.pof
+*.snf
+*.mmf
+*.scf
+*.sym
+
+# =========================
+# Project-specific generated artifacts
+# =========================
 *_encoded/
 out/
 *.arc
@@ -36,50 +121,5 @@ out/
 *.lzw
 *.rle2
 *.dec
-
-# .NET build
-bin/
-obj/
-*.suo
-*.sdf
-*.VC.db
-*.DotSettings.user
-*.csproj.user
-ipch/
-
-# NuGet (старый стиль)
-packages/
-!packages/repositories.config
-
-# Test results
-TestResults/
-
-# Java / Maven
-target/
-*.iml
-*.class
-*.jar
-
-# MSVC build output (named Debug/ Release/ directly)
-**/Debug/
-**/Release/
-*.tlog
-*.pch
-*.idb
-*.pdb
-*.ilk
-*.exp
-*.lib
-*.iobj
-*.ipdb
-*.dll.recipe
-
-# Altera Quartus build artifacts
-*.pof
-*.snf
-*.mmf
-*.scf
-*.sym
-*.vcxproj.user
 .rle_first_run_done
 information-theory/otik-lab-4/test_environment/output_data/
