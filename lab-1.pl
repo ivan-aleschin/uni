@@ -83,8 +83,8 @@ run_tests :-
     delta([1,2,4,3], D),
     format("3. ~w~n", [D]),
     int_to_binary(8, B1), int_to_binary(-2, B2), int_to_binary(0, B0),
-    format("4. ~w ~w ~w~n", [B1, B2, B0]),
+    format("4.1 ~w ~w ~w~n", [B1, B2, B0]),
     int_to_binary_2(8, B1), int_to_binary(-2, B2), int_to_binary(0, B0),
-    format("4. ~w ~w ~w~n", [B1, B2, B0]),
+    format("4.2 ~w ~w ~w~n", [B1, B2, B0]),
     rle_encode([a,a,a,b,c,c,a,a], E),
     format("5. ~w~n", [E]).
