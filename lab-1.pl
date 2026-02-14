@@ -74,6 +74,50 @@ rle_run(Elem, [H|T], Acc, Count, Rest) :-
        Rest = [H|T]
     ).
 
+% 6.
+intersect([], _, []).
+intersect([H|T], L2, [H|Rest]) :-
+    member(H, L2), !,
+    intersect(T, L2, Rest).
+intersect([_|T], L2, Rest) :-
+    intersect(T, L2, Rest).
+
+% 7.
+is_leap(Y) :- Y mod 400 =:= 0, !.
+is_leap(Y) :- Y mod 100 =\= 0, Y mod 4 =:= 0.
+
+year_days(Y, 366) :- is_leap(Y), !.
+year_days(_, 365).
+
+days_in_month(_, 1, 31).  days_in_month(Y, 2, 29) :- is_leap(Y), !.
+days_in_month(_, 2, 28).  days_in_month(_, 3, 31).
+days_in_month(_, 4, 30).  days_in_month(_, 5, 31).
+days_in_month(_, 6, 30).  days_in_month(_, 7, 31).
+days_in_month(_, 8, 31).  days_in_month(_, 9, 30).
+days_in_month(_, 10, 31). days_in_month(_, 11, 30).
+days_in_month(_, 12, 31).
+
+days_since_2000(2000, 0) :- !.
+days_since_2000(Y, Days) :-
+    Y > 2000,
+    Y1 is Y - 1,
+    days_since_2000(Y1, D1),
+    year_days(Y1, YD),
+    Days is D1 + YD.
+
+days_in_months(_, 1, 0) :- !.
+days_in_months(Y, M, Days) :-
+    M1 is M - 1,
+    days_in_months(Y, M1, D1),
+    days_in_month(Y, M1, MD),
+    Days is D1 + MD.
+
+is_date(D, M, Y, DayOfWeek) :-
+    days_since_2000(Y, DY),
+    days_in_months(Y, M, DM),
+    Total is DY + DM + D - 1,
+    DayOfWeek is (Total + 5) mod 7 + 1.
+
 run_tests :-
     ball_volume(1.0, V),
     format("1. ~f~n", [V]),
