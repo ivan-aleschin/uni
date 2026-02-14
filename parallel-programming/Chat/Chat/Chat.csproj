@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>Chat</RootNamespace>
+    <AssemblyName>Chat</AssemblyName>
+    <!-- Pin the runtime framework version to the installed patch so runtimeconfig.json
+         matches the runtime available under Program Files\dotnet (8.0.20).
+         This prevents a mismatch where a per-user dotnet host (e.g. C:\Users\super\.dotnet)
+         that has only 9.x would otherwise cause a launch failure. -->
+    <RuntimeFrameworkVersion>8.0.20</RuntimeFrameworkVersion>
+    <!-- Ensure Windows desktop runtime uses same patch version so the runtimeconfig
+         includes Microsoft.WindowsDesktop.App=8.0.20 as well. -->
+    <WindowsDesktopRuntimeFrameworkVersion>8.0.20</WindowsDesktopRuntimeFrameworkVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="Properties\Settings.settings" />
+    <None Include="App.config" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,46 @@
+NDB006
+The number of symbol table entries is: 3
+The length of the symbol table is: 48
+
+Index Hierarchy Path
+----- --------------
+!	&null_hpath&
+.	|cd-lab-2-2-1:9|
+?	|cd-lab-2-2-2:10|
+
+The number of name info structs is : 32
+
+InsOrder BitField SymTableIndex NextSyn SynParent Loc ChainType NextChain ChainParent FanOut DirExp ParExp ShareExp NodeName
+-------- -------- ------------- ------- --------- --- --------- --------- ----------- ------ ------ ------ -------- --------
+"	IGdq	!	nQ1	v
+#	Ky&}	!	2	#	%	nQ2	t
+$	Ky&}	!	2	"	$	Q1	s
+%	IGdq	!	Q2	u
+&	(@>U^	!	4	$	#	%	"	ti	o
+'	Ky&|	!	4	"	#	$	%	x0	r
+(	Ky&|	!	4	"	#	$	%	x1	p
+)	Ky&|	!	4	"	#	$	%	x2	q
+*	IVOQ	.	1	:11	"3
++	IVOQ	.	0	:14	"5
+,	IVOQ	.	5	:15	"6
+-	IVOQ	.	2	:16	"7
+.	IVOQ	.	3	:5	"2
+/	IVOA	.	4	:9	"4
+0	INu}	.	+	D	"5
+1	INu}	.	*	nQ	"3
+2	INu}	.	-	nQx2	"7
+3	INu}	.	.	nx0	"2
+4	INum	.	/	Q	"4
+5	INu}	.	,	Qx0	"6
+6	IVOQ	?	<	:19	"E
+7	IVOQ	?	=	:20	"C
+8	IVOQ	?	>	:25	"D
+9	IVOA	?	?	:26	"F
+:	IVOQ	?	A	:27	"G
+;	IVOQ	?	@	:28	"H
+<	INu}	?	6	nQ	"E
+=	INu}	?	7	nx0	"C
+>	INu}	?	8	nx1	"D
+?	INum	?	9	Q	"F
+@	INu}	?	;	x0x1	"H
+A	INu}	?	:	x1x2	"G
