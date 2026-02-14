@@ -83,3 +83,4 @@ target/
 *.scf
 *.sym
 *.vcxproj.user
+.rle_first_run_done
