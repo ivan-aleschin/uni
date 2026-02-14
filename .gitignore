@@ -1,0 +1,77 @@
+# CMake / CLion
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+build.ninja
+*.ninja
+*.obj
+*.exe
+*.log
+
+# Python
+__pycache__/
+*.pyc
+
+# Python virtualenv
+.venv/
+venv/
+env/
+
+# Visual Studio
+.vs/
+
+# JetBrains IDEs
+.idea/
+
+# Encoded/output artifacts (information-theory labs)
+*_encoded/
+out/
+*.arc
+*.rle
+*.rle_v2
+*.lz77
+*.lz77_v1
+*.lz78
+*.lzw
+*.rle2
+*.dec
+
+# .NET build
+bin/
+obj/
+*.suo
+*.v12.suo
+*.sdf
+*.VC.db
+*.DotSettings.user
+*.csproj.user
+ipch/
+
+# NuGet (старый стиль)
+packages/
+!packages/repositories.config
+
+# Test results
+TestResults/
+
+# Java / Maven
+target/
+*.iml
+*.class
+*.jar
+
+# MSVC build output (named Debug/ Release/ directly)
+**/Debug/
+**/Release/
+*.tlog
+*.pch
+*.idb
+*.pdb
+*.obj
+*.ilk
+*.exp
+*.lib
+*.iobj
+*.ipdb
+*.dll.recipe
