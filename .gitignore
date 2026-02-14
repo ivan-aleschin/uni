@@ -82,3 +82,4 @@ target/
 *.sym
 *.vcxproj.user
 .rle_first_run_done
+information-theory/otik-lab-4/test_environment/output_data/
