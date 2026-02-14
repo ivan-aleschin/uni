@@ -41,7 +41,6 @@ out/
 bin/
 obj/
 *.suo
-*.v12.suo
 *.sdf
 *.VC.db
 *.DotSettings.user
@@ -68,7 +67,6 @@ target/
 *.pch
 *.idb
 *.pdb
-*.obj
 *.ilk
 *.exp
 *.lib
