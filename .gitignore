@@ -75,3 +75,10 @@ target/
 *.iobj
 *.ipdb
 *.dll.recipe
+
+# Altera Quartus build artifacts
+*.pof
+*.snf
+*.mmf
+*.scf
+*.sym
