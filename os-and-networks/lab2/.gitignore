@@ -1,0 +1,9 @@
+# Игнорируем все бинарники и объектные файлы
+*.o
+*.a
+*.so
+swap/swap_demo
+revert_string/revert_demo
+revert_string/revert_static
+revert_string/revert_dynamic
+test/tests

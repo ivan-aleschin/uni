@@ -1,0 +1,72 @@
+# Binaries (executables produced by make)
+lab5/src/mutex_without
+lab5/src/mutex_with
+lab5/src/factorial
+lab5/src/deadlock
+lab5/src/deadlock_fixed
+
+lab6/src/server
+lab6/src/client
+
+lab7/src/tcpserver
+lab7/src/tcpclient
+lab7/src/udpserver
+lab7/src/udpclient
+
+# Static/dynamic libraries produced by build
+lab6/src/*.a
+lab6/src/*.so
+lab7/src/*.a
+lab7/src/*.so
+*.a
+*.so
+
+# Object files and temporary build files
+*.o
+*.out
+*.exe
+*.obj
+
+# Logs, pid and runtime files
+*.log
+.server*.pid
+*.pid
+*.pid.lock
+
+# Editor and OS temporary files
+*~
+*.swp
+*.swo
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Debug / symbols
+*.dSYM/
+*.dwarf
+*.stackdump
+core
+core.*
+
+# Build directories
+build/
+bin/
+dist/
+coverage/
+htmlcov/
+
+# Python caches (if any)
+__pycache__/
+*.pyc
+*.pyo
+
+# Other common ignores
+.env
+*.env
+npm-debug.log
+yarn-error.log
+
+# Ignore file with servers list only if you don't want to commit it:
+# (обычно servers.txt имеет конфигурацию, которую стоит коммитить — раскомментируйте, если нужно игнорировать)
+# lab6/src/servers.txt
