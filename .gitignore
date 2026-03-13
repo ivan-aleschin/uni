@@ -123,3 +123,9 @@ out/
 *.dec
 .rle_first_run_done
 information-theory/otik-lab-4/test_environment/output_data/
+
+# =========================
+# Erlang
+# =========================
+*.beam
+erl_crash.dump
