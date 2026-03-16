@@ -1,4 +1,5 @@
 SET search_path = bookings;
+SET bookings.lang = 'ru';
 
 WITH passengers_5 AS (
     SELECT passenger_id, passenger_name

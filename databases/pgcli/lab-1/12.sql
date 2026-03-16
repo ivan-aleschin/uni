@@ -9,6 +9,6 @@ JOIN airports dep ON dep.airport_code = r.departure_airport
 JOIN airports arr ON arr.airport_code = r.arrival_airport
 WHERE dep.city = 'Moscow'
     AND arr.city = 'Saint Petersburg'
-    AND f.scheduled_departure >= '2025-10-09 00:00:00+03'
-    AND f.scheduled_departure <  '2025-10-10 00:00:00+03'
+    AND f.scheduled_departure >= '2025-02-15 00:00:00+03'
+    AND f.scheduled_departure <  '2025-02-15 00:00:00+03'
     AND s.price < 4000;
