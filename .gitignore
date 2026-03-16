@@ -129,3 +129,9 @@ information-theory/otik-lab-4/test_environment/output_data/
 # =========================
 *.beam
 erl_crash.dump
+
+# =========================
+# Databases
+# =========================
+
+*.dump
