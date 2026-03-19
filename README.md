@@ -1,17 +1,28 @@
 # uni
+Моё обучение в университете
 
-University laboratory work archive.
+## Контент
 
-## Contents
-
-| Directory | Subject |
+| Папка | Предмет |
 |---|---|
-| [`cpp`](./cpp) | Introduction to C++ Programming |
-| [`databases`](./databases) | Databases |
-| [`digital-circuits`](./digital-circuits) | Digital Circuit Design Fundamentals |
-| [`information-theory`](./information-theory) | Information Theory and Coding |
-| [`logic-programming`](./logic-programming) | Functional and Logic Programming (Prolog) |
-| [`math-logic`](./math-logic) | Math Logic and Algorithms |
-| [`os-and-networks`](./os-and-networks) | Operating Systems and Networks |
-| [`parallel-programming`](./parallel-programming) | Parallel Programming |
-| [`software-testing`](./software-testing) | Software Testing (Java) |
+| [`cpp`](./cpp) | Введение в программирование на C++ |
+| [`databases`](./databases) | Базы данных |
+| [`digital-circuits`](./digital-circuits) | Основы цифровой схемотехники |
+| [`electronics`](./electronics) | Электроника и электротехника |
+| [`human-machine-interface`](./human-machine-interface) | Человеко-машинный интерфейс |
+| [`information-theory`](./information-theory) | Теория информации и кодирование |
+| [`internet-programming`](./internet-programming) | Интернет-программирование |
+| [`logic-programming`](./logic-programming) | Функциональное и логическое программирование (Prolog, Erlang) |
+| [`math-logic`](./math-logic) | Математическая логика и теория алгоритмов |
+| [`os-and-networks`](./os-and-networks) | Операционные системы и сети |
+| [`otik`](./otik) | Теория информации и кодирования (конспекты) |
+| [`parallel-programming`](./parallel-programming) | Параллельное программирование |
+| [`software-design`](./software-design) | Проектирование программного обеспечения |
+| [`software-testing`](./software-testing) | Тестирование программного обеспечения (Java) |
+
+## Полезные ссылки
+
+1. [Учёба](https://disk.yandex.ru/d/4Ij_-5wglYN8qw)
+2. [Подгон](https://drive.google.com/drive/folders/1PkLq-mtRbhQAfXeJvgIldDfHbSoEFuVK)
+3. [МИЭТ](https://disk.yandex.ru/d/xtBuQRaC3QM4ui)
+4. [Активация JetBrains](https://blog.llinh9ra.ru/%d0%b0%d0%ba%d1%82%d0%b8%d0%b2%d0%b0%d1%86%d0%b8%d1%8f-phpstorm-webstorm-intellij-idea-%d0%b8-%d0%b4%d1%80%d1%83%d0%b3%d0%b8%d0%b5-%d0%bf%d1%80%d0%be%d0%b4%d1%83%d0%ba%d1%82%d1%8b-jetbrains-%d0%b2/)
