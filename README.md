@@ -11,6 +11,7 @@ University laboratory work archive.
 | [`digital-circuits`](./digital-circuits) | Digital Circuit Design Fundamentals |
 | [`information-theory`](./information-theory) | Information Theory and Coding |
 | [`logic-programming`](./logic-programming) | Functional and Logic Programming (Prolog) |
+| [`math-logic`](./math-logic) | Math Logic and Algorithms |
 | [`os-and-networks`](./os-and-networks) | Operating Systems and Networks |
 | [`parallel-programming`](./parallel-programming) | Parallel Programming |
 | [`software-testing`](./software-testing) | Software Testing (Java) |
