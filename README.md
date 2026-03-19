@@ -22,7 +22,6 @@
 
 ## Полезные ссылки
 
-1. [Учёба](https://disk.yandex.ru/d/4Ij_-5wglYN8qw)
-2. [Подгон](https://drive.google.com/drive/folders/1PkLq-mtRbhQAfXeJvgIldDfHbSoEFuVK)
-3. [МИЭТ](https://disk.yandex.ru/d/xtBuQRaC3QM4ui)
-4. [Активация JetBrains](https://blog.llinh9ra.ru/%d0%b0%d0%ba%d1%82%d0%b8%d0%b2%d0%b0%d1%86%d0%b8%d1%8f-phpstorm-webstorm-intellij-idea-%d0%b8-%d0%b4%d1%80%d1%83%d0%b3%d0%b8%d0%b5-%d0%bf%d1%80%d0%be%d0%b4%d1%83%d0%ba%d1%82%d1%8b-jetbrains-%d0%b2/)
+1. [Подгон](https://drive.google.com/drive/folders/1PkLq-mtRbhQAfXeJvgIldDfHbSoEFuVK)
+2. [МИЭТ](https://disk.yandex.ru/d/xtBuQRaC3QM4ui)
+3. [Активация JetBrains](https://blog.llinh9ra.ru/%d0%b0%d0%ba%d1%82%d0%b8%d0%b2%d0%b0%d1%86%d0%b8%d1%8f-phpstorm-webstorm-intellij-idea-%d0%b8-%d0%b4%d1%80%d1%83%d0%b3%d0%b8%d0%b5-%d0%bf%d1%80%d0%be%d0%b4%d1%83%d0%ba%d1%82%d1%8b-jetbrains-%d0%b2/)
