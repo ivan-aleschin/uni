@@ -31,30 +31,58 @@
 ```mermaid
 classDiagram
     class Vehicle {
-        <<interface>>
+        <<abstract>>
+        #shared_ptr~Driver~ driver
+        #vector~Passenger~ passengers
+        #size_t capacity
+        +setDriver(driver) bool
+        +addPassenger(passenger) bool
+        +isReadyToGo() bool
+        +getType()* string
     }
     class Driver {
-        <<interface>>
+        <<abstract>>
+        +getCategory()* string
     }
-    class AbstractFactory {
-        <<interface>>
-        +createVehicle()
+    class TransportFactory {
+        <<abstract>>
+        +createVehicle(passengers, outNotSeated)* shared_ptr~Vehicle~
     }
     
     Vehicle <|-- Taxi
     Vehicle <|-- Bus
     Driver <|-- TaxiDriver
     Driver <|-- BusDriver
-    AbstractFactory <|-- TaxiFactory
-    AbstractFactory <|-- BusFactory
+    TransportFactory <|-- TaxiFactory
+    TransportFactory <|-- BusFactory
+
+    class Taxi {
+        +getType() string
+    }
+    class Bus {
+        +getType() string
+    }
 
     class TaxiDriver {
         <<Singleton>>
-        +getInstance() TaxiDriver
+        -TaxiDriver()
+        +getInstance()$ TaxiDriver
+        +getCategory() string
     }
     class BusDriver {
         <<Singleton>>
-        +getInstance() BusDriver
+        -BusDriver()
+        +getInstance()$ BusDriver
+        +getCategory() string
+    }
+
+    class TaxiFactory {
+        +createVehicle(passengers, outNotSeated) shared_ptr~Vehicle~
+        +createDriver()$ shared_ptr~Driver~
+    }
+    class BusFactory {
+        +createVehicle(passengers, outNotSeated) shared_ptr~Vehicle~
+        +createDriver()$ shared_ptr~Driver~
     }
 
     TaxiFactory ..> Taxi : creates
