@@ -1,5 +1,5 @@
 CXX      = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -Icore -Ivehicles -Idrivers -Ifactory
+CXXFLAGS = -std=c++17 -Wall -Wextra -Icore -Ivehicles -Idrivers -Ifactory -Iutils
 
 TARGET = transport_factory
 
@@ -14,7 +14,8 @@ SRCS = \
     drivers/PizzaDriver.cpp \
     factory/TaxiFactory.cpp \
     factory/BusFactory.cpp \
-    factory/PizzaFactory.cpp
+    factory/PizzaFactory.cpp \
+    utils/Simulation.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 
