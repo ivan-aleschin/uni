@@ -55,6 +55,7 @@ build.ninja
 *.exe
 *.out
 software-architecture/lab-1/AbstractFactory/transport_factory
+software-architecture/lab-2/transport_system
 
 # =========================
 # MSVC / Visual Studio
