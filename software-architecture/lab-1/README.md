@@ -51,15 +51,24 @@ classDiagram
     
     Vehicle <|-- Taxi
     Vehicle <|-- Bus
+    Vehicle <|-- PizzaVan
     Driver <|-- TaxiDriver
     Driver <|-- BusDriver
+    Driver <|-- PizzaDriver
     TransportFactory <|-- TaxiFactory
     TransportFactory <|-- BusFactory
+    TransportFactory <|-- PizzaFactory
 
     class Taxi {
         +getType() string
     }
     class Bus {
+        +getType() string
+    }
+    class PizzaVan {
+        -vector~PizzaBox~ boxes
+        +addPizzaBox(box) bool
+        +isReadyToDeliver() bool
         +getType() string
     }
 
@@ -75,6 +84,12 @@ classDiagram
         +getInstance()$ BusDriver
         +getCategory() string
     }
+    class PizzaDriver {
+        <<Singleton>>
+        -PizzaDriver()
+        +getInstance()$ PizzaDriver
+        +getCategory() string
+    }
 
     class TaxiFactory {
         +createVehicle(passengers, outNotSeated) shared_ptr~Vehicle~
@@ -84,11 +99,17 @@ classDiagram
         +createVehicle(passengers, outNotSeated) shared_ptr~Vehicle~
         +createDriver()$ shared_ptr~Driver~
     }
+    class PizzaFactory {
+        +createDelivery(boxes, outNotDelivered) shared_ptr~PizzaVan~
+        +createDriver()$ shared_ptr~Driver~
+    }
 
     TaxiFactory ..> Taxi : creates
     TaxiFactory ..> TaxiDriver : gets instance
     BusFactory ..> Bus : creates
     BusFactory ..> BusDriver : gets instance
+    PizzaFactory ..> PizzaVan : creates
+    PizzaFactory ..> PizzaDriver : gets instance
 ```
 
 **Особенности точки входа:**
