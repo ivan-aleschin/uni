@@ -4,7 +4,7 @@ TARGET = transport_system
 SRCDIR = src
 OBJDIR = obj
 
-SOURCES = $(SRCDIR)/main.cpp
+SOURCES = $(wildcard $(SRCDIR)/*.cpp)
 
 
 OBJECTS = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES))
