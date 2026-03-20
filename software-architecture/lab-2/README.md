@@ -18,13 +18,15 @@
 
 ## Архитектура реализации
 
-Архитектура проекта построена с учетом принципов чистого кода, а точка входа `main.cpp` сделана максимально лаконичной: вся логика симуляции вынесена в класс `Simulation` (или инкапсулирована в абстракциях).
+Архитектура проекта построена с учетом принципов чистого кода, а точка входа `main.cpp` сделана максимально лаконичной: вся бизнес-логика и тестирование инкапсулированы в статическом классе `Simulation`.
 
 В реализации паттерна Строитель участвуют следующие сущности:
 - **Director (Распорядитель)**: Класс `Director` конструирует объект, пользуясь интерфейсом `VehicleBuilder`. Он определяет алгоритм (порядок) сборки (например, посадить водителя, добавить детское кресло, посадить пассажиров).
 - **Builder (Строитель)**: Абстрактный интерфейс `VehicleBuilder` задает шаги для создания частей транспортного средства.
 - **ConcreteBuilders (Конкретные строители)**: Классы `TaxiBuilder`, `BusBuilder` и `BoatBuilder` реализуют шаги интерфейса для конкретных типов транспорта, следят за бизнес-правилами (наличие кресел, жилетов, проверка категории прав водителя) и собирают конечный продукт.
 - **Product (Продукт)**: Конкретные транспортные средства (`Taxi`, `Bus`, `InflatableBoat`), реализующие интерфейс `Vehicle`.
+
+*Примечание касаемо разделения кода:* В данной архитектуре мы используем подход header-only (реализация в заголовочных файлах `.h`) для строителей и сущностей. Это допустимая и часто применяемая практика в современном C++, которая позволяет упростить сборку небольших классов, при этом логика симуляции (`Simulation`) строго вынесена в раздельные `.h` и `.cpp` файлы.
 
 **UML-диаграмма классов (Mermaid):**
 
@@ -33,6 +35,7 @@ classDiagram
     class Director {
         -VehicleBuilder* builder
         +setBuilder(builder: VehicleBuilder*)
+        +constructBusWithPassengers()
         +constructTaxiWithFamily()
         +constructTaxiWithoutChildSeat()
         +constructBoatWithTourists()
@@ -44,13 +47,14 @@ classDiagram
         +setDriver(name: string, category: string)*
         +addPassenger(passenger: unique_ptr~Passenger~)* bool
         +build()* unique_ptr~Vehicle~
+        +tryAddPassengers(candidates: vector)* vector
         +getErrors()* string
     }
 
     class TaxiBuilder {
         -unique_ptr~Taxi~ taxi
         -bool hasChildSeat
-        +setChildSeat(hasSeat: bool)
+        +setChildSeat(available: bool)
         +reset()
         +setDriver(name, category)
         +addPassenger(passenger) bool
@@ -104,6 +108,7 @@ classDiagram
     class Passenger {
         <<abstract>>
         +getType()* string
+        +requiresSafetyEquipment()* bool
     }
     class AdultPassenger {
         +getType() string
@@ -138,22 +143,26 @@ classDiagram
 ```
 
 **Особенности точки входа:**
-Файл `main.cpp` содержит только минималистичную обертку:
+Файл `main.cpp` содержит только вызовы симуляций:
 
 ```cpp
-#include "Director.h"
-#include "TaxiBuilder.h"
-#include "BoatBuilder.h"
-
-class Simulation {
-public:
-    static void runAll() {
-        // ... инициализация директора, строителей и запуск бизнес-сценариев ...
-    }
-};
+#include "Simulation.h"
+#include <iostream>
 
 int main() {
-    Simulation::runAll();
+    std::cout << "=== СИСТЕМА КОНТРОЛЯ ТРАНСПОРТА (BUILDER) ===\n\n";
+
+    std::cout << "--- 1. Создание Такси (с детским креслом) ---\n";
+    Simulation::runTaxiDemo();
+
+    std::cout << "\n--- 2. Создание Надувной Лодки (со спасательными жилетами) ---\n";
+    Simulation::runBoatDemo();
+
+    std::cout << "\n--- 3. Создание Автобуса (через Builder) ---\n";
+    Simulation::runBusDemo();
+
+    std::cout << "\n=== РАБОТА ЗАВЕРШЕНА ===\n";
+
     return 0;
 }
 ```
@@ -167,21 +176,20 @@ int main() {
 ```bash
 cd software-architecture/lab-2
 ```
-Выполните сборку:
+Выполните чистую сборку:
 ```bash
 make clean
 make
 ```
-*(Для очистки старых артефактов перед новой сборкой можно использовать `make clean`)*
 
 ### Шаг 2. Запуск
 Скомпилированный бинарный файл готов к работе. Вы можете запустить его напрямую:
 ```bash
 ./transport_system
 ```
-Или воспользоваться командой `make run`:
+Или воспользоваться командой:
 ```bash
 make run
 ```
 
-В выводе программы вы увидите симуляцию работы Директора по сборке такси с детским креслом и надувной лодки с туристами, а также проверки соблюдения бизнес-логики (максимальная вместимость и обязательное наличие водителя).
+В выводе программы вы увидите разделенные симуляции работы Директора по сборке такси с детским креслом, надувной лодки с туристами и попытку сборки пустого автобуса, что наглядно продемонстрирует проверки соблюдения бизнес-логики (максимальная вместимость и обязательное наличие водителя и пассажиров).
