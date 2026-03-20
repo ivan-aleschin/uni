@@ -30,4 +30,7 @@ $(TARGET): $(OBJS)
 clean:
 	rm -f $(OBJS) $(TARGET)
 
-.PHONY: all clean
+run: $(TARGET)
+	./$(TARGET)
+
+.PHONY: all clean run

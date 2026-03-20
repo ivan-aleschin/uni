@@ -20,10 +20,13 @@ void Passenger::add(Component*) {
 
 bool Passenger::removePassenger(const std::string&) { return false; }
 
-void Passenger::printPassengerInfo() const {
+void Passenger::printPassengerInfo(int freeLimit) const {
     std::cout << "    - " << name << ": " << baggage << " kg";
     if (baggage < originalBaggage) {
         std::cout << " (снято " << (originalBaggage - baggage) << " кг)";
+    }
+    if (freeLimit >= 0 && originalBaggage > freeLimit) {
+        std::cout << " [перевес: " << (originalBaggage - freeLimit) << " кг]";
     }
     std::cout << std::endl;
 }
