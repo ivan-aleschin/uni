@@ -7,36 +7,44 @@
 
   outputs = { self, nixpkgs }:
     let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+      # Поддерживаемые архитектуры и ОС (Linux и macOS на Intel и Apple Silicon)
+      supportedSystems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
+
+      # Вспомогательная функция для генерации конфигурации под каждую ОС
+      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
     in
     {
-      devShells.${system}.default = pkgs.mkShell {
-        packages = with pkgs; [
-          # --- C/C++ ---
-          gcc
-          gnumake
-          cmake
-          gdb
-          valgrind
-          clang-tools
+      devShells = forAllSystems (system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = pkgs.mkShell {
+            packages = with pkgs; [
+              # --- C/C++ ---
+              gcc
+              gnumake
+              cmake
+              clang-tools
+            ] ++ lib.optionals stdenv.isLinux [
+              # gdb и valgrind плохо или совсем не работают на современных macOS,
+              # поэтому устанавливаем их только на Linux
+              gdb
+              valgrind
+            ] ++ [
+              # --- C# ---
+              dotnet-sdk
 
-          # --- C# ---
-          dotnet-sdk
+              # --- Python ---
+              python3
+              uv
+            ];
 
-          # --- Python ---
-          # Ответ на твой вопрос:
-          # Сам Python и утилиту `uv` мы ставим глобально для проекта через flake.nix.
-          # А вот конкретные зависимости (библиотеки) для каждой отдельной лабы
-          # стоит контролировать исключительно через `uv` и `pyproject.toml` (или `uv.lock`).
-          # `uv` будет создавать локальные `.venv` папки, и это самый правильный, быстрый и современный подход!
-          python3
-          uv
-        ];
-
-        shellHook = ''
-          echo "🛠️ Uni Environment Loaded (C/C++, C#, Python)"
-        '';
-      };
+            shellHook = ''
+              echo "🛠️ Uni Environment Loaded (C/C++, C#, Python) [${system}]"
+            '';
+          };
+        }
+      );
     };
 }
