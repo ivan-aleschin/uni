@@ -25,6 +25,44 @@
 - **`factory/`** — реализации абстрактных фабрик (`TaxiFactory`, `BusFactory`, `PizzaFactory`), которые связывают воедино транспорт, нужного водителя и пассажиров/груз.
 - **`utils/`** — вспомогательные утилиты. Сюда вынесена вся бизнес-логика симуляции (`Simulation.cpp`).
 
+**UML-диаграмма классов (Mermaid):**
+Для генерации диаграмм прямо в Markdown (без необходимости устанавливать сторонние библиотеки) отлично подходит синтаксис Mermaid. Он нативно поддерживается на GitHub, GitLab и во многих редакторах (например, Obsidian и VS Code).
+
+```mermaid
+classDiagram
+    class Vehicle {
+        <<interface>>
+    }
+    class Driver {
+        <<interface>>
+    }
+    class AbstractFactory {
+        <<interface>>
+        +createVehicle()
+    }
+    
+    Vehicle <|-- Taxi
+    Vehicle <|-- Bus
+    Driver <|-- TaxiDriver
+    Driver <|-- BusDriver
+    AbstractFactory <|-- TaxiFactory
+    AbstractFactory <|-- BusFactory
+
+    class TaxiDriver {
+        <<Singleton>>
+        +getInstance() TaxiDriver
+    }
+    class BusDriver {
+        <<Singleton>>
+        +getInstance() BusDriver
+    }
+
+    TaxiFactory ..> Taxi : creates
+    TaxiFactory ..> TaxiDriver : gets instance
+    BusFactory ..> Bus : creates
+    BusFactory ..> BusDriver : gets instance
+```
+
 **Особенности точки входа:**
 Файл `main.cpp` сделан максимально лаконичным и чистым. Он не содержит бизнес-логики или сложной инициализации — вся работа делегирована классу `Simulation`, что позволяет легко расширять сценарии демонстрации.
 
@@ -42,9 +80,9 @@ int main() {
 Проект использует систему сборки `make` и настроен для работы в воспроизводимом окружении `Nix`.
 
 ### Шаг 1. Активация окружения
-Если у вас установлен Nix, в корне проекта (где лежит `flake.nix`) подтяните нужные компиляторы и утилиты:
-```bash
-nix develop -c bash
+Если у вас установлен Nix, в корне проекта (где лежит `flake.nix`) подтяните нужные компиляторы и утилиты (запуск сразу в вашей оболочке fish):
+```fish
+nix develop -c fish
 ```
 *(Либо используйте интеграцию через `direnv`, тогда окружение подтянется автоматически).*
 
