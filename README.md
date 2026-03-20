@@ -21,6 +21,13 @@
 | [`software-design`](./software-design) | Проектирование программного обеспечения |
 | [`software-testing`](./software-testing) | Тестирование программного обеспечения (Java) |
 
+## Рекомендации
+
+Для комфортной работы стоит установить fish и запускать его с окрудением:
+```bash
+nix develop -c fish
+```
+
 ## Полезные ссылки
 
 1. [Подгон](https://drive.google.com/drive/folders/1PkLq-mtRbhQAfXeJvgIldDfHbSoEFuVK)
