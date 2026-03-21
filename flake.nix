@@ -49,7 +49,7 @@
 
               # --- Declarative ---
               erlang
-              swi-prolog`
+              swi-prolog
             ];
 
             shellHook = ''
