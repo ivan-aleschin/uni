@@ -1,131 +1,100 @@
 #include "Simulation.h"
 #include <iostream>
-#include <vector>
-#include <queue>
-#include <memory>
-
-#include "../factory/PizzaFactory.h"
 #include "../factory/TaxiFactory.h"
 #include "../factory/BusFactory.h"
-#include "../core/PizzaBox.h"
-#include "../core/Passenger.h"
-#include "../core/Vehicle.h"
 
-namespace {
-    void printStatus(const std::shared_ptr<Vehicle>& v) {
-        std::cout << v->getType() << ": ";
-        if (v->isReadyToGo()) std::cout << "READY TO GO\n";
-        else std::cout << "NOT READY\n";
-    }
-}
+void Simulation::dispatchPassengers(TransportFactory& factory, std::queue<Passenger>& passengers) {
+    int vehiclesCount = 0;
 
-void Simulation::runTaxiDemo() {
-    std::cout << "=== TAXI QUEUE DEMO ===\n";
-    std::cout << "Creating 20 passengers in queue...\n\n";
+    // Пока есть очередь из пассажиров
+    while (!passengers.empty()) {
+        // Запрашиваем у фабрики транспорт и водителя
+        auto transport = factory.get_vehicle();
+        auto driver = factory.get_driver();
 
-    std::queue<Passenger> passengerQueue;
-    for (int i = 0; i < 20; ++i) {
-        passengerQueue.push(Passenger());
-    }
-    std::cout << "Queue size: " << passengerQueue.size() << " passengers\n\n";
-
-    TaxiFactory taxiFactory;
-    int taxiCount = 0;
-    std::vector<std::shared_ptr<Vehicle>> taxis;
-
-    while (!passengerQueue.empty()) {
-        std::vector<Passenger> passengerForTaxi;
-        const int TAXI_CAPACITY = 4;
-
-        for (int i = 0; i < TAXI_CAPACITY && !passengerQueue.empty(); ++i) {
-            passengerForTaxi.push_back(passengerQueue.front());
-            passengerQueue.pop();
+        // Собираем их
+        if (!transport->set_driver(driver)) {
+            std::cout << "Failed to set driver!\n";
+            break;
         }
 
-        std::vector<Passenger> notSeated;
-        auto taxi = taxiFactory.createVehicle(passengerForTaxi, notSeated);
-
-        if (taxi) {
-            ++taxiCount;
-            taxis.push_back(taxi);
-            std::cout << "Taxi #" << taxiCount << " created with " 
-                      << passengerForTaxi.size() << " passengers\n";
-            printStatus(taxi);
-        } else {
-            std::cout << "Failed to create taxi. Not seated: " << notSeated.size() << "\n";
-            for (const auto& p : notSeated) {
-                passengerQueue.push(p);
+        int boarded = 0;
+        // Заполняем транспорт. Лимит контролируется самим транспортом!
+        while (!passengers.empty()) {
+            if (transport->add_passenger(passengers.front())) {
+                passengers.pop();
+                boarded++;
+            } else {
+                // Транспорт заполнен
+                break;
             }
         }
-    }
 
-    std::cout << "\n=== SUMMARY ===\n";
-    std::cout << "Total taxis created: " << taxiCount << "\n";
-    std::cout << "Passengers remaining in queue: " << passengerQueue.size() << "\n\n";
+        if (transport->is_ready_to_go()) {
+            vehiclesCount++;
+            std::cout << transport->get_type() << " #" << vehiclesCount 
+                      << " is READY TO GO! (Boarded: " << boarded 
+                      << ", Capacity: " << transport->get_places() << ")\n";
+        } else {
+            std::cout << transport->get_type() << " is NOT READY!\n";
+            break;
+        }
+    }
 }
 
-void Simulation::runBusDemo() {
-    std::cout << "=== BUS FACTORY ===\n";
-    BusFactory busFactory;
-    std::vector<Passenger> busPs(30);
-    std::vector<Passenger> notSeated;
+void Simulation::dispatchPizza(PizzaFactory& factory, std::queue<PizzaBox>& boxes) {
+    int vansCount = 0;
 
-    auto bus = busFactory.createVehicle(busPs, notSeated);
-    if (bus) {
-        std::cout << "Bus created with 30 passengers\n";
-        printStatus(bus);
-    } else {
-        std::cout << "Bus creation failed\n";
-    }
-    std::cout << "\n";
-}
+    while (!boxes.empty()) {
+        auto van = factory.get_vehicle();
+        auto driver = factory.get_driver();
 
-void Simulation::runPizzaDemo() {
-    std::cout << "=== PIZZA DELIVERY DEMO ===\n";
-    std::cout << "Creating 25 pizza boxes for delivery...\n\n";
-
-    std::vector<PizzaBox> pizzaBoxes;
-    for (int i = 1; i <= 25; ++i) {
-        pizzaBoxes.push_back(PizzaBox(i));
-    }
-
-    PizzaFactory pizzaFactory;
-    std::vector<PizzaBox> remainingBoxes = pizzaBoxes;
-    int deliveryCount = 0;
-
-    while (!remainingBoxes.empty()) {
-        std::vector<PizzaBox> boxesForVan;
-        const size_t VAN_CAPACITY = 10;
-
-        for (size_t i = 0; i < VAN_CAPACITY && !remainingBoxes.empty(); ++i) {
-            boxesForVan.push_back(remainingBoxes.back());
-            remainingBoxes.pop_back();
+        if (!van->set_driver(driver)) {
+            std::cout << "Failed to set driver for pizza van!\n";
+            break;
         }
 
-        std::vector<PizzaBox> notDelivered;
-        auto van = pizzaFactory.createDelivery(boxesForVan, notDelivered);
-
-        if (van) {
-            ++deliveryCount;
-            std::cout << "Pizza Van #" << deliveryCount << " created with " 
-                      << van->getBoxCount() << " boxes\n";
-            std::cout << "  Type: " << van->getType() << ", Ready: " 
-                      << (van->isReadyToDeliver() ? "YES" : "NO") << "\n";
-        } else {
-            std::cout << "Failed to create pizza van. Undelivered: " << notDelivered.size() << "\n";
-            for (const auto& box : notDelivered) {
-                remainingBoxes.push_back(box);
+        int loaded = 0;
+        while (!boxes.empty()) {
+            if (van->add_box(boxes.front())) {
+                boxes.pop();
+                loaded++;
+            } else {
+                break;
             }
         }
-    }
 
-    std::cout << "\n=== PIZZA DELIVERY SUMMARY ===\n";
-    std::cout << "Total pizza vans created: " << deliveryCount << "\n";
-    std::cout << "Remaining boxes: " << remainingBoxes.size() << "\n";
+        if (van->is_ready_to_deliver()) {
+            vansCount++;
+            std::cout << van->get_type() << " #" << vansCount 
+                      << " is READY TO DELIVER! (Loaded: " << loaded 
+                      << ", Capacity: " << van->get_places() << ")\n";
+        } else {
+            std::cout << van->get_type() << " is NOT READY!\n";
+            break;
+        }
+    }
 }
 
 void Simulation::runAll() {
-    runTaxiDemo();
-    runBusDemo();
-    runPizzaDemo();
+    std::cout << "--- Симуляция работы Такси ---\n";
+    std::queue<Passenger> queueForTaxi;
+    for (int i = 0; i < 20; ++i) queueForTaxi.push(Passenger());
+    
+    TaxiFactory taxiFactory;
+    dispatchPassengers(taxiFactory, queueForTaxi);
+
+    std::cout << "\n--- Симуляция работы Автобуса ---\n";
+    std::queue<Passenger> queueForBus;
+    for (int i = 0; i < 30; ++i) queueForBus.push(Passenger());
+    
+    BusFactory busFactory;
+    dispatchPassengers(busFactory, queueForBus);
+
+    std::cout << "\n--- Симуляция доставки пиццы ---\n";
+    std::queue<PizzaBox> boxes;
+    for (int i = 1; i <= 25; ++i) boxes.push(PizzaBox(i));
+    
+    ConcretePizzaFactory pizzaFactory;
+    dispatchPizza(pizzaFactory, boxes);
 }

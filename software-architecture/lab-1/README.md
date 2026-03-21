@@ -2,7 +2,7 @@
 
 ## Основное задание
 
-В рамках данной лабораторной работы мне необходимо было изучить и применить на практике порождающие паттерны проектирования, в частности **Абстрактную фабрику (Abstract Factory)** и **Одиночку (Singleton)**.
+В рамках данной лабораторной работы необходимо изучить и применить на практике порождающие паттерны проектирования, в частности **Абстрактную фабрику (Abstract Factory)** и **Одиночку (Singleton)**.
 
 **Условие задачи:**
 1. Реализовать паттерн Одиночка (Singleton).
@@ -13,192 +13,130 @@
 6. Установлен лимит загрузки машин: для автобуса — 30 человек, для такси — 4 человека.
 7. Для классов водителей необходимо применить паттерн Singleton.
 
-*Дополнительно от себя:* Я расширил предметную область и добавил параллельную реализацию фабрики по доставке пиццы (фургоны и водители-доставщики), чтобы показать универсальность выбранной архитектуры.
+*Дополнительно от себя:* Добавлена параллельная реализация абстрактной фабрики по доставке пиццы (фургоны и водители-доставщики), чтобы показать универсальность подхода.
 
 ## Архитектура реализации
 
-При разработке я уделил особое внимание принципам **Clean Architecture** (чистой архитектуры). Кодовая база разделена на независимые модули, что делает проект масштабируемым и легко читаемым:
+Архитектура строго следует каноничному паттерну "Абстрактная фабрика" из книги GoF, где интерфейс фабрики задает создание семейства связанных объектов (в нашем случае — транспорт и подходящий ему водитель). 
 
-- **`core/`** — содержатся базовые абстрактные классы и интерфейсы (`Vehicle`, `Driver`, `Passenger`, `PizzaBox`).
-- **`drivers/`** — конкретные реализации водителей (`TaxiDriver`, `BusDriver`, `PizzaDriver`). Все они строго реализуют паттерн **Singleton**, гарантируя, что за рулем может находиться только один уникальный водитель определенной категории.
-- **`vehicles/`** — конкретные реализации транспортных средств (`Taxi`, `Bus`, `PizzaVan`), инкапсулирующие логику проверки готовности к отправлению (наличие ровно одного правильного водителя и соответствие лимитам загрузки).
-- **`factory/`** — реализации абстрактных фабрик (`TaxiFactory`, `BusFactory`, `PizzaFactory`), которые связывают воедино транспорт, нужного водителя и пассажиров/груз.
-- **`utils/`** — вспомогательные утилиты. Сюда вынесена вся бизнес-логика симуляции (`Simulation.cpp`).
+- **`core/`** — содержатся базовые абстрактные классы: `Transport` (с методами `get_places()`, `add_passenger()`) и `Driver`.
+- **`drivers/`** — конкретные реализации водителей. Строго реализуют **Singleton**, возвращаются фабрикой через метод `get_driver()`.
+- **`vehicles/`** — конкретные виды транспорта (`Taxi`, `Bus`). Инкапсулируют внутри себя лимиты вместимости (4 и 30 мест) и логику проверки.
+- **`factory/`** — паттерн абстрактная фабрика. `TransportFactory` задает контракт (`get_vehicle()`, `get_driver()`), а наследники `TaxiFactory` и `BusFactory` его реализуют.
+- **`utils/Simulation.cpp`** — клиентский код. Симуляция принимает на вход только **абстрактную фабрику** и очередь пассажиров. Клиент **не знает** ни о типе транспорта, ни о его вместимости, он просто пытается посадить пассажиров, пока транспорт не ответит, что места кончились.
 
 **UML-диаграмма классов (Mermaid):**
-Для генерации диаграмм прямо в Markdown (без необходимости устанавливать сторонние библиотеки) отлично подходит синтаксис Mermaid. Он нативно поддерживается на GitHub, GitLab и во многих редакторах (например, Obsidian и VS Code).
-
 ```mermaid
 classDiagram
-    class Vehicle {
+    class TransportFactory {
         <<abstract>>
-        #shared_ptr~Driver~ driver
-        #vector~Passenger~ passengers
-        #size_t capacity
-        +setDriver(driver) bool
-        +addPassenger(passenger) bool
-        +isReadyToGo() bool
-        +getType()* string
+        +get_vehicle()* shared_ptr~Transport~
+        +get_driver()* shared_ptr~Driver~
     }
+    class TaxiFactory {
+        +get_vehicle() shared_ptr~Transport~
+        +get_driver() shared_ptr~Driver~
+    }
+    class BusFactory {
+        +get_vehicle() shared_ptr~Transport~
+        +get_driver() shared_ptr~Driver~
+    }
+    
+    TransportFactory <|-- TaxiFactory
+    TransportFactory <|-- BusFactory
+
+    class Transport {
+        <<abstract>>
+        +get_places()* int
+        +add_passenger(passenger)* bool
+        +set_driver(driver)* bool
+        +is_ready_to_go()* bool
+        +get_type()* string
+    }
+    class Taxi {
+        +get_places() int
+        +add_passenger(passenger) bool
+        +set_driver(driver) bool
+        +is_ready_to_go() bool
+        +get_type() string
+    }
+    class Bus {
+        +get_places() int
+        +add_passenger(passenger) bool
+        +set_driver(driver) bool
+        +is_ready_to_go() bool
+        +get_type() string
+    }
+    
+    Transport <|-- Taxi
+    Transport <|-- Bus
+
     class Driver {
         <<abstract>>
         +getCategory()* string
     }
-    class TransportFactory {
-        <<abstract>>
-        +createVehicle(passengers, outNotSeated)* shared_ptr~Vehicle~
-    }
-    
-    Vehicle <|-- Taxi
-    Vehicle <|-- Bus
-    Vehicle <|-- PizzaVan
-    Driver <|-- TaxiDriver
-    Driver <|-- BusDriver
-    Driver <|-- PizzaDriver
-    TransportFactory <|-- TaxiFactory
-    TransportFactory <|-- BusFactory
-    TransportFactory <|-- PizzaFactory
-
-    class Taxi {
-        +getType() string
-    }
-    class Bus {
-        +getType() string
-    }
-    class PizzaVan {
-        -vector~PizzaBox~ boxes
-        +addPizzaBox(box) bool
-        +isReadyToDeliver() bool
-        +getType() string
-    }
-
     class TaxiDriver {
         <<Singleton>>
-        -TaxiDriver()
-        +getInstance()$ TaxiDriver
-        +getCategory() string
+        +getInstance()$ shared_ptr~TaxiDriver~
     }
     class BusDriver {
         <<Singleton>>
-        -BusDriver()
-        +getInstance()$ BusDriver
-        +getCategory() string
+        +getInstance()$ shared_ptr~BusDriver~
     }
-    class PizzaDriver {
-        <<Singleton>>
-        -PizzaDriver()
-        +getInstance()$ PizzaDriver
-        +getCategory() string
-    }
-
-    class TaxiFactory {
-        +createVehicle(passengers, outNotSeated) shared_ptr~Vehicle~
-        +createDriver()$ shared_ptr~Driver~
-    }
-    class BusFactory {
-        +createVehicle(passengers, outNotSeated) shared_ptr~Vehicle~
-        +createDriver()$ shared_ptr~Driver~
-    }
-    class PizzaFactory {
-        +createDelivery(boxes, outNotDelivered) shared_ptr~PizzaVan~
-        +createDriver()$ shared_ptr~Driver~
-    }
-
+    
+    Driver <|-- TaxiDriver
+    Driver <|-- BusDriver
+    
     TaxiFactory ..> Taxi : creates
-    TaxiFactory ..> TaxiDriver : gets instance
+    TaxiFactory ..> TaxiDriver : gets
     BusFactory ..> Bus : creates
-    BusFactory ..> BusDriver : gets instance
-    PizzaFactory ..> PizzaVan : creates
-    PizzaFactory ..> PizzaDriver : gets instance
+    BusFactory ..> BusDriver : gets
 ```
 
-**UML-диаграмма последовательности (Sequence Diagram):**
-
+**UML-диаграмма взаимодействия клиента (Sequence Diagram):**
 ```mermaid
 sequenceDiagram
     participant Client as Simulation
-    participant Factory as TaxiFactory
-    participant Driver as TaxiDriver (Singleton)
-    participant Vehicle as Taxi
+    participant Factory as TransportFactory
+    participant Vehicle as Transport
     
-    Client->>Factory: createDriver()
-    activate Factory
-    Factory->>Driver: getInstance()
-    activate Driver
-    Driver-->>Factory: instance
-    deactivate Driver
+    Client->>Factory: get_vehicle()
+    Factory-->>Client: shared_ptr~Transport~
+    
+    Client->>Factory: get_driver()
     Factory-->>Client: shared_ptr~Driver~
-    deactivate Factory
     
-    Client->>Factory: createVehicle(passengers, outNotSeated)
-    activate Factory
-    Factory->>Vehicle: new Taxi()
-    Vehicle-->>Factory: instance
-    Factory-->>Client: shared_ptr~Vehicle~
-    deactivate Factory
-```
-
-**Особенности точки входа:**
-Файл `main.cpp` сделан максимально лаконичным и чистым. Он не содержит бизнес-логики или сложной инициализации — вся работа делегирована классу `Simulation`, что позволяет легко расширять сценарии демонстрации.
-
-```cpp
-#include "utils/Simulation.h"
-
-int main() {
-    Simulation::runAll();
-    return 0;
-}
+    Client->>Vehicle: set_driver(...)
+    loop while queue is not empty
+        Client->>Vehicle: add_passenger(p)
+        Vehicle-->>Client: true (if fits) / false (if full)
+    end
+    Client->>Vehicle: is_ready_to_go()
+    Vehicle-->>Client: true/false
 ```
 
 ## Пайплайн демонстрации (Сборка и запуск)
 
-Проект использует систему сборки `make` и настроен для работы в воспроизводимом окружении `Nix`.
-
-### Шаг 1. Активация окружения
-Если у вас установлен Nix, в корне проекта (где лежит `flake.nix`) подтяните нужные компиляторы и утилиты (запуск сразу в вашей оболочке fish):
-```fish
-nix develop -c fish
-```
-*(Либо используйте интеграцию через `direnv`, тогда окружение подтянется автоматически).*
-
-### Шаг 2. Переход в директорию исходников
 ```bash
 cd software-architecture/lab-1/AbstractFactory
-```
-
-### Шаг 3. Сборка проекта
-Для очистки старых артефактов и новой чистой сборки выполните:
-```bash
 make clean
 make
-```
-
-### Шаг 4. Запуск
-Скомпилированный бинарный файл готов к работе:
-```bash
 make run
 ```
 
-В выводе программы вы увидите:
-1. Симуляцию распределения очереди из 20 пассажиров по такси (по 4 человека).
-2. Заполнение автобуса ровно на 30 человек.
-3. Дополнительную симуляцию логистики доставки пиццы.
-Программа наглядно демонстрирует проверки статуса готовности (`READY TO GO`), подтверждая, что все условия лабы (наличие водителя-одиночки и пассажиров) успешно выполнены.
+В выводе программы вы увидите симуляцию распределения очереди из пассажиров по такси и автобусам, а также дополнительную симуляцию логистики доставки пиццы.
 
 ## Ответы на контрольные вопросы
 
 **Достоинства и недостатки паттерна Singleton (Одиночка):**
 - **Достоинства:**
   1. Класс сам контролирует процесс создания единственного экземпляра.
-  2. Паттерн легко адаптировать для создания нужного числа экземпляров (например, для пула).
-  3. Возможность создания объектов классов, производных от Singleton.
 - **Недостатки:**
-  1. В случае использования нескольких взаимозависимых одиночек их реализация может резко усложниться.
-  2. Глобальное состояние может усложнить процесс юнит-тестирования.
+  1. Глобальное состояние может усложнить процесс юнит-тестирования.
 
 **Достоинства и недостатки паттерна Abstract Factory (Абстрактная фабрика):**
 - **Достоинства:**
   1. Гарантирует сочетаемость создаваемых объектов (например, Такси всегда создается только вместе с Водителем Такси).
-  2. Изолирует клиентский код от конкретных классов (клиент работает только с абстракциями `Vehicle` и `Driver`).
+  2. Изолирует клиентский код от конкретных классов (клиент работает только с абстракциями `TransportFactory`, `Transport` и `Driver`).
 - **Недостатки:**
   1. Сложно добавить поддержку нового вида продуктов в семейство, так как это потребует изменения интерфейса самой абстрактной фабрики и всех её реализаций.

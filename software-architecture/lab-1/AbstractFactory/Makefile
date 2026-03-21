@@ -5,7 +5,7 @@ TARGET = transport_factory
 
 SRCS = \
     main.cpp \
-    core/Vehicle.cpp \
+    core/Transport.cpp \
     vehicles/Taxi.cpp \
     vehicles/Bus.cpp \
     vehicles/PizzaVan.cpp \

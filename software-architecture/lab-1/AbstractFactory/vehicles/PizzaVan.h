@@ -1,25 +1,20 @@
 #pragma once
 #include <vector>
 #include <memory>
-#include "../core/PizzaBox.h"
+#include <string>
 #include "../core/Driver.h"
+#include "../core/PizzaBox.h"
 
 class PizzaVan {
 private:
     std::shared_ptr<Driver> driver;
     std::vector<PizzaBox> boxes;
-    size_t capacity;
+    const int capacity = 10;
 
 public:
-    explicit PizzaVan(size_t maxBoxes = 10);
-    virtual ~PizzaVan() = default;
-
-    bool setDriver(std::shared_ptr<Driver> d);
-    bool addPizzaBox(const PizzaBox& box);
-
-    size_t getBoxCount() const { return boxes.size(); }
-    size_t getCapacity() const { return capacity; }
-    bool isReadyToDeliver() const;
-
-    std::string getType() const { return "PizzaVan"; }
+    int get_places() const;
+    bool add_box(const PizzaBox& box);
+    bool set_driver(std::shared_ptr<Driver> newDriver);
+    bool is_ready_to_deliver() const;
+    std::string get_type() const;
 };

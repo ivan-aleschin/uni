@@ -1,14 +1,14 @@
 #pragma once
 #include <memory>
-#include <vector>
-#include "../core/Vehicle.h"
+#include "../core/Transport.h"
 #include "../core/Driver.h"
-#include "../core/Passenger.h"
 
+// Абстрактная фабрика (AbstractFactory из паттерна)
 class TransportFactory {
 public:
     virtual ~TransportFactory() = default;
-    virtual std::shared_ptr<Vehicle> createVehicle(
-        const std::vector<Passenger>& passengers,
-        std::vector<Passenger>& outNotSeated) = 0;
+    
+    // Создание семейства связанных объектов
+    virtual std::shared_ptr<Transport> get_vehicle() = 0;
+    virtual std::shared_ptr<Driver> get_driver() = 0;
 };

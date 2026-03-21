@@ -6,5 +6,5 @@ std::shared_ptr<PizzaDriver> PizzaDriver::getInstance() {
 }
 
 std::string PizzaDriver::getCategory() const {
-    return "D";
+    return "C";
 }

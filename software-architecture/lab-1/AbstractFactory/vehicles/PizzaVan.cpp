@@ -1,19 +1,35 @@
 #include "PizzaVan.h"
+#include <iostream>
 
-PizzaVan::PizzaVan(size_t maxBoxes) : capacity(maxBoxes) {}
+int PizzaVan::get_places() const {
+    return capacity;
+}
 
-bool PizzaVan::setDriver(std::shared_ptr<Driver> d) {
-    if (!d || driver) return false;
-    driver = d;
+bool PizzaVan::set_driver(std::shared_ptr<Driver> newDriver) {
+    if (this->driver) {
+        std::cerr << "Driver already assigned to pizza van!\n";
+        return false;
+    }
+    if (newDriver->getCategory() != "C") {
+        std::cerr << "Invalid driver category for pizza van!\n";
+        return false;
+    }
+    this->driver = newDriver;
     return true;
 }
 
-bool PizzaVan::addPizzaBox(const PizzaBox& box) {
-    if (boxes.size() >= capacity) return false;
+bool PizzaVan::add_box(const PizzaBox& box) {
+    if (boxes.size() >= static_cast<size_t>(capacity)) {
+        return false;
+    }
     boxes.push_back(box);
     return true;
 }
 
-bool PizzaVan::isReadyToDeliver() const {
-    return driver && !boxes.empty();
+bool PizzaVan::is_ready_to_deliver() const {
+    return driver && !boxes.empty() && boxes.size() <= static_cast<size_t>(capacity);
+}
+
+std::string PizzaVan::get_type() const {
+    return "PizzaVan";
 }
