@@ -31,6 +31,7 @@
               # --- Qt6 для GUI ---
               qt6.qtbase
               qt6.qtwayland
+              qt6.qtimageformats
               qt6.wrapQtAppsHook
 
             ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
