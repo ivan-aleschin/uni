@@ -82,6 +82,7 @@ ipch/
 *.vcxproj.user
 
 # Build output folders (common)
+build/
 bin/
 obj/
 **/Debug/
