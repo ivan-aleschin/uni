@@ -46,6 +46,10 @@
               # --- Python ---
               python3
               uv
+
+              # --- Declarative ---
+              erlang
+              swi-prolog`
             ];
 
             shellHook = ''
