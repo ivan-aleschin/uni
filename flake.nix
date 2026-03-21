@@ -1,5 +1,5 @@
 {
-  description = "University Projects Environment (C++, C#, Python)";
+  description = "University Projects Environment (C++, C#, Python, Qt6)";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -26,7 +26,13 @@
               gnumake
               cmake
               clang-tools
-            ] ++ lib.optionals stdenv.isLinux [
+              pkg-config
+
+              # --- Qt6 для GUI ---
+              qt6.qtbase
+              qt6.wrapQtAppsHook
+
+            ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
               # gdb и valgrind плохо или совсем не работают на современных macOS,
               # поэтому устанавливаем их только на Linux
               gdb
@@ -41,7 +47,7 @@
             ];
 
             shellHook = ''
-              echo "🛠️ Uni Environment Loaded (C/C++, C#, Python) [${system}]"
+              echo "🛠️ Uni Environment Loaded (C/C++, C#, Python, Qt6) [${system}]"
             '';
           };
         }
