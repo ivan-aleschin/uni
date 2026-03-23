@@ -35,7 +35,7 @@ class GammaCipher:
         self.a = a
         self.c = c
         self.b = b
-        self.m = 2 ** b
+        self.m = 2**b
         self.seed = seed
         self.prng = LinearCongruentialGenerator(self.a, self.c, self.m, self.seed)
 
@@ -107,7 +107,7 @@ def main() -> None:
     # 1. Шифрование
     encrypted_data = cipher.encrypt(original)
     encrypted_str = " ".join(map(str, encrypted_data))
-    
+
     with open(encrypted_file, "w", encoding="utf-8") as f:
         f.write(encrypted_str)
 
@@ -132,26 +132,45 @@ def main() -> None:
         print("[УСПЕХ] Текст успешно и однозначно дешифрован.")
     else:
         print("[ОШИБКА] Возникли проблемы при расшифровке!")
-        
+
     # 4. Изменение параметра (задание 4)
     print(_banner("ИЗМЕНЕНИЕ ПАРАМЕТРА T(0) = 12"))
     changed_seed = 12
     cipher_new = GammaCipher(a, c, b, changed_seed)
-    
+
     encrypted_data_new = cipher_new.encrypt(original)
     encrypted_str_new = " ".join(map(str, encrypted_data_new))
-    
+
     print("  Шифрограмма с изменённым начальным значением:")
     print("  " + encrypted_str_new[:80] + "...")
-    
+
     if encrypted_str != encrypted_str_new:
         print("\n[УСПЕХ] Шифрограммы отличаются при изменении параметра генератора.")
     else:
         print("\n[ОШИБКА] Шифрограммы совпадают!")
-        
+
     wrong_decrypted = cipher_new.decrypt(encrypted_data)
     print("\n  Попытка расшифровать оригинальную криптограмму новым ключом:")
     print("  " + repr(wrong_decrypted[:40]) + "...")
+
+    # 5. Демонстрация уязвимости малого b (M=64)
+    print(_banner("ДЕМОНСТРАЦИЯ УЯЗВИМОСТИ МАЛОГО b (b=6, M=64)"))
+    print("  Так как b=6, генератор выдает максимум 6 бит (число до 63).")
+    print("  А русские буквы в Unicode занимают 11-12 бит (числа > 1000).")
+
+    cipher_demo = GammaCipher(a, c, b + 0, seed)
+    cipher_demo.prng.reset(seed)
+
+    for char in original[:3]:
+        gamma = cipher_demo.prng.next()
+        char_code = ord(char)
+        encrypted_code = char_code ^ gamma
+
+        print(f"\n  Символ '{char}' (код {char_code}):")
+        print(f"    Открытый текст: {char_code:012b}")
+        print(f"    Гамма (6 бит):  {gamma:012b} (число {gamma})")
+        print(f"    Шифротекст:     {encrypted_code:012b}")
+        print("    -> Старшие биты остались без изменений")
 
 
 if __name__ == "__main__":
