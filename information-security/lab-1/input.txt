@@ -1,1 +1,2 @@
-Information Security is crucial. This is Lab 1 for Substitution Cipher!
+INFORMATION SECURITY IS AN IMPORTANT TASK.
+THIS IS LAB 1!

@@ -1,8 +1,7 @@
 """
 Лабораторная работа №1 — Шифрование методом подстановки
 Вариант 1: Таблица 1.2, Столбец 3
-Исходный алфавит: русский (А–Я + пробел, 34 символа)
-Подстановочный алфавит: латинские буквы + спецсимволы
+Исходный алфавит: английский (A-Z + спецсимволы)
 """
 
 import os
@@ -12,13 +11,8 @@ from typing import Final
 class SubstitutionCipher:
     """
     Моноалфавитный шифр подстановки.
-    Таблица 1.2, Вариант 1, Столбец 3:
-      - 34 символа исходного алфавита (А–Я + пробел)
-      - Подстановочный алфавит: латиница + спецсимволы (!  : ; - . , ? V …)
     """
 
-    # Таблица подстановки: русская буква (верхний регистр) → символ шифротекста
-    # Источник: Таблица 1.2, строки 1–34, Столбец 3
     SUBSTITUTION_TABLE: Final[dict[str, str]] = {
         "A": "Z",
         "B": " ",
@@ -40,9 +34,9 @@ class SubstitutionCipher:
         "R": "P",
         "S": "L",
         "T": "M",
-        "U": "N",
-        "V": "O",
-        "W": "P",
+        "U": "U",  # Изменено на уникальное 'U' (была коллизия: 'P' тоже давал 'N')
+        "V": "V",  # Изменено на уникальное 'V' (была коллизия: 'Q' тоже давал 'O')
+        "W": "W",  # Изменено на уникальное 'W' (была коллизия: 'R' тоже давал 'P')
         "X": "A",
         "Y": "B",
         "Z": "C",
@@ -58,56 +52,37 @@ class SubstitutionCipher:
 
     def __init__(self) -> None:
         self._encode: dict[str, str] = self.SUBSTITUTION_TABLE
-        # Обратная таблица строится автоматически (биекция гарантирована таблицей)
+        # Так как теперь все значения уникальны, обратная таблица строится однозначно
         self._decode: dict[str, str] = {v: k for k, v in self._encode.items()}
-
-    # ------------------------------------------------------------------
-    # Публичный API
-    # ------------------------------------------------------------------
 
     def encrypt(self, text: str) -> str:
         """
-        Шифрует исходный русскоязычный текст.
-        Символы вне алфавита (цифры, знаки препинания) пропускаются без изменений.
+        Шифрует исходный текст.
+        Символы вне алфавита пропускаются без изменений.
         """
         return "".join(self._encode.get(ch, ch) for ch in text.upper())
 
     def decrypt(self, text: str) -> str:
         """
-        Дешифрует криптограмму обратно в исходный текст (верхний регистр).
-        Символы вне подстановочного алфавита пропускаются без изменений.
+        Дешифрует криптограмму.
+        Символы вне алфавита пропускаются без изменений.
         """
         return "".join(self._decode.get(ch, ch) for ch in text)
 
-    # ------------------------------------------------------------------
-    # Вспомогательные методы
-    # ------------------------------------------------------------------
-
     def print_table(self) -> None:
-        """Печатает полную таблицу подстановки (для отчёта)."""
-        header = (
-            f"{'Исходный':>10}  →  {'Шифр':<6}  |  {'Исходный':>10}  →  {'Шифр':<6}"
-        )
-        print(header)
-        print("-" * len(header))
+        """Печатает таблицу шифрования для отчёта."""
+        print("  Таблица подстановки (биекция):")
         items = list(self._encode.items())
         mid = len(items) // 2
         for (src1, enc1), (src2, enc2) in zip(items[:mid], items[mid:]):
-            src1_repr = repr(src1) if src1 == " " else src1
-            src2_repr = repr(src2) if src2 == " " else src2
-            enc1_repr = repr(enc1) if enc1 == " " else enc1
-            enc2_repr = repr(enc2) if enc2 == " " else enc2
-            print(
-                f"{src1_repr:>10}  →  {enc1_repr:<6}  |  {src2_repr:>10}  →  {enc2_repr:<6}"
-            )
+            s1 = repr(src1) if src1 in " ." else src1
+            e1 = repr(enc1) if enc1 in " ." else enc1
+            s2 = repr(src2) if src2 in " ." else src2
+            e2 = repr(enc2) if enc2 in " ." else enc2
+            print(f"    {s1:>4} -> {e1:<4}  |  {s2:>4} -> {e2:<4}")
 
 
-# ----------------------------------------------------------------------
-# Точка входа
-# ----------------------------------------------------------------------
-
-
-def _banner(title: str, width: int = 56) -> str:
+def _banner(title: str, width: int = 60) -> str:
     line = "=" * width
     return f"\n{line}\n  {title}\n{line}"
 
@@ -119,27 +94,23 @@ def main() -> None:
     encrypted_file = "encrypted.txt"
     decrypted_file = "decrypted.txt"
 
-    # Создаём входной файл с примером, если он отсутствует
+    # Создаём входной файл с примером на английском, если он отсутствует
     if not os.path.exists(input_file):
-        sample = (
-            "ЗАЩИТА ИНФОРМАЦИИ ЯВЛЯЕТСЯ ВАЖНОЙ ЗАДАЧЕЙ\n"
-            "ШИФРОВАНИЕ ОБЕСПЕЧИВАЕТ КОНФИДЕНЦИАЛЬНОСТЬ"
-        )
+        sample = "INFORMATION SECURITY IS AN IMPORTANT TASK.\nTHIS IS LAB 1!"
         with open(input_file, "w", encoding="utf-8") as f:
             f.write(sample)
         print(f"[INFO] Создан файл '{input_file}' с тестовым текстом.")
 
-    # 1. Читаем исходный текст
     with open(input_file, "r", encoding="utf-8") as f:
         original = f.read()
 
-    print(_banner("ТАБЛИЦА ПОДСТАНОВКИ (Таблица 1.2, Столбец 3)"))
+    print(_banner("ТАБЛИЦА ПОДСТАНОВКИ"))
     cipher.print_table()
 
     print(_banner("ИСХОДНЫЙ ТЕКСТ"))
     print(original)
 
-    # 2. Шифрование
+    # 1. Шифрование
     encrypted = cipher.encrypt(original)
     with open(encrypted_file, "w", encoding="utf-8") as f:
         f.write(encrypted)
@@ -147,7 +118,7 @@ def main() -> None:
     print(_banner("ЗАШИФРОВАННЫЙ ТЕКСТ (КРИПТОГРАММА)"))
     print(encrypted)
 
-    # 3. Дешифрование (читаем из файла — имитируем передачу шифротекста)
+    # 2. Дешифрование
     with open(encrypted_file, "r", encoding="utf-8") as f:
         cipher_from_file = f.read()
 
@@ -158,13 +129,14 @@ def main() -> None:
     print(_banner("РАСШИФРОВАННЫЙ ТЕКСТ"))
     print(decrypted)
 
-    # 4. Верификация корректности
+    # 3. Верификация корректности
     print(_banner("ВЕРИФИКАЦИЯ"))
     reference = original.upper()
+
     if reference == decrypted:
-        print("[УСПЕХ] Расшифрованный текст совпадает с исходным (верхний регистр).")
+        print("[УСПЕХ] Текст успешно и однозначно дешифрован.")
     else:
-        print("[ОШИБКА] Обнаружено несоответствие:")
+        print("[ОШИБКА] Возникли проблемы при расшифровке!")
         for i, (a, b) in enumerate(zip(reference, decrypted)):
             if a != b:
                 print(f"  Позиция {i}: ожидалось {repr(a)}, получено {repr(b)}")
