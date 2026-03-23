@@ -10,6 +10,7 @@
 | [`digital-circuits`](./digital-circuits) | Основы цифровой схемотехники |
 | [`electronics`](./electronics) | Электроника и электротехника |
 | [`human-machine-interface`](./human-machine-interface) | Человеко-машинный интерфейс |
+| [`information-security`](./information-security) | Защита информации |
 | [`information-theory`](./information-theory) | Теория информации и кодирование |
 | [`internet-programming`](./internet-programming) | Интернет-программирование |
 | [`logic-programming`](./logic-programming) | Функциональное и логическое программирование (Prolog, Erlang) |
