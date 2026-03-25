@@ -15,6 +15,7 @@
 | [`internet-programming`](./internet-programming) | Интернет-программирование |
 | [`logic-programming`](./logic-programming) | Функциональное и логическое программирование (Prolog, Erlang) |
 | [`math-logic`](./math-logic) | Математическая логика и теория алгоритмов |
+| [`microprocessor-systems`](./microprocessor-systems) | Микропроцессорные средства и системы |
 | [`os-and-networks`](./os-and-networks) | Операционные системы и сети |
 | [`otik`](./otik) | Теория информации и кодирования (конспекты) |
 | [`parallel-programming`](./parallel-programming) | Параллельное программирование |

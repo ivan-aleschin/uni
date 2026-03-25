@@ -1,0 +1,6 @@
+# =========================
+# SystemVerilog / Icarus / GTKWave
+# =========================
+*sim
+*.vcd
+*.vvp
