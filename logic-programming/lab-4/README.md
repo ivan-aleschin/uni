@@ -7,8 +7,13 @@
 |------|-------------|
 | `ring.erl` | Задание 1: `ring/2` — кольцо процессов |
 | `parent_children.erl` | Задание 2: родитель и дети, перезапуск |
-| `par_filter.erl` | Задание 3: параллельный `filter/3` |
+| `par_filter.erl` | Задание 3: параллельный `filter/3` + доп. `par_filter_ordered/3` |
 | `lab4.erl` | Демо и тесты |
+| `lab4_app.erl` | OTP-приложение (доп. 4–5) |
+| `lab4_sup.erl` | OTP-супервизор (доп. 4–5) |
+| `ring_srv.erl` | OTP-обёртка для `ring` (доп. 4–5) |
+| `parent_children_srv.erl` | OTP-обёртка для `parent_children` (доп. 4–5) |
+| `ebin/lab4_app.app` | Описание OTP-приложения |
 
 ---
 
@@ -60,7 +65,7 @@ Created <0.35.0>
 
 **Интерфейс:**
 - `start(N)` — запускает родителя и N детей
-- `send_to_child(I, Msg)` — отправляет сообщение ребенку I
+- `send_to_child(I, Msg)` — отправляет сообщение ребёнку I
 - `stop()` — останавливает родителя (и детей)
 
 **Поведение детей:**
@@ -70,7 +75,7 @@ Created <0.35.0>
 
 **Поведение родителя:**
 - родитель зарегистрирован как `parent_children`
-- если ребенок умер с ошибкой → перезапускается и выводится сообщение
+- если ребёнок умер с ошибкой → перезапускается и выводится сообщение
 - если родитель останавливается → всем детям отправляется `stop`
 
 **Пример:**
@@ -103,6 +108,50 @@ parent_children:stop().
 ```/dev/null/example.erl#L1-3
 F = fun(X) -> is_integer(X) andalso (X rem 2 =:= 0) end,
 par_filter:par_filter(F, [1,2,3,4,5,6,a,false,8], [{sublist_size,2},{processes,3}]).
+```
+
+---
+
+## Дополнительное задание 4–5 (OTP)
+
+**Идея:** оформить задания 1 и 2 как OTP-приложение с супервизором и `gen_server`.
+
+**Модули OTP:**
+- `lab4_app` — `application`
+- `lab4_sup` — `supervisor`
+- `ring_srv` — `gen_server` для `ring`
+- `parent_children_srv` — `gen_server` для `parent_children`
+
+**Как запустить OTP:**
+```/dev/null/example.erl#L1-8
+c(lab4_app), c(lab4_sup), c(ring_srv), c(parent_children_srv).
+code:add_patha("ebin").
+application:load(lab4_app).
+application:start(lab4_app).
+
+ring_srv:ring(3, 2).
+parent_children_srv:start(3).
+parent_children_srv:send_to_child(1, hello).
+parent_children_srv:stop().
+
+application:stop(lab4_app).
+```
+
+---
+
+## Дополнительное задание 6 (с сохранением порядка)
+
+**Функция:** `par_filter_ordered/3` — то же, что `par_filter/3`, но результат в том же порядке, что и исходный список.
+
+**Идея реализации:**
+- к каждому подсписку добавляется индекс
+- воркеры возвращают `{Index, Filtered}`
+- результаты сортируются по индексу и склеиваются
+
+**Пример:**
+```/dev/null/example.erl#L1-3
+F = fun(X) -> is_integer(X) andalso (X rem 2 =:= 0) end,
+par_filter:par_filter_ordered(F, [1,2,3,4,5,6,a,false,8], [{sublist_size,2},{processes,3}]).
 ```
 
 ---

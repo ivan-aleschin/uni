@@ -16,7 +16,7 @@ ring(N, M) when is_integer(N), N > 0, is_integer(M), M >= 0 ->
     init_ring(Pids, First, Last, Parent),
     First ! {token, 0, Parent, M},
     receive
-        {ring_done, First} -> ok
+        {ring_done, Last} -> ok
     end.
 
 spawn_workers(N) ->
@@ -44,24 +44,37 @@ worker() ->
 
 loop(Next, First, Last, Parent) ->
     receive
-        {token, Lap, From, M} ->
-            io:format("~p received ~w from ~p~n", [self(), Lap, From]),
+        {token, Count, From, M} ->
+            io:format("~p received ~w from ~p~n", [self(), Count, From]),
             IsFirst = (self() =:= First),
-            Lap1 =
-                case IsFirst andalso (From =:= Last) of
-                    true -> Lap + 1;
-                    false -> Lap
+            IsLast = (self() =:= Last),
+            Count1 =
+                case true of
+                    _ when IsFirst, From =:= Parent ->
+                        Count + 1;
+                    _ when IsLast ->
+                        Count + 1;
+                    _ ->
+                        Count
                 end,
-            case IsFirst andalso (Lap1 >= M) of
+            case IsFirst andalso (From =:= Last) andalso (Count1 >= M) of
                 true ->
-                    Next ! stop,
-                    io:format("~p finished~n", [self()]),
-                    Parent ! {ring_done, self()};
+                    Next ! {stop, Count1, self()},
+                    io:format("~p finished~n", [self()]);
                 false ->
-                    Next ! {token, Lap1, self(), M},
+                    Next ! {token, Count1, self(), M},
                     loop(Next, First, Last, Parent)
             end;
+
+        {stop, Count, From} ->
+            io:format("~p received ~w from ~p~n", [self(), Count, From]),
+            io:format("~p finished~n", [self()]),
+            case self() =:= Last of
+                true ->
+                    Parent ! {ring_done, self()};
+                false ->
+                    Next ! {stop, Count, self()}
+            end;
         stop ->
-            Next ! stop,
             io:format("~p finished~n", [self()])
     end.
