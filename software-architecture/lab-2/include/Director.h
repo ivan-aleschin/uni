@@ -12,7 +12,6 @@ public:
     void setBuilder(VehicleBuilder* newBuilder) { builder = newBuilder; }
     
     void constructBusWithPassengers() {
-        builder->reset();
         builder->setDriver("Сергей Иванов", "D");
         builder->addPassenger(std::make_unique<AdultPassenger>());
         builder->addPassenger(std::make_unique<AdultPassenger>());
@@ -22,7 +21,6 @@ public:
     }
     
     void constructTaxiWithFamily() {
-        builder->reset();
         builder->setDriver("Михаил Кузнецов", "B");
 
         builder->addPassenger(std::make_unique<AdultPassenger>()); 
@@ -31,7 +29,6 @@ public:
     }
     
     void constructTaxiWithoutChildSeat() {
-        builder->reset();
         builder->setDriver("Олег Петров", "B");
         builder->addPassenger(std::make_unique<AdultPassenger>()); 
         builder->addPassenger(std::make_unique<ChildPassenger>(true));

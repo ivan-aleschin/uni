@@ -34,7 +34,9 @@ private:
         
 
         if (taxi->getPassengerCount() >= 4) {
-            errorLog << "Ошибка: Такси заполнено\n";
+            if (errorLog.str().find("Ошибка: Такси заполнено") == std::string::npos) {
+                errorLog << "Ошибка: Такси заполнено\n";
+            }
             return false;
         }
         

@@ -20,10 +20,26 @@ void printVehicleInfo(const std::unique_ptr<Vehicle>& v, const std::string& buil
     std::cout << "  Тип: " << v->getType() << "\n";
     std::cout << "  Пассажиров: " << v->getPassengerCount() << "/";
     
-    if (v->getType() == "Bus") std::cout << "30";
-    else if (v->getType() == "Taxi") std::cout << "4";
+    if (v->getType() == "Bus") {
+        std::cout << "30\n";
+        std::cout << "  Стоимость билетов:\n";
+        std::cout << "    Взрослый: 50 руб.\n";
+        std::cout << "    Льготный: 25 руб.\n";
+        std::cout << "    Ребёнок:  30 руб.";
+    }
+    else if (v->getType() == "Taxi") {
+        std::cout << "4\n";
+        std::cout << "  Стоимость билетов:\n";
+        std::cout << "    Взрослый: 50 руб.\n";
+        std::cout << "    Ребёнок:  30 руб.";
+    }
     
     std::cout << "\n  Водитель: " << (v->hasDriver() ? "есть" : "нет");
+    
+    if (!builderErrors.empty()) {
+        std::cout << "\n  Замечания при сборке:\n" << builderErrors;
+    }
+    
     std::cout << "\n" << std::string(40, '-') << "\n";
 }
 
@@ -161,7 +177,7 @@ int main() {
     try {
         director.constructTaxiWithFamily();
         auto taxi = taxiBuilder.build();
-        printVehicleInfo(taxi);
+        printVehicleInfo(taxi, taxiBuilder.getErrors());
     } catch (const std::exception& e) {
         std::cout << "✗ Ошибка: " << e.what() << "\n";
         std::cout << "Детали: " << taxiBuilder.getErrors();
@@ -175,7 +191,7 @@ int main() {
     try {
         director.constructTaxiWithoutChildSeat();
         auto taxi2 = taxiBuilder2.build();
-        printVehicleInfo(taxi2);
+        printVehicleInfo(taxi2, taxiBuilder2.getErrors());
     } catch (const std::exception& e) {
         std::cout << "✗ Ошибка (ожидаемо): " << e.what() << "\n";
         std::cout << "  Детали: " << taxiBuilder2.getErrors();
@@ -203,7 +219,7 @@ int main() {
     try {
         auto bus2 = busBuilder2.build();
         std::cout << "✓ Успешно!\n";
-        printVehicleInfo(bus2);
+        printVehicleInfo(bus2, busBuilder2.getErrors());
     } catch (const std::exception& e) {
         std::cout << "✗ Ошибка: " << e.what() << "\n";
         std::cout << "Детали: " << busBuilder2.getErrors();
@@ -225,7 +241,7 @@ int main() {
     
     try {
         auto bus3 = busBuilder3.build();
-        printVehicleInfo(bus3);
+        printVehicleInfo(bus3, busBuilder3.getErrors());
     } catch (const std::exception& e) {
         std::cout << "✗ Ошибка при сборке: " << e.what() << "\n";
         std::cout << "  Детали: " << busBuilder3.getErrors();

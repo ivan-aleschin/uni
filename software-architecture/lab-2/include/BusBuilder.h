@@ -20,7 +20,9 @@ private:
     
     bool validatePassenger(const Passenger* p) {
         if (bus->getPassengerCount() >= 30) {
-            errorLog << "Ошибка: Автобус заполнен\n";
+            if (errorLog.str().find("Ошибка: Автобус заполнен") == std::string::npos) {
+                errorLog << "Ошибка: Автобус заполнен\n";
+            }
             return false;
         }
         return true;
