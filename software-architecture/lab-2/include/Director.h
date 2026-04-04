@@ -36,14 +36,4 @@ public:
         builder->addPassenger(std::make_unique<AdultPassenger>()); 
         builder->addPassenger(std::make_unique<ChildPassenger>(true));
     }
-    
-    void constructBoatWithTourists() {
-        builder->reset();
-        builder->setDriver("Петр Капитан", "B");
-        builder->addPassenger(std::make_unique<AdultPassenger>()); 
-        builder->addPassenger(std::make_unique<AdultPassenger>());  
-        builder->addPassenger(std::make_unique<AdultPassenger>());  
-        builder->addPassenger(std::make_unique<ChildPassenger>(true)); 
-        builder->addPassenger(std::make_unique<ChildPassenger>(true)); 
-    }
 };

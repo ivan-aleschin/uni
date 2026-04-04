@@ -5,10 +5,8 @@
 #include "Director.h"
 #include "BusBuilder.h"
 #include "TaxiBuilder.h"
-#include "BoatBuilder.h"
 #include "Bus.h"
 #include "Taxi.h"
-#include "InflatableBoat.h"
 
 void printVehicleInfo(const std::unique_ptr<Vehicle>& v, const std::string& builderErrors = "") {
     if (!v) {
@@ -24,12 +22,10 @@ void printVehicleInfo(const std::unique_ptr<Vehicle>& v, const std::string& buil
     
     if (v->getType() == "Bus") std::cout << "30";
     else if (v->getType() == "Taxi") std::cout << "4";
-    else if (v->getType() == "InflatableBoat") std::cout << "6";
     
     std::cout << "\n  Водитель: " << (v->hasDriver() ? "есть" : "нет");
     std::cout << "\n" << std::string(40, '-') << "\n";
 }
-
 
 std::vector<std::unique_ptr<Vehicle>> createVehiclesFromQueue(
     std::queue<std::unique_ptr<Passenger>>& passengerQueue,
@@ -48,7 +44,6 @@ std::vector<std::unique_ptr<Vehicle>> createVehiclesFromQueue(
         builder.setDriver(driverName, driverCategory);
         
         std::vector<std::unique_ptr<Passenger>> batch;
-
         int taken = 0;
         std::queue<std::unique_ptr<Passenger>> tempQueue;
         
@@ -60,12 +55,10 @@ std::vector<std::unique_ptr<Vehicle>> createVehiclesFromQueue(
                 batch.push_back(std::move(p));
                 taken++;
             } else {
-
                 tempQueue.push(std::move(p));
             }
         }
         
-
         while (!tempQueue.empty()) {
             passengerQueue.push(std::move(tempQueue.front()));
             tempQueue.pop();
@@ -103,10 +96,9 @@ std::vector<std::unique_ptr<Vehicle>> createVehiclesFromQueue(
     return vehicles;
 }
 
-
 std::vector<std::unique_ptr<Vehicle>> createVehiclesFromQueue(
     std::queue<std::unique_ptr<Passenger>>& passengerQueue,
-    BoatBuilder& builder,
+    BusBuilder& builder,
     const std::string& driverName,
     const std::string& driverCategory)
 {
@@ -114,12 +106,12 @@ std::vector<std::unique_ptr<Vehicle>> createVehiclesFromQueue(
     int vehicleNum = 1;
     
     while (!passengerQueue.empty()) {
-        std::cout << "\n  Создание лодки #" << vehicleNum++ << ":\n";
+        std::cout << "\n  Создание автобуса #" << vehicleNum++ << ":\n";
         builder.reset();
         builder.setDriver(driverName, driverCategory);
         
         std::vector<std::unique_ptr<Passenger>> batch;
-        int capacity = 6;
+        int capacity = 30;
         
         for (int i = 0; i < capacity && !passengerQueue.empty(); ++i) {
             batch.push_back(std::move(passengerQueue.front()));
@@ -127,7 +119,6 @@ std::vector<std::unique_ptr<Vehicle>> createVehiclesFromQueue(
         }
         
         std::cout << "  Попытка посадить " << batch.size() << " пассажиров\n";
-        std::cout << "  Доступно жилетов: " << builder.getAvailableLifeJackets() << "\n";
         
         auto rejected = builder.tryAddPassengers(std::move(batch));
         
@@ -138,20 +129,15 @@ std::vector<std::unique_ptr<Vehicle>> createVehiclesFromQueue(
         try {
             auto vehicle = builder.build();
             if (vehicle && vehicle->getPassengerCount() > 0) {
-                std::cout << "  ✓ Создана лодка с " << vehicle->getPassengerCount() << " пассажирами\n";
+                std::cout << "  ✓ Создан автобус с " << vehicle->getPassengerCount() << " пассажирами\n";
                 vehicles.push_back(std::move(vehicle));
             } else {
-                std::cout << "  ✗ Лодка пуста, прекращаем создание\n";
+                std::cout << "  ✗ Автобус пуст, прекращаем создание\n";
                 break;
             }
         } catch (const std::exception& e) {
-            std::cout << "  ✗ Не удалось создать лодку: " << e.what() << "\n";
+            std::cout << "  ✗ Не удалось создать автобус: " << e.what() << "\n";
             std::cout << "  Детали: " << builder.getErrors();
-            break;
-        }
-        
-        if (!passengerQueue.empty() && builder.getAvailableLifeJackets() == 0) {
-            std::cout << "  Закончились жилеты, прекращаем создание лодок\n";
             break;
         }
     }
@@ -165,10 +151,9 @@ int main() {
     
     Director director;
     
-
-    std::cout << "1. ТАКСИ - ДЕТСКОЕ КРЕСЛО:\n";
+    std::cout << "1. ТАКСИ - ДЕТСКОЕ КРЕСЛО И ПРАВА:\n";
     
-    std::cout << "\nСоздание такси с семьей (кресло есть):\n";
+    std::cout << "\nСоздание такси с семьей (кресло есть, водитель кат. B):\n";
     TaxiBuilder taxiBuilder;
     taxiBuilder.setChildSeat(true);  
     director.setBuilder(&taxiBuilder);
@@ -195,46 +180,59 @@ int main() {
         std::cout << "✗ Ошибка (ожидаемо): " << e.what() << "\n";
         std::cout << "  Детали: " << taxiBuilder2.getErrors();
     }
-    
 
-    std::cout << "\n2. НАДУВНАЯ ЛОДКА - СПАСАТЕЛЬНЫЕ ЖИЛЕТЫ:\n";
+    std::cout << "\n2. АВТОБУС - ВОДИТЕЛЬСКИЕ ПРАВА, ЛЬГОТНИКИ И ЛИМИТЫ:\n";
     
-    BoatBuilder boatBuilder;
-    director.setBuilder(&boatBuilder);
-    
-    std::cout << "\nСоздание лодки с туристами:\n";
+    std::cout << "\nПопытка назначить водителя с неверной категорией (B вместо D) в автобус:\n";
+    BusBuilder busBuilder;
+    busBuilder.setDriver("Алексей Водитель", "B"); // Wrong category for bus
+    busBuilder.addPassenger(std::make_unique<AdultPassenger>());
     try {
-        director.constructBoatWithTourists();
-        auto boat = boatBuilder.build();
-        printVehicleInfo(boat);
+        auto bus = busBuilder.build();
+        printVehicleInfo(bus);
+    } catch (const std::exception& e) {
+        std::cout << "✗ Ошибка (ожидаемо): " << e.what() << "\n";
+        std::cout << "Детали: " << busBuilder.getErrors();
+    }
+    
+    std::cout << "\nСоздание автобуса с льготными пассажирами:\n";
+    BusBuilder busBuilder2;
+    busBuilder2.setDriver("Алексей Водитель", "D");
+    busBuilder2.addPassenger(std::make_unique<BenefitPassenger>());
+    busBuilder2.addPassenger(std::make_unique<AdultPassenger>());
+    try {
+        auto bus2 = busBuilder2.build();
+        std::cout << "✓ Успешно!\n";
+        printVehicleInfo(bus2);
     } catch (const std::exception& e) {
         std::cout << "✗ Ошибка: " << e.what() << "\n";
-        std::cout << "Детали: " << boatBuilder.getErrors();
+        std::cout << "Детали: " << busBuilder2.getErrors();
     }
-    
 
-    std::cout << "\nПопытка создать лодку с перегрузом:\n";
-    BoatBuilder boatBuilder2;
-    boatBuilder2.setDriver("Петр Капитан", "B");
+    std::cout << "\nПопытка создать автобус с перегрузом (лимит 30):\n";
+    BusBuilder busBuilder3;
+    busBuilder3.setDriver("Алексей Водитель", "D");
     
-    for (int i = 0; i < 7; i++) {
-        bool result = boatBuilder2.addPassenger(std::make_unique<AdultPassenger>());
-        std::cout << "  Пассажир " << (i+1) << ": " << (result ? "✓ посажен" : "✗ не посажен") 
-                  << " (жилетов осталось: " << boatBuilder2.getAvailableLifeJackets() << ")\n";
+    int successfullyAdded = 0;
+    for (int i = 0; i < 35; i++) {
+        bool result = busBuilder3.addPassenger(std::make_unique<AdultPassenger>());
+        if (result) successfullyAdded++;
+    }
+    std::cout << "  Посажено пассажиров: " << successfullyAdded << " из 35\n";
+    if (successfullyAdded == 30) {
+        std::cout << "  ✓ Лимит автобуса работает корректно!\n";
     }
     
     try {
-        auto boat2 = boatBuilder2.build();
-        printVehicleInfo(boat2);
+        auto bus3 = busBuilder3.build();
+        printVehicleInfo(bus3);
     } catch (const std::exception& e) {
         std::cout << "✗ Ошибка при сборке: " << e.what() << "\n";
-        std::cout << "  Детали: " << boatBuilder2.getErrors();
+        std::cout << "  Детали: " << busBuilder3.getErrors();
     }
     
-
     std::cout << "\n3. ОБРАБОТКА ОЧЕРЕДИ ПАССАЖИРОВ:\n";
     
-
     auto createTestQueue = []() {
         std::queue<std::unique_ptr<Passenger>> q;
 
@@ -242,11 +240,11 @@ int main() {
             q.push(std::make_unique<ChildPassenger>(true));
         }
 
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 15; ++i) {
             q.push(std::make_unique<AdultPassenger>());
         }
 
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 15; ++i) {
             q.push(std::make_unique<BenefitPassenger>());
         }
         return q;
@@ -254,23 +252,21 @@ int main() {
     
     auto queue1 = createTestQueue();
     std::cout << "В очереди " << queue1.size() << " пассажиров:\n";
-    std::cout << "  - 4 ребенка (нуждаются в креслах/жилетах)\n";
-    std::cout << "  - 4 взрослых\n";
-    std::cout << "  - 4 льготника (только для автобуса)\n";
+    std::cout << "  - 4 ребенка\n";
+    std::cout << "  - 15 взрослых\n";
+    std::cout << "  - 15 льготников (только для автобуса)\n";
     
-
     std::cout << "\n--- СОЗДАНИЕ ТАКСИ ИЗ ОЧЕРЕДИ ---\n";
     TaxiBuilder taxiBuilder3;
     auto taxis = createVehiclesFromQueue(queue1, taxiBuilder3, "Иван Водитель", "B");
     std::cout << "\nСоздано такси: " << taxis.size() << "\n";
-    std::cout << "Осталось в очереди: " << queue1.size() << "\n";
+    std::cout << "Осталось в очереди: " << queue1.size() << " (льготники и, возможно, оставшиеся взрослые/дети)\n";
     
-
     if (!queue1.empty()) {
-        std::cout << "\n--- СОЗДАНИЕ ЛОДКИ ИЗ ОЧЕРЕДИ ---\n";
-        BoatBuilder boatBuilder3;
-        auto boats = createVehiclesFromQueue(queue1, boatBuilder3, "Петр Капитан", "B");
-        std::cout << "\nСоздано лодок: " << boats.size() << "\n";
+        std::cout << "\n--- СОЗДАНИЕ АВТОБУСОВ ИЗ ОЧЕРЕДИ ---\n";
+        BusBuilder busBuilderQueue;
+        auto buses = createVehiclesFromQueue(queue1, busBuilderQueue, "Петр Водитель", "D");
+        std::cout << "\nСоздано автобусов: " << buses.size() << "\n";
         std::cout << "Осталось в очереди: " << queue1.size() << "\n";
     }
     
