@@ -14,5 +14,5 @@ public:
     void offloadBaggage(int kg);
     void add(Component*) override;
     bool removePassenger(const std::string& nm) override;
-    void printPassengerInfo(int freeLimit = -1) const;
+    void printPassengerInfo() const;
 };

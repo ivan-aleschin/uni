@@ -32,17 +32,16 @@ bool Section::removePassenger(const std::string& name) {
 
 void Section::printLoadingMap() const {
     std::cout << sectionName << " (макс. пассажиров: ";
-    int freeLimit = -1;
     if (sectionName == "First Class") std::cout << "10";
-    else if (sectionName == "Business Class") { std::cout << "20"; freeLimit = 35; }
-    else if (sectionName == "Economy Class") { std::cout << "150"; freeLimit = 20; }
+    else if (sectionName == "Business Class") std::cout << "20";
+    else if (sectionName == "Economy Class") std::cout << "150";
     std::cout << "):" << std::endl;
 
     int count = 0;
     for (const auto& c : components) {
         Passenger* p = dynamic_cast<Passenger*>(c);
         if (p) {
-            p->printPassengerInfo(freeLimit);
+            p->printPassengerInfo();
             count++;
         }
     }

@@ -7,7 +7,7 @@ public:
 
     virtual void add(Component* component) = 0;
 
-    virtual bool removePassenger(const std::string& /*name*/) {
+    virtual bool removePassenger(const std::string& name) {
         return false;
     }
 
