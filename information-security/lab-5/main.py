@@ -289,7 +289,7 @@ def main() -> None:
     print(f"Подпись {'ДЕЙСТВИТЕЛЬНА' if ok else 'НЕДЕЙСТВИТЕЛЬНА'}")
 
     # изменим сообщение (имитация подмены) и проверим, что подпись не пройдёт
-    tampered_text = plaintext + "\n(внесены изменения)"
+    tampered_text = plaintext + "\n1"
     tampered_bytes = tampered_text.encode("utf-8")
     ok2 = verify_signature(tampered_bytes, signature, params, keys.y)
     print(banner("ПРОВЕРКА ПОДПИСИ (ИЗМЕНЁННОЕ СООБЩЕНИЕ)"))
