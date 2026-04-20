@@ -1,0 +1,15 @@
+{
+  "ivan": {
+    "salt": "ee9c00a0988911e894208cc60793c1ad",
+    "length": 4,
+    "char_hashes": [
+      "eec4a0292eba27b914bf865010c99db08e3df8c9bbbfbd630563779575135407",
+      "0f0ad77621592704f1f535e77ce7dbebeb4cc941b9ebf1ee8f9e672ccd256840",
+      "65d1c3762122c04669aab7be7b916b021849bc9e222a43d6b2e8e7015c73eb9d",
+      "2b01d53763592aa32d0296b264b653cc58dfbf9526c118e806c6b5e34e10451c"
+    ],
+    "last_login": 1776680306.7854705,
+    "failed_attempts": 0,
+    "locked_until": null
+  }
+}
