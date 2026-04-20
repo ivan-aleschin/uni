@@ -28,6 +28,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import secrets
 from dataclasses import dataclass
@@ -262,6 +263,25 @@ def main() -> None:
     # сохранить подпись
     with open(signature_file, "w", encoding="utf-8") as f:
         f.write(f"{r1} {s}\n")
+
+    # собрать и сохранить подписанное сообщение (JSON) — включает исходный текст, хеш и подпись
+    signed = {
+        "message": plaintext,
+        "hash": h,
+        "r": r1,
+        "s": s,
+        "params": {"p": params.p, "q": params.q, "a": params.a},
+        "y": keys.y,
+    }
+    signed_file = os.path.join(base_dir, "signed_message.json")
+    with open(signed_file, "w", encoding="utf-8") as f:
+        json.dump(signed, f, ensure_ascii=False, indent=2)
+
+    # вывести блок подписанного сообщения (аналогично lab-4: исходный -> подписанный -> проверка)
+    print(banner("ИСХОДНЫЙ ТЕКСТ"))
+    print(plaintext)
+    print(banner("ПОДПИСАННОЕ СООБЩЕНИЕ (JSON)"))
+    print(json.dumps(signed, ensure_ascii=False, indent=2))
 
     # проверка подписи (оригинальное сообщение)
     ok = verify_signature(message_bytes, signature, params, keys.y)
