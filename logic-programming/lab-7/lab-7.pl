@@ -26,15 +26,79 @@ combination([H|T], K, [H|R]) :- K > 0, K1 is K - 1, combination(T, K1, R).
 combination([_|T], K, R) :- K > 0, combination(T, K, R).
 
 run_lab_tests :-
+    % Run unit tests first
     run_tests,
     triangle(4, T), format("1. triangle: ~w~n", [T]),
     dot([1,2],[3,4], D), format("2. dot: ~w~n", [D]),
     (polynom(2*x^3 + x) -> format("3. polynom: yes~n")),
-    findall(C, combination([1,2,3], 2, C), L), format("4. combinations: ~w~n", [L]).
+    findall(C, combination([1,2,3], 2, C), L), format("4. combinations: ~w~n", [L]),
+
+    format("~n--- Operator experiments ---~n", []),
+
+    % 1) X = 1+2.
+    format("?- X = 1+2.~n", []),
+    (   catch((X = 1+2, format("   true. X = ~w~n", [X])), E, format("   error: ~w~n", [E]))
+    ->  true
+    ;   true
+    ),
+
+    % 2) 3 = 1+2.
+    format("?- 3 = 1+2.~n", []),
+    catch(( (3 = 1+2 -> format("   true.~n", []); format("   false.~n", [])) ), E, format("   error: ~w~n", [E])),
+
+    % 3) 2+1 = 1+2.
+    format("?- 2+1 = 1+2.~n", []),
+    catch(( ( (2+1) = (1+2) -> format("   true.~n", []); format("   false.~n", [])) ), E, format("   error: ~w~n", [E])),
+
+    % 4) X == 1+2.
+    format("?- X == 1+2.~n", []),
+    catch(( (X == 1+2 -> format("   true.~n", []); format("   false.~n", [])) ), E, format("   error: ~w~n", [E])),
+
+    % 5) 3 == 1+2.
+    format("?- 3 == 1+2.~n", []),
+    catch(( (3 == 1+2 -> format("   true.~n", []); format("   false.~n", [])) ), E, format("   error: ~w~n", [E])),
+
+    % 6) 2+1 == 1+2.
+    format("?- 2+1 == 1+2.~n", []),
+    catch(( ((2+1) == (1+2) -> format("   true.~n", []); format("   false.~n", [])) ), E, format("   error: ~w~n", [E])),
+
+    % 7) X =:= 1+2.
+    format("?- X =:= 1+2.~n", []),
+    catch(( (X =:= 1+2 -> format("   true.~n", []); format("   false.~n", [])) ), E, format("   error: ~w~n", [E])),
+
+    % 8) 3 =:= 1+2.
+    format("?- 3 =:= 1+2.~n", []),
+    catch(( (3 =:= 1+2 -> format("   true.~n", []); format("   false.~n", [])) ), E, format("   error: ~w~n", [E])),
+
+    % 9) 2+1 =:= 1+2.
+    format("?- 2+1 =:= 1+2.~n", []),
+    catch(( ((2+1) =:= (1+2) -> format("   true.~n", []); format("   false.~n", [])) ), E, format("   error: ~w~n", [E])),
+
+    % 10) X is 1+2.
+    format("?- X is 1+2.~n", []),
+    (   catch((X is 1+2, format("   true. X = ~w~n", [X])), E, format("   error: ~w~n", [E]))
+    ->  true
+    ;   true
+    ),
+
+    % 11) 3 is 1+2.
+    format("?- 3 is 1+2.~n", []),
+    catch(( (3 is 1+2 -> format("   true.~n", []); format("   false.~n", [])) ), E, format("   error: ~w~n", [E])),
+
+    % 12) 2+1 is 1+2.
+    format("?- 2+1 is 1+2.~n", []),
+    catch(( ((2+1) is (1+2) -> format("   true.~n", []); format("   false.~n", [])) ), E, format("   error: ~w~n", [E])).
 
 :- begin_tests(lab7).
 test(tri) :- triangle(4, 10).
 test(dot) :- dot([1,2],[3,4], 11).
 test(poly) :- polynom(2*x^2 + 1).
 test(comb) :- findall(C, combination([1,2], 1, C), [[1],[2]]).
+
+% Operator behavior tests (safe checks that do not raise instantiation errors)
+test(op_is_bind) :- X is 1+2, X =:= 3.
+test(op_eval_numeric) :- 3 =:= 1+2.
+test(op_eval_commute) :- (2+1) =:= (1+2).
+test(op_unify_term) :- X = 1+2, X == 1+2.
+
 :- end_tests(lab7).

@@ -1,4 +1,5 @@
 % lab-6.pl
+:- consult('family.pl').
 :- use_module(library(plunit)).
 
 % 2. zip
@@ -32,7 +33,13 @@ run_lab_tests :-
 
 :- begin_tests(lab6).
 test(zip) :- zip([a],[1],[[a,1]]).
+test(zip_var) :- zip([A,B],[1,2],[[A,1],[B,2]]).
 test(dups) :- contains_duplicates([a,a]).
+test(dups_vars) :- contains_duplicates([X,a,X]).
 test(flat) :- my_flatten([a,[b]], [a,b]).
+test(flat_deep) :- my_flatten([a, [[b], c], [[d]]], [a,b,c,d]).
 test(gray) :- gray([0], [[0],[1]]).
+test(gray2) :- gray([0,0], [[0,0],[0,1],[1,1],[1,0]]).
+test(predok_stephen_mary) :- предок_потомок(stephen, mary).
+test(predok_ivan_lisa) :- предок_потомок(ivan, lisa).
 :- end_tests(lab6).
