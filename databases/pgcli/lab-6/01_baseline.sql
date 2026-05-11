@@ -7,7 +7,7 @@ SET search_path = bookings;
 -- Проблема: полный перебор ~3 млн строк таблицы tickets
 --           фильтр по passenger_name без индекса
 -- ============================================================
-\echo '=== Запрос 1 (lab-1/11): ДО оптимизации ==='
+SELECT '=== Запрос 1 (lab-1/11): ДО оптимизации ===';
 EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
 SELECT
     t.passenger_name,
@@ -27,7 +27,7 @@ GROUP BY t.passenger_name;
 -- Проблема: GROUP BY по passenger_id сканирует всю таблицу tickets
 --           дважды (CTE + JOIN), происходит сброс на диск (~161 МБ)
 -- ============================================================
-\echo '=== Запрос 2 (lab-1/09): ДО оптимизации ==='
+SELECT '=== Запрос 2 (lab-1/09): ДО оптимизации ===';
 EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
 WITH passengers_5 AS (
     SELECT passenger_id, passenger_name
@@ -53,7 +53,7 @@ ORDER BY p.passenger_name;
 -- Проблема: полный перебор таблицы flights (21 тыс строк)
 --           для агрегации по всем маршрутам; результат не кешируется
 -- ============================================================
-\echo '=== Запрос 3 (lab-1/05): ДО оптимизации ==='
+SELECT '=== Запрос 3 (lab-1/05): ДО оптимизации ===';
 EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
 SELECT
     a.airport_code,

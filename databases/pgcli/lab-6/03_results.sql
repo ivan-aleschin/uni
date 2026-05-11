@@ -7,7 +7,7 @@ SET search_path = bookings;
 -- Ожидаем: Index Scan вместо Parallel Seq Scan,
 --          время должно упасть с ~40 мс до < 1 мс
 -- ============================================================
-\echo '=== Запрос 1 (lab-1/11): ПОСЛЕ оптимизации ==='
+SELECT '=== Запрос 1 (lab-1/11): ПОСЛЕ оптимизации ===';
 EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
 SELECT
     t.passenger_name,
@@ -26,9 +26,9 @@ GROUP BY t.passenger_name;
 -- Запрос 2 (из lab-1/09): ПОСЛЕ — покрывающий индекс
 -- Ожидаем: Index Only Scan на CTE,
 --          отсутствие сброса агрегации на диск,
---          время должно упасть с ~1000 мс до < 100 мс
+--          время должно упасть с ~1000 мс до ~350 мс (ускорение в 3 раза)
 -- ============================================================
-\echo '=== Запрос 2 (lab-1/09): ПОСЛЕ оптимизации ==='
+SELECT '=== Запрос 2 (lab-1/09): ПОСЛЕ оптимизации ===';
 EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
 WITH passengers_5 AS (
     SELECT passenger_id, passenger_name
@@ -54,7 +54,7 @@ ORDER BY p.passenger_name;
 -- Оригинальный запрос не меняется — планировщик сам не использует mv.
 -- Показываем ПЕРЕПИСАННЫЙ вариант с явным обращением к mv:
 -- ============================================================
-\echo '=== Запрос 3 (lab-1/05): ПОСЛЕ оптимизации — через mv ==='
+SELECT '=== Запрос 3 (lab-1/05): ПОСЛЕ оптимизации — через mv ===';
 EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
 SELECT airport_code, airport_name, flights_received
 FROM mv_airport_incoming_flights
@@ -62,7 +62,7 @@ ORDER BY flights_received DESC
 LIMIT 1;
 
 -- Для сравнения — фактический результат обоих вариантов совпадает:
-\echo '--- Результат оригинального запроса ---'
+SELECT '--- Результат оригинального запроса ---';
 SELECT a.airport_code, a.airport_name, COUNT(f.flight_id) AS flights_received
 FROM airports a
 JOIN routes r  ON r.arrival_airport = a.airport_code
@@ -71,7 +71,7 @@ GROUP BY a.airport_code, a.airport_name
 ORDER BY flights_received DESC
 LIMIT 1;
 
-\echo '--- Результат через материализованное представление ---'
+SELECT '--- Результат через материализованное представление ---';
 SELECT airport_code, airport_name, flights_received
 FROM mv_airport_incoming_flights
 ORDER BY flights_received DESC

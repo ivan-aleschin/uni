@@ -5,8 +5,6 @@
 
 ---
 
----
-
 ## Теория: Хранимые функции и процедуры в PostgreSQL
 
 ### FUNCTION vs PROCEDURE

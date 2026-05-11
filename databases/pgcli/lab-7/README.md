@@ -5,8 +5,6 @@
 
 ---
 
----
-
 ## Теория: Приложения для работы с PostgreSQL
 
 ### psycopg2 — адаптер PostgreSQL для Python

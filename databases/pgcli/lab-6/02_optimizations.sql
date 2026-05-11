@@ -52,5 +52,5 @@ CREATE UNIQUE INDEX IF NOT EXISTS mv_airport_incoming_flights_pkey
 ANALYZE tickets;
 ANALYZE flights;
 
-\echo 'Индексы и материализованное представление созданы.'
-\echo 'Для обновления mv при изменении данных: REFRESH MATERIALIZED VIEW CONCURRENTLY mv_airport_incoming_flights;'
+SELECT 'Индексы и материализованное представление созданы.';
+SELECT 'Для обновления mv при изменении данных: REFRESH MATERIALIZED VIEW CONCURRENTLY mv_airport_incoming_flights;';

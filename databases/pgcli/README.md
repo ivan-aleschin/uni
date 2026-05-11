@@ -122,8 +122,7 @@ pgcli/
 │   └── 03_results.sql      # EXPLAIN ANALYZE ПОСЛЕ оптимизации
 ├── lab-7/           # Лаба 7: Python-приложение для работы с БД
 │   ├── README.md    
-│   ├── app.py              # Интерактивное CLI (psycopg2)
-│   └── shell.nix           # Nix-окружение с psycopg2
+│   └── app.py              # Интерактивное CLI (psycopg2)
 └── lab-8/           # Лаба 8: Доработка процедур и ПО
     ├── README.md    
     ├── 01_improvements.sql # cancel_booking, get_flight_info, триггер от переполнения
