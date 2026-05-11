@@ -1,0 +1,15 @@
+[project]
+name = "db-labs"
+version = "0.1.0"
+description = "Лабораторные работы по СУБД PostgreSQL (lab-7, lab-8)"
+requires-python = ">=3.12"
+
+dependencies = [
+    "psycopg2>=2.9",   # PostgreSQL адаптер; на NixOS — через python3.withPackages в flake.nix
+]
+
+[tool.uv]
+# На NixOS psycopg2-binary не работает (нет стандартных /lib путей для .so).
+# Зависимости разрешаются через Nix: python3.withPackages в flake.nix.
+# uv используется для чистых Python-проектов без C-расширений.
+managed = false

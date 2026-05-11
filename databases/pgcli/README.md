@@ -42,7 +42,7 @@
 curl -O https://edu.postgrespro.ru/demo-20250901-3m.sql.gz
 
 # Загрузить в PostgreSQL
-gunzip -c demo-20250901-3m.sql.gz | psql -h localhost -U $USER
+gunzip -c demo-20250901-3m.sql.gz | psql -h localhost -U postgres -d postgres -v ON_ERROR_STOP=1
 
 # Удалить архив после загрузки
 rm demo-20250901-3m.sql.gz
@@ -105,15 +105,80 @@ pgcli/
 │   ├── README.md    
 │   ├── 01_schema_update.sql
 │   └── 02_demonstration.sql
-└── lab-4/           # Лаба 4: Аналитические запросы с JOIN, GROUP BY, OVER
+├── lab-4/           # Лаба 4: Аналитические запросы с JOIN, GROUP BY, OVER
+│   ├── README.md    
+│   ├── 00_seed_data.sql
+│   ├── 01.sql       
+│   ...
+│   └── 10.sql       
+├── lab-5/           # Лаба 5: Хранимые процедуры бронирования (Вариант 1)
+│   ├── README.md    
+│   ├── 01_procedure.sql    # check_free_seats, book_ticket, последовательность ticket_no_seq
+│   └── 02_demonstration.sql
+├── lab-6/           # Лаба 6: Оптимизация запросов
+│   ├── README.md    
+│   ├── 01_baseline.sql     # EXPLAIN ANALYZE ДО оптимизации
+│   ├── 02_optimizations.sql# CREATE INDEX + CREATE MATERIALIZED VIEW
+│   └── 03_results.sql      # EXPLAIN ANALYZE ПОСЛЕ оптимизации
+├── lab-7/           # Лаба 7: Python-приложение для работы с БД
+│   ├── README.md    
+│   ├── app.py              # Интерактивное CLI (psycopg2)
+│   └── shell.nix           # Nix-окружение с psycopg2
+└── lab-8/           # Лаба 8: Доработка процедур и ПО
     ├── README.md    
-    ├── 00_seed_data.sql
-    ├── 01.sql       
-    ...
-    └── 10.sql       
+    ├── 01_improvements.sql # cancel_booking, get_flight_info, триггер от переполнения
+    ├── 02_demonstration.sql
+    └── app.py              # Улучшенное приложение v2.0
 ```
 
 **Почему так удобно работать:**
 - SQL-файлы редактор подсвечивает как код — работает автодополнение и форматирование.
 - Каждый файл можно запустить напрямую внутри `pgcli` (например: `\i 01.sql`).
 - Преподавателю легко проверять каждый запрос отдельно, переключаясь между файлами в редакторе.
+
+---
+
+## Полный порядок применения скриптов к чистой базе
+
+После загрузки `demo` с нуля — применять скрипты строго в этом порядке:
+
+```bash
+pg demo
+```
+
+```sql
+-- Лаб 1: просто запросы, изменений нет
+\c demo
+SET search_path = bookings;
+\i ../lab-1/01.sql   -- ... 12.sql
+
+-- Лаб 2: только проектирование (нет SQL)
+
+-- Лаб 3: обязательно ПЕРЕД lab-4, lab-5, lab-6, lab-7, lab-8
+\i ../lab-3/01_schema_update.sql
+\i ../lab-3/02_demonstration.sql
+
+-- Лаб 4: нужны данные lab-3
+\i ../lab-4/00_seed_data.sql
+\i ../lab-4/01.sql   -- ... 10.sql
+
+-- Лаб 5: создать процедуры бронирования
+\i ../lab-5/01_procedure.sql
+\i ../lab-5/02_demonstration.sql
+
+-- Лаб 6: индексы и материализованное представление
+\i ../lab-6/01_baseline.sql    -- посмотреть план ДО
+\i ../lab-6/02_optimizations.sql
+\i ../lab-6/03_results.sql     -- посмотреть план ПОСЛЕ
+
+-- Лаб 8: доработки (после lab-5)
+\i ../lab-8/01_improvements.sql
+\i ../lab-8/02_demonstration.sql
+```
+
+```bash
+# Лаб 7 и 8 — Python-приложение:
+nix develop          # из корня репозитория — psycopg2 доступен автоматически
+python3 lab-7/app.py
+python3 lab-8/app.py
+```

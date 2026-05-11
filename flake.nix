@@ -34,8 +34,14 @@
               # --- C# ---
               dotnet-sdk
               # --- Python ---
-              python3
-              uv
+              # python3.withPackages — единственный способ поставить C-расширения
+              # (psycopg2, numpy и т.д.) на NixOS: pip/uv бинарные колёса не работают
+              # из-за отсутствия стандартных /lib путей. Декларация зависимостей — в
+              # databases/pgcli/pyproject.toml; Nix её воспроизводит через withPackages.
+              (python3.withPackages (ps: with ps; [
+                psycopg2   # PostgreSQL адаптер для лаб по БД
+              ]))
+              uv           # менеджер пакетов для чистых Python-проектов (без C-ext)
               # --- Declarative ---
               erlang
               swi-prolog
@@ -43,6 +49,14 @@
               iverilog      # iverilog: запуск testbench с initial/delays/$display
               verilator    # для лаб с import pkg::* (лаба 2+)
               gtkwave      # просмотр .vcd временных диаграмм
+              # --- LSP серверы для Neovim ---
+              lua-language-server    # Lua (конфиг Neovim / скрипты)
+              pyright                # Python (статический анализ + LSP)
+              nil                    # Nix (*.nix файлы)
+              sqls                   # SQL (PostgreSQL, MySQL и др.)
+              omnisharp-roslyn       # C# (.NET)
+              bash-language-server   # Bash / Shell-скрипты
+              # clangd входит в clang-tools (уже выше)
             ];
             shellHook = ''
               echo "🛠️ Uni Environment Loaded (C/C++, C#, Python, Qt6, SystemVerilog) [${system}]"

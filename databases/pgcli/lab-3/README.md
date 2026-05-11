@@ -7,6 +7,48 @@
 
 ---
 
+---
+
+## Теория: DDL и миграции схем БД
+
+### Основные команды DDL
+```sql
+-- Добавить столбец (NULL-safe, старые строки получат NULL)
+ALTER TABLE t ADD COLUMN IF NOT EXISTS col TYPE;
+
+-- Добавить ограничение CHECK
+ALTER TABLE t ADD COLUMN col INT CHECK (col > 0);
+
+-- Добавить внешний ключ
+ALTER TABLE t ADD COLUMN fk CHAR(3) REFERENCES ref_table(pk);
+
+-- Создать таблицу с составным PK
+CREATE TABLE IF NOT EXISTS t (
+    a INT REFERENCES other(id),
+    b TEXT,
+    PRIMARY KEY (a, b)
+);
+
+-- Пересоздать представление (без удаления зависимых объектов)
+CREATE OR REPLACE VIEW v AS SELECT ...;
+```
+
+### Золотые правила миграций без потери данных
+1. Используй `ADD COLUMN` с `IF NOT EXISTS` — идемпотентно, можно запускать повторно.
+2. Никогда не `DROP COLUMN` без резервной копии.
+3. `NOT NULL` добавляй только с `DEFAULT` значением — иначе упадёт при наличии строк.
+4. `CREATE OR REPLACE VIEW` — безопасно пересоздаёт представление с сохранением зависимостей.
+5. Всегда делай `pg_dump` перед запуском DDL-скриптов на продакшне.
+
+### Каскадные ограничения
+```sql
+REFERENCES t(col) ON DELETE CASCADE   -- автоудалить дочерние строки
+REFERENCES t(col) ON DELETE SET NULL  -- поставить NULL вместо удаления
+REFERENCES t(col) ON DELETE RESTRICT  -- запретить удаление, если есть дочерние
+```
+
+---
+
 ## Структура файлов в папке `lab-3`
 
 1. `01_schema_update.sql` — основной DDL-скрипт. Вносит изменения: добавляет нужные колонки в существующие таблицы `airplanes_data`, `airports_data`, `flights`, создает таблицу для заблокированных мест и обновляет представления.
