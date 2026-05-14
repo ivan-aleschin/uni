@@ -1,31 +1,33 @@
 # uni
-Моё обучение в университете
+
+Моё обучение в университете (Forgejo -> Github Mirror)
 
 ## Контент
 
-| Папка | Предмет |
-|---|---|
-| [`cpp`](./cpp) | Введение в программирование на C++ |
-| [`databases`](./databases) | Базы данных |
-| [`digital-circuits`](./digital-circuits) | Основы цифровой схемотехники |
-| [`electronics`](./electronics) | Электроника и электротехника |
-| [`human-machine-interface`](./human-machine-interface) | Человеко-машинный интерфейс |
-| [`information-security`](./information-security) | Защита информации |
-| [`information-theory`](./information-theory) | Теория информации и кодирование |
-| [`internet-programming`](./internet-programming) | Интернет-программирование |
-| [`logic-programming`](./logic-programming) | Функциональное и логическое программирование (Prolog, Erlang) |
-| [`math-logic`](./math-logic) | Математическая логика и теория алгоритмов |
-| [`microprocessor-systems`](./microprocessor-systems) | Микропроцессорные средства и системы |
-| [`os-and-networks`](./os-and-networks) | Операционные системы и сети |
-| [`otik`](./otik) | Теория информации и кодирования (конспекты) |
-| [`parallel-programming`](./parallel-programming) | Параллельное программирование |
-| [`software-architecture`](./software-architecture) | Проектирование и архитектура программных систем |
-| [`software-design`](./software-design) | Проектирование программного обеспечения |
-| [`software-testing`](./software-testing) | Тестирование программного обеспечения (Java) |
+| Папка                                                  | Предмет                                                       |
+| ------------------------------------------------------ | ------------------------------------------------------------- |
+| [`cpp`](./cpp)                                         | Введение в программирование на C++                            |
+| [`databases`](./databases)                             | Базы данных                                                   |
+| [`digital-circuits`](./digital-circuits)               | Основы цифровой схемотехники                                  |
+| [`electronics`](./electronics)                         | Электроника и электротехника                                  |
+| [`human-machine-interface`](./human-machine-interface) | Человеко-машинный интерфейс                                   |
+| [`information-security`](./information-security)       | Защита информации                                             |
+| [`information-theory`](./information-theory)           | Теория информации и кодирование                               |
+| [`internet-programming`](./internet-programming)       | Интернет-программирование                                     |
+| [`logic-programming`](./logic-programming)             | Функциональное и логическое программирование (Prolog, Erlang) |
+| [`math-logic`](./math-logic)                           | Математическая логика и теория алгоритмов                     |
+| [`microprocessor-systems`](./microprocessor-systems)   | Микропроцессорные средства и системы                          |
+| [`os-and-networks`](./os-and-networks)                 | Операционные системы и сети                                   |
+| [`otik`](./otik)                                       | Теория информации и кодирования (конспекты)                   |
+| [`parallel-programming`](./parallel-programming)       | Параллельное программирование                                 |
+| [`software-architecture`](./software-architecture)     | Проектирование и архитектура программных систем               |
+| [`software-design`](./software-design)                 | Проектирование программного обеспечения                       |
+| [`software-testing`](./software-testing)               | Тестирование программного обеспечения (Java)                  |
 
 ## Рекомендации
 
 Для комфортной работы стоит установить fish и запускать его с окрудением:
+
 ```bash
 nix develop -c fish
 ```
