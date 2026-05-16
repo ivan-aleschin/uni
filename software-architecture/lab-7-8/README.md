@@ -293,32 +293,31 @@ classDiagram
 
 ```mermaid
 sequenceDiagram
-    actor User as Пользователь
-    participant Loop as Program (main loop)
+    actor User
+    participant Loop
     participant Scene
     participant Player
-    participant State as RunState → AttackState
+    participant State
     participant Enemy
-    participant Husk as PatrolStrategy
-    participant Events as GameEvents
+    participant Events
     participant Hud
 
-    Loop->>Scene: Update(dt)
-    Scene->>Player: Update(dt, scene)
-    Player->>State: HandleInput()
-    User-->>Player: D (бег)
-    State-->>Player: ChangeState(RunState)
-    User-->>Player: J (атака)
-    State-->>Player: ChangeState(AttackState)
-    Player->>Player: DealNailDamage(scene)
-    Player->>Enemy: TakeDamage(1)
-    Enemy-->>Events: RaiseEnemyDied(id)
-    Player->>Events: RaisePlayerScoredKill(1)
-    Events->>Hud: OnKill(total)
-    Loop->>Scene: Draw()
-    Scene->>Player: Draw()
-    Scene->>Enemy: Draw()
-    Loop->>Hud: Draw()
+    Main->>Scene: Update dt
+    Scene->>Player: Update dt scene
+    Player->>State: HandleInput
+    User-->>Player: keyD running
+    State-->>Player: ChangeState RunState
+    User-->>Player: keyJ attack
+    State-->>Player: ChangeState AttackState
+    Player->>Player: DealNailDamage scene
+    Player->>Enemy: TakeDamage 1
+    Enemy-->>Events: RaiseEnemyDied id
+    Player->>Events: RaisePlayerScoredKill 1
+    Events->>Hud: OnKill total
+    Main->>Scene: Draw
+    Scene->>Player: Draw
+    Scene->>Enemy: Draw
+    Main->>Hud: Draw
 ```
 
 ---
