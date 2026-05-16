@@ -9,6 +9,8 @@ int main() {
     Department department("Программная инженерия");
     DeansOffice dean(department);
 
+    // Один факультет, одна дисциплина «Архитектура ПО», три группы.
+    // Каждый преподаватель ведёт свою группу.
     Teacher ivanov("Иванов И.И.", "Архитектура ПО");
     Teacher petrov("Петров П.П.", "Архитектура ПО");
     Teacher sidorov("Сидоров С.С.", "Архитектура ПО");
@@ -19,19 +21,19 @@ int main() {
 
     std::vector<Teacher*> teachers{&ivanov, &petrov, &sidorov};
 
-    std::cout << "--- Неделя 1: все преподаватели подали успеваемость ---\n";
+    std::cout << "--- Неделя 1: все преподаватели подали успеваемость по своим группам ---\n";
     ivanov.submitGrades("PI-31", 1);
-    petrov.submitGrades("PI-31", 1);
-    sidorov.submitGrades("PI-31", 1);
+    petrov.submitGrades("PI-32", 1);
+    sidorov.submitGrades("PI-33", 1);
     dean.checkWeek(1, teachers);
 
-    std::cout << "\n--- Неделя 2: Петров не подал успеваемость ---\n";
+    std::cout << "\n--- Неделя 2: Петров (группа PI-32) не подал успеваемость ---\n";
     ivanov.submitGrades("PI-31", 2);
-    sidorov.submitGrades("PI-31", 2);
+    sidorov.submitGrades("PI-33", 2);
     dean.checkWeek(2, teachers);
 
-    std::cout << "\n--- Неделя 3: Иванов и Петров не подали успеваемость ---\n";
-    sidorov.submitGrades("PI-31", 3);
+    std::cout << "\n--- Неделя 3: Иванов (PI-31) и Петров (PI-32) не подали успеваемость ---\n";
+    sidorov.submitGrades("PI-33", 3);
     dean.checkWeek(3, teachers);
 
     return 0;

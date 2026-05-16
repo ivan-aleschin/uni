@@ -73,13 +73,15 @@ multiple_newlines_rule
 
 ## 4. Архитектура и UML-диаграммы
 
-| Класс | Роль из методички | Что делает |
-| --- | --- | --- |
-| `Expression` | AbstractExpression | Чисто виртуальный `interpret(Context&)`. |
-| `TabRule`, `QuotesRule`, `DashRule`, `PunctuationSpaceRule`, `MultipleSpacesRule`, `MultipleNewlinesRule` | TerminalExpression × 6 | Каждое правило применяет к `ctx.text` свой `std::regex_replace`. |
-| `CompositeRule` | NonterminalExpression | Хранит вектор вложенных `Expression` и при `interpret()` вызывает их по очереди. |
-| `Context` | Context | Структура с единственным полем `std::string text`. |
-| `main` (`src/main.cpp`) | Client | Читает файл, конфигурирует `CompositeRule` всеми шестью правилами, вызывает `interpret()`, печатает результат. |
+| Файл(ы) | Класс | Тип | Роль из методички | Что делает |
+| --- | --- | --- | --- | --- |
+| `include/Expression.h` | `Expression` | **абстрактный класс** (чисто виртуальный `interpret`) | **AbstractExpression** | Общий интерфейс всех правил грамматики корректора. |
+| `include/Context.h` | `Context` | **структура** (`struct`) | **Context** | Глобальное состояние интерпретатора — единственное поле `std::string text`, изменяемое правилами. |
+| `include/Rules.h` + `src/Rules.cpp` | `TabRule`, `QuotesRule`, `DashRule`, `PunctuationSpaceRule`, `MultipleSpacesRule`, `MultipleNewlinesRule` *(все наследуют от `Expression`)* | конкретные классы (6 шт.) | **TerminalExpression × 6** | По одному классу на каждую ошибку из задания. Каждое правило в `interpret()` применяет `std::regex_replace` к `ctx.text`. |
+| `include/Rules.h` + `src/Rules.cpp` | `CompositeRule` *(наследует от `Expression`)* | конкретный класс | **NonterminalExpression** | Содержит `vector<unique_ptr<Expression>>` и в `interpret()` вызывает все вложенные правила по очереди. По методичке нетерминальное правило — Composite. |
+| `src/main.cpp` | `main()` | функция | **Client** | Читает файл, конфигурирует `CompositeRule` всеми шестью правилами, вызывает `interpret()`, печатает результат до и после. |
+
+**Короткая защитная формулировка:** «`Expression` — абстрактный класс (AbstractExpression). От него наследуются 6 конкретных терминальных правил (по одному на тип ошибки) и `CompositeRule` — нетерминальное правило, реализованное как Composite. Клиент `main` конструирует дерево из одного CompositeRule с 6 терминалами в нём и запускает интерпретацию через единственный `interpret(Context&)`. `Context` — структура, хранящая корректируемый текст, передаётся по ссылке во все правила.»
 
 ### 4.1. UML-диаграмма классов
 
