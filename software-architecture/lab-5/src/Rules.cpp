@@ -40,6 +40,16 @@ void MultipleNewlinesRule::interpret(Context& ctx) {
     ctx.text = std::regex_replace(ctx.text, std::regex("\n{3,}"), "\n\n");
 }
 
+// Порядок важен: табы → кавычки → тире → пунктуация → пробелы → переносы строк.
+CompositeRule::CompositeRule() {
+    add(std::make_unique<TabRule>());
+    add(std::make_unique<QuotesRule>());
+    add(std::make_unique<DashRule>());
+    add(std::make_unique<PunctuationSpaceRule>());
+    add(std::make_unique<MultipleSpacesRule>());
+    add(std::make_unique<MultipleNewlinesRule>());
+}
+
 void CompositeRule::add(std::unique_ptr<Expression> rule) {
     rules_.push_back(std::move(rule));
 }

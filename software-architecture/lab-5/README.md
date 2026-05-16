@@ -78,10 +78,10 @@ multiple_newlines_rule
 | `include/Expression.h` | `Expression` | **абстрактный класс** (чисто виртуальный `interpret`) | **AbstractExpression** | Общий интерфейс всех правил грамматики корректора. |
 | `include/Context.h` | `Context` | **структура** (`struct`) | **Context** | Глобальное состояние интерпретатора — единственное поле `std::string text`, изменяемое правилами. |
 | `include/Rules.h` + `src/Rules.cpp` | `TabRule`, `QuotesRule`, `DashRule`, `PunctuationSpaceRule`, `MultipleSpacesRule`, `MultipleNewlinesRule` *(все наследуют от `Expression`)* | конкретные классы (6 шт.) | **TerminalExpression × 6** | По одному классу на каждую ошибку из задания. Каждое правило в `interpret()` применяет `std::regex_replace` к `ctx.text`. |
-| `include/Rules.h` + `src/Rules.cpp` | `CompositeRule` *(наследует от `Expression`)* | конкретный класс | **NonterminalExpression** | Содержит `vector<unique_ptr<Expression>>` и в `interpret()` вызывает все вложенные правила по очереди. По методичке нетерминальное правило — Composite. |
-| `src/main.cpp` | `main()` | функция | **Client** | Читает файл, конфигурирует `CompositeRule` всеми шестью правилами, вызывает `interpret()`, печатает результат до и после. |
+| `include/Rules.h` + `src/Rules.cpp` | `CompositeRule` *(наследует от `Expression`)* | конкретный класс | **NonterminalExpression** | Содержит `vector<unique_ptr<Expression>>`. Конструктор самостоятельно собирает все шесть терминальных правил в нужном порядке. В `interpret()` вызывает их по очереди. |
+| `src/main.cpp` | `main()` | функция | **Client** | Читает файл, создаёт `CompositeRule`, вызывает `interpret()`, печатает результат до и после. О конкретных терминальных правилах не знает ничего. |
 
-**Короткая защитная формулировка:** «`Expression` — абстрактный класс (AbstractExpression). От него наследуются 6 конкретных терминальных правил (по одному на тип ошибки) и `CompositeRule` — нетерминальное правило, реализованное как Composite. Клиент `main` конструирует дерево из одного CompositeRule с 6 терминалами в нём и запускает интерпретацию через единственный `interpret(Context&)`. `Context` — структура, хранящая корректируемый текст, передаётся по ссылке во все правила.»
+**Короткая защитная формулировка:** «`Expression` — абстрактный класс (AbstractExpression). От него наследуются 6 конкретных терминальных правил (по одному на тип ошибки) и `CompositeRule` — нетерминальное правило, реализованное как Composite. `CompositeRule` в конструкторе сам собирает дерево из шести терминалов — клиент `main` не знает ни об одном из них и просто вызывает `interpret(Context&)` на корневом нетерминале. `Context` — структура, хранящая корректируемый текст, передаётся по ссылке во все правила.»
 
 ### 4.1. UML-диаграмма классов
 
@@ -149,12 +149,8 @@ sequenceDiagram
     participant Ctx as Context
 
     Client->>Ctx: text = readFile()
-    Client->>Comp: add(TabRule)
-    Client->>Comp: add(QuotesRule)
-    Client->>Comp: add(DashRule)
-    Client->>Comp: add(PunctuationSpaceRule)
-    Client->>Comp: add(MultipleSpacesRule)
-    Client->>Comp: add(MultipleNewlinesRule)
+    Client->>Comp: <<create>>
+    Note right of Comp: конструктор сам добавляет<br/>все шесть терминальных правил
     Client->>Comp: interpret(ctx)
     Comp->>T1: interpret(ctx)
     T1-->>Ctx: text без табов
@@ -189,7 +185,7 @@ make clean      # очистка
 
 ### Порядок применения правил (важен)
 
-Клиент в `main.cpp` добавляет правила в строго определённом порядке:
+`CompositeRule` добавляет правила в конструкторе в строго определённом порядке:
 
 1. **`TabRule`** — первым, чтобы все табы стали обычными пробелами и дальнейшие правила работали единообразно.
 2. **`QuotesRule`** — до правил пробелов и тире, чтобы случайный пробел или дефис внутри кавычек не повредил уже корректным цитатам.

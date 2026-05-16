@@ -37,22 +37,7 @@ int main(int argc, char** argv) {
         std::cout << '\n';
     }
 
-    // Клиент собирает грамматику. Порядок правил важен:
-    //   TabRule — первым, чтобы привести табы к пробелам;
-    //   QuotesRule — до пунктуации, чтобы не повредить содержимое кавычек;
-    //   DashRule — до правила множественных пробелов (требует ровно " - ");
-    //   PunctuationSpaceRule — до MultipleSpacesRule, иначе у нас останутся
-    //   одинарные «лишние» пробелы перед точкой/запятой;
-    //   MultipleSpacesRule — после всего, что вводит лишние пробелы;
-    //   MultipleNewlinesRule — последним, после возможной нормализации.
     CompositeRule corrector;
-    corrector.add(std::make_unique<TabRule>());
-    corrector.add(std::make_unique<QuotesRule>());
-    corrector.add(std::make_unique<DashRule>());
-    corrector.add(std::make_unique<PunctuationSpaceRule>());
-    corrector.add(std::make_unique<MultipleSpacesRule>());
-    corrector.add(std::make_unique<MultipleNewlinesRule>());
-
     corrector.interpret(ctx);
 
     std::cout << "\n=== Откорректированный текст ===\n" << ctx.text;

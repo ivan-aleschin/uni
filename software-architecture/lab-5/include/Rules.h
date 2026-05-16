@@ -40,12 +40,14 @@ public:
 };
 
 // NonterminalExpression — последовательно применяет все вложенные правила
-// к одному и тому же контексту.
+// к одному и тому же контексту. Конструктор собирает все шесть терминальных
+// правил в правильном порядке, скрывая эту деталь от клиента.
 class CompositeRule : public Expression {
 public:
-    void add(std::unique_ptr<Expression> rule);
+    CompositeRule();
     void interpret(Context& ctx) override;
 
 private:
+    void add(std::unique_ptr<Expression> rule);
     std::vector<std::unique_ptr<Expression>> rules_;
 };
