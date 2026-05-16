@@ -19,6 +19,9 @@ public:
     // Подписаться на преподавателя как Observer.
     void watch(Teacher& teacher);
 
+    // Отписаться от преподавателя (тот больше не отслеживается).
+    void unwatch(Teacher& teacher);
+
     // Колбэк наблюдателя.
     void update(const SubmissionInfo& info) override;
 

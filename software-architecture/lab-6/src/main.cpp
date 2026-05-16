@@ -36,5 +36,14 @@ int main() {
     sidorov.submitGrades("PI-33", 3);
     dean.checkWeek(3, teachers);
 
+    std::cout << "\n--- Неделя 4: Сидоров уходит на кафедру — деканат снимает наблюдение ---\n";
+    dean.unwatch(sidorov);
+    std::vector<Teacher*> remainingTeachers{&ivanov, &petrov};
+
+    // Иванов сдал. Петров и Сидоров — нет.
+    // Сидоров больше не в списке наблюдения, поэтому деканат его не штрафует.
+    ivanov.submitGrades("PI-31", 4);
+    dean.checkWeek(4, remainingTeachers);
+
     return 0;
 }

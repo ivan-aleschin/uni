@@ -11,6 +11,11 @@ void DeansOffice::watch(Teacher& teacher) {
     teacher.registerObserver(this);
 }
 
+void DeansOffice::unwatch(Teacher& teacher) {
+    teacher.removeObserver(this);
+    std::cout << "[DeansOffice] " << teacher.name() << " снят с наблюдения\n";
+}
+
 void DeansOffice::update(const SubmissionInfo& info) {
     received_.emplace(info.teacher, info.week);
     std::cout << "[DeansOffice] получено уведомление: " << info.teacher
