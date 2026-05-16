@@ -313,7 +313,7 @@ sequenceDiagram
     Player->>Player: DealNailDamage(scene)
     Player->>Enemy: TakeDamage(1)
     Enemy-->>Events: RaiseEnemyDied(id)
-    Player->>Events: RaisePlayerScoredKill(+1)
+    Player->>Events: RaisePlayerScoredKill(1)
     Events->>Hud: OnKill(total)
     Loop->>Scene: Draw()
     Scene->>Player: Draw()
