@@ -61,6 +61,8 @@ build.ninja
 software-architecture/lab-1/AbstractFactory/transport_factory
 software-architecture/lab-2/transport_system
 software-architecture/lab-3/airplane_control
+software-architecture/lab-5/text_corrector
+software-architecture/lab-6/grade_tracker
 
 # =========================
 # MSVC / Visual Studio
