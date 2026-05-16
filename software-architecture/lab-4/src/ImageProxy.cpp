@@ -1,56 +1,66 @@
-#include "../include/ImageProxy.h"
-#include <QDebug>
-#include <QPainter>
+#include "ImageProxy.h"
+#include "RealImage.h"
 
-ImageProxy::ImageProxy(const QString& filename, int x, int y, int width, int height)
-    : filename(filename), x(x), y(y), width(width), height(height) {
-    qDebug() << "[Proxy] Создан заместитель (суррогат) для изображения:" << filename;
+#include <QImageReader>
+#include <QPainter>
+#include <QPen>
+
+#include <iostream>
+
+ImageProxy::ImageProxy(const QString& filename, int x, int y)
+    : filename_(filename), x_(x), y_(y) {
+    // Читаем только метаданные файла, чтобы знать размеры реального
+    // изображения, но не загружать сами пиксели.
+    QImageReader reader(filename_);
+    QSize size = reader.size();
+    if (!size.isValid()) {
+        std::cerr << "[ImageProxy] Не удалось прочитать размеры файла "
+                  << filename_.toStdString() << ", использую 400x300\n";
+        size = QSize(400, 300);
+    }
+    width_ = size.width();
+    height_ = size.height();
+    std::cerr << "[ImageProxy] Создан заместитель " << width_ << "x" << height_
+              << " для " << filename_.toStdString() << "\n";
 }
 
+ImageProxy::~ImageProxy() = default;
+
 void ImageProxy::draw(QPainter* painter) {
-    if (realImage) {
-        realImage->draw(painter);
-    } else if (painter) {
-        painter->save();
-        
-        // Рисуем рамку (бокс)
-        QPen pen(Qt::DashLine);
-        pen.setColor(Qt::darkGray);
-        pen.setWidth(2);
-        painter->setPen(pen);
-        painter->drawRect(x, y, width, height);
-        
-        // Рисуем текст внутри бокса
-        painter->setPen(Qt::black);
-        painter->drawText(QRect(x, y, width, height), Qt::AlignCenter, 
-                          "Placeholder\n[Double Right-Click to Load]\n" + filename);
-                          
-        painter->restore();
+    if (real_) {
+        real_->draw(painter);
+        return;
     }
+    painter->save();
+    QPen pen(Qt::darkGray);
+    pen.setWidth(2);
+    pen.setStyle(Qt::DashLine);
+    painter->setPen(pen);
+    painter->setBrush(Qt::NoBrush);
+    painter->drawRect(x_, y_, width_, height_);
+    painter->setPen(Qt::black);
+    painter->drawText(QRect(x_, y_, width_, height_), Qt::AlignCenter,
+                      filename_ + QString("\n%1×%2\n(двойной ПКМ — загрузить)")
+                                      .arg(width_).arg(height_));
+    painter->restore();
 }
 
 void ImageProxy::move(int dx, int dy) {
-    if (realImage) {
-        realImage->move(dx, dy);
-    } else {
-        x += dx;
-        y += dy;
-        qDebug() << "[Proxy] Перемещение ПУСТОГО БОКСА для" << filename << "на новые координаты:" << x << "," << y;
+    x_ += dx;
+    y_ += dy;
+    if (real_) {
+        real_->move(dx, dy);
     }
 }
 
-void ImageProxy::doubleRightClick() {
-    if (!realImage) {
-        qDebug() << "[Proxy] Двойной клик правой кнопкой мыши! Загрузка реального изображения с диска...";
-        realImage = std::make_unique<RealImage>(filename, x, y, width, height);
-    } else {
-        realImage->doubleRightClick();
+void ImageProxy::load() {
+    if (real_) {
+        return;
     }
+    std::cerr << "[ImageProxy] Двойной ПКМ — создаю RealImage\n";
+    real_ = std::make_unique<RealImage>(filename_, x_, y_, width_, height_);
 }
 
-QRect ImageProxy::getBounds() const {
-    if (realImage) {
-        return realImage->getBounds();
-    }
-    return QRect(x, y, width, height);
+QRect ImageProxy::bounds() const {
+    return QRect(x_, y_, width_, height_);
 }

@@ -1,22 +1,31 @@
 #pragma once
-#include "IGraphic.h"
-#include "RealImage.h"
+
+#include "Image.h"
+
 #include <QString>
 #include <memory>
 
-class ImageProxy : public IGraphic {
-private:
-    std::unique_ptr<RealImage> realImage;
-    QString filename;
-    int x, y;
-    int width, height;
+class RealImage;
 
+// Proxy — заместитель. Знает размеры реального изображения (читает
+// метаданные файла через QImageReader, без загрузки пикселей) и
+// перемещает «бокс» по холсту. Реальный объект создаётся только
+// при вызове load() — в нашей задаче это двойной щелчок ПКМ.
+class ImageProxy : public Image {
 public:
-    ImageProxy(const QString& filename, int x, int y, int width, int height);
-    ~ImageProxy() override = default;
+    ImageProxy(const QString& filename, int x, int y);
+    ~ImageProxy() override;
 
     void draw(QPainter* painter) override;
     void move(int dx, int dy) override;
-    void doubleRightClick() override;
-    QRect getBounds() const override;
+    void load() override;
+    QRect bounds() const override;
+
+private:
+    QString filename_;
+    int x_;
+    int y_;
+    int width_;
+    int height_;
+    std::unique_ptr<RealImage> real_;
 };

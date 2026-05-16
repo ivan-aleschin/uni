@@ -1,21 +1,26 @@
 #pragma once
-#include "IGraphic.h"
-#include <QString>
+
+#include "Image.h"
+
 #include <QImage>
+#include <QString>
 
-class RealImage : public IGraphic {
-private:
-    QString filename;
-    int x, y;
-    int width, height;
-    QImage image;
-
+// RealSubject — реальный объект. Загружает пиксели изображения с диска
+// (дорогая операция) и рисует их на холсте.
+class RealImage : public Image {
 public:
     RealImage(const QString& filename, int x, int y, int width, int height);
-    ~RealImage() override = default;
 
     void draw(QPainter* painter) override;
     void move(int dx, int dy) override;
-    void doubleRightClick() override;
-    QRect getBounds() const override;
+    void load() override;
+    QRect bounds() const override;
+
+private:
+    QString filename_;
+    int x_;
+    int y_;
+    int width_;
+    int height_;
+    QImage image_;
 };

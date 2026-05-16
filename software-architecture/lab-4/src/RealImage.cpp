@@ -1,42 +1,37 @@
-#include "../include/RealImage.h"
-#include <QDebug>
+#include "RealImage.h"
+
 #include <QPainter>
 
+#include <iostream>
+
 RealImage::RealImage(const QString& filename, int x, int y, int width, int height)
-    : filename(filename), x(x), y(y), width(width), height(height) {
-    qDebug() << "[RealImage] Загрузка изображения" << filename << "с диска в память...";
-    
-    // Пытаемся загрузить реальное изображение
-    if (!image.load(filename)) {
-        qWarning() << "[RealImage] Не удалось найти файл:" << filename << ". Создан плейсхолдер ошибки.";
-        // Если картинки нет, создаем заглушку с текстом ошибки
-        image = QImage(width, height, QImage::Format_RGB32);
-        image.fill(Qt::darkGray);
-        QPainter p(&image);
-        p.setPen(Qt::white);
-        p.drawText(image.rect(), Qt::AlignCenter, "Image Not Found\n" + filename);
-    } else {
-        // Масштабируем до требуемых размеров
-        image = image.scaled(width, height, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+    : filename_(filename), x_(x), y_(y), width_(width), height_(height) {
+    std::cerr << "[RealImage] Загрузка пикселей с диска: "
+              << filename_.toStdString() << "\n";
+    if (!image_.load(filename_)) {
+        std::cerr << "[RealImage] Не удалось загрузить файл: "
+                  << filename_.toStdString() << "\n";
+        return;
     }
+    image_ = image_.scaled(width_, height_, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 }
 
 void RealImage::draw(QPainter* painter) {
-    if (painter && !image.isNull()) {
-        painter->drawImage(x, y, image);
+    if (!image_.isNull()) {
+        painter->drawImage(x_, y_, image_);
     }
 }
 
 void RealImage::move(int dx, int dy) {
-    x += dx;
-    y += dy;
-    qDebug() << "[RealImage] Перемещение реального изображения на новые координаты:" << x << "," << y;
+    x_ += dx;
+    y_ += dy;
 }
 
-void RealImage::doubleRightClick() {
-    qDebug() << "[RealImage] Изображение" << filename << "уже загружено.";
+void RealImage::load() {
+    // Уже загружено в конструкторе. Метод присутствует для соответствия
+    // интерфейсу Subject.
 }
 
-QRect RealImage::getBounds() const {
-    return QRect(x, y, width, height);
+QRect RealImage::bounds() const {
+    return QRect(x_, y_, width_, height_);
 }
