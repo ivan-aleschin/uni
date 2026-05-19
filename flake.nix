@@ -16,6 +16,8 @@
         {
           default = pkgs.mkShell {
             packages = with pkgs; [
+              git
+              git-cliff
               # --- C/C++ ---
               gcc
               gnumake
