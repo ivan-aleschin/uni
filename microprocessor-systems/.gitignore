@@ -1,8 +1,36 @@
 # =========================
-# SystemVerilog / Icarus / GTKWave
+# SystemVerilog / Icarus / GTKWave / Verilator
 # =========================
+# Симуляторы кладут свои бинарники с именами sim, sim_v, sim_check, sim_lab14,
+# sim_lr7, sim_lr11, sim_lr13 и т.п. — закрываем оба варианта префикса.
 *sim
+sim_*
+
 *.vcd
 *.vvp
-
+*.fst
 obj_dir/
+
+# =========================
+# RISC-V кросс-компилятор (lab-8)
+# =========================
+*.o
+*.elf
+disasm.S
+# .mem НЕ игнорируем — init_instr.mem, init_data.mem, program.mem
+# нужны для $readmemh в симуляции и должны коммититься.
+
+# =========================
+# Vivado
+# =========================
+*.wdb
+*.jou
+.Xil/
+*.str
+*.pb
+*.dir/
+xsim.dir/
+.cache/
+.runs/
+.sim/
+.hw/
