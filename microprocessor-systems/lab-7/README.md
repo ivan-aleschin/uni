@@ -140,6 +140,28 @@ sys_clk_rst_gen.sv
 
 Готовый файл конфигурации волн — `lab_13_tb_processor_system_behav.wcfg` — можно открыть через **File → Open Waveform Configuration** в окне симулятора.
 
+### Локальная симуляция через Verilator (smoke-test)
+
+В Vivado есть встроенная библиотека `unisim` с примитивом `BUFG` (clock buffer), которым пользуется `sys_clk_rst_gen`. Для Verilator нужна заглушка — она лежит в `bufg_stub.sv` (этот файл **не нужно добавлять в Vivado-проект**).
+
+```bash
+cd microprocessor-systems/lab-7
+verilator --binary --sv --timing \
+  -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-UNDRIVEN -Wno-MULTIDRIVEN -Wno-MULTITOP \
+  --top-module lab_13_tb_processor_system \
+  bufg_stub.sv \
+  memory_pkg.sv alu_opcodes_pkg.sv decoder_pkg.sv csr_pkg.sv peripheral_pkg.sv \
+  lab_03.register_file.sv lab_02.alu.sv decoder.sv instr_mem.sv \
+  lab_06.data_mem.sv lab_08.lsu.sv lab_10.csr.sv lab_10.irq.sv \
+  sys_clk_rst_gen.sv hex_digits.sv hex_sb_ctrl.sv \
+  PS2Receiver.sv ps2_sb_ctrl.sv \
+  processor_core.sv processor_system.sv lab_13.tb_processor_system.sv \
+  -o sim_lr13 \
+  && ./obj_dir/sim_lr13
+```
+
+Симуляция длится 4 мс (`#4ms $finish` в тестбенче). Тестбенч пассивный — нет PASS/FAIL, поэтому смотрите waveform отдельно.
+
 ### Шаг 6. Синтез и прошивка платы (опционально)
 
 1. **Run Synthesis** → **Run Implementation** → **Generate Bitstream**.
