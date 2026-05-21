@@ -57,6 +57,9 @@
               iverilog      # iverilog: запуск testbench с initial/delays/$display
               verilator    # для лаб с import pkg::* (лаба 2+)
               gtkwave      # просмотр .vcd временных диаграмм
+              # --- RISC-V кросс-компилятор (ЛР14: кросс-компиляция C → rv32i) ---
+              pkgsCross.riscv32-embedded.buildPackages.gcc
+              pkgsCross.riscv32-embedded.buildPackages.binutils
               # --- LSP серверы для Neovim ---
               lua-language-server    # Lua (конфиг Neovim / скрипты)
               pyright                # Python (статический анализ + LSP)
