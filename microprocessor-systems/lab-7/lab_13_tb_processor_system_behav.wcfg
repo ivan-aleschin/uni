@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="lab_13_tb_processor_system_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="alu_opcodes_pkg" />
+            <top_module name="csr_pkg" />
+            <top_module name="decoder_pkg" />
+            <top_module name="glbl" />
+            <top_module name="lab_13_tb_processor_system" />
+            <top_module name="memory_pkg" />
+            <top_module name="peripheral_pkg" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="120.679999 us"></ZoomStartTime>
+      <ZoomEndTime time="919.680000 us"></ZoomEndTime>
+      <Cursor1Time time="214.679999 us"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="167"></NameColumnWidth>
+      <ValueColumnWidth column_width="110"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="40" />
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/clk_i">
+      <obj_property name="ElementShortName">clk_i</obj_property>
+      <obj_property name="ObjectShortName">clk_i</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/resetn">
+      <obj_property name="ElementShortName">resetn</obj_property>
+      <obj_property name="ObjectShortName">resetn</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/sw_i">
+      <obj_property name="ElementShortName">sw_i[15:0]</obj_property>
+      <obj_property name="ObjectShortName">sw_i[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/led_o">
+      <obj_property name="ElementShortName">led_o[15:0]</obj_property>
+      <obj_property name="ObjectShortName">led_o[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/ps2_clk">
+      <obj_property name="ElementShortName">ps2_clk</obj_property>
+      <obj_property name="ObjectShortName">ps2_clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/ps2_dat">
+      <obj_property name="ElementShortName">ps2_dat</obj_property>
+      <obj_property name="ObjectShortName">ps2_dat</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/hex_led_o">
+      <obj_property name="ElementShortName">hex_led_o[6:0]</obj_property>
+      <obj_property name="ObjectShortName">hex_led_o[6:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/hex_sel_o">
+      <obj_property name="ElementShortName">hex_sel_o[7:0]</obj_property>
+      <obj_property name="ObjectShortName">hex_sel_o[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/DUT/sysclk">
+      <obj_property name="ElementShortName">sysclk</obj_property>
+      <obj_property name="ObjectShortName">sysclk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/DUT/rst">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/DUT/instr_addr">
+      <obj_property name="ElementShortName">instr_addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">instr_addr[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/DUT/mem_req">
+      <obj_property name="ElementShortName">mem_req</obj_property>
+      <obj_property name="ObjectShortName">mem_req</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/DUT/mem_we">
+      <obj_property name="ElementShortName">mem_we</obj_property>
+      <obj_property name="ObjectShortName">mem_we</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/DUT/mem_wd">
+      <obj_property name="ElementShortName">mem_wd[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_wd[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/DUT/mem_rd">
+      <obj_property name="ElementShortName">mem_rd[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_rd[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/DUT/irq_req">
+      <obj_property name="ElementShortName">irq_req</obj_property>
+      <obj_property name="ObjectShortName">irq_req</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/DUT/irq_ret">
+      <obj_property name="ElementShortName">irq_ret</obj_property>
+      <obj_property name="ObjectShortName">irq_ret</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/DUT/core/irq_ret_o">
+      <obj_property name="ElementShortName">irq_ret_o</obj_property>
+      <obj_property name="ObjectShortName">irq_ret_o</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/DUT/ps2_ctrl/interrupt_request_o">
+      <obj_property name="ElementShortName">interrupt_request_o</obj_property>
+      <obj_property name="ObjectShortName">interrupt_request_o</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/DUT/ps2_ctrl/scan_code">
+      <obj_property name="ElementShortName">scan_code[7:0]</obj_property>
+      <obj_property name="ObjectShortName">scan_code[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/DUT/ps2_ctrl/scan_code_is_unread">
+      <obj_property name="ElementShortName">scan_code_is_unread</obj_property>
+      <obj_property name="ObjectShortName">scan_code_is_unread</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/DUT/ps2_ctrl/keycode">
+      <obj_property name="ElementShortName">keycode[7:0]</obj_property>
+      <obj_property name="ObjectShortName">keycode[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/DUT/ps2_ctrl/keycode_valid">
+      <obj_property name="ElementShortName">keycode_valid</obj_property>
+      <obj_property name="ObjectShortName">keycode_valid</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/DUT/ps2_ctrl/reset_req">
+      <obj_property name="ElementShortName">reset_req</obj_property>
+      <obj_property name="ObjectShortName">reset_req</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/DUT/hex_ctrl/hex0">
+      <obj_property name="ElementShortName">hex0[3:0]</obj_property>
+      <obj_property name="ObjectShortName">hex0[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/DUT/hex_ctrl/hex1">
+      <obj_property name="ElementShortName">hex1[3:0]</obj_property>
+      <obj_property name="ObjectShortName">hex1[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/DUT/hex_ctrl/hex2">
+      <obj_property name="ElementShortName">hex2[3:0]</obj_property>
+      <obj_property name="ObjectShortName">hex2[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/DUT/hex_ctrl/hex3">
+      <obj_property name="ElementShortName">hex3[3:0]</obj_property>
+      <obj_property name="ObjectShortName">hex3[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/DUT/hex_ctrl/hex4">
+      <obj_property name="ElementShortName">hex4[3:0]</obj_property>
+      <obj_property name="ObjectShortName">hex4[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/DUT/hex_ctrl/hex5">
+      <obj_property name="ElementShortName">hex5[3:0]</obj_property>
+      <obj_property name="ObjectShortName">hex5[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/DUT/hex_ctrl/hex6">
+      <obj_property name="ElementShortName">hex6[3:0]</obj_property>
+      <obj_property name="ObjectShortName">hex6[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/DUT/hex_ctrl/hex7">
+      <obj_property name="ElementShortName">hex7[3:0]</obj_property>
+      <obj_property name="ObjectShortName">hex7[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/DUT/hex_ctrl/bitmask">
+      <obj_property name="ElementShortName">bitmask[7:0]</obj_property>
+      <obj_property name="ObjectShortName">bitmask[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/DUT/core/mie_data">
+      <obj_property name="ElementShortName">mie_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mie_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/DUT/core/mie_data[0]">
+      <obj_property name="ElementShortName">[0]</obj_property>
+      <obj_property name="ObjectShortName">[0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/DUT/core/irq_signal">
+      <obj_property name="ElementShortName">irq_signal</obj_property>
+      <obj_property name="ObjectShortName">irq_signal</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/DUT/core/int_ctrl/irq_o">
+      <obj_property name="ElementShortName">irq_o</obj_property>
+      <obj_property name="ObjectShortName">irq_o</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/lab_13_tb_processor_system/DUT/core/int_ctrl/mie_i">
+      <obj_property name="ElementShortName">mie_i</obj_property>
+      <obj_property name="ObjectShortName">mie_i</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/DUT/core/pc_reg">
+      <obj_property name="ElementShortName">pc_reg[31:0]</obj_property>
+      <obj_property name="ObjectShortName">pc_reg[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/lab_13_tb_processor_system/DUT/core/mtvec_data">
+      <obj_property name="ElementShortName">mtvec_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mtvec_data[31:0]</obj_property>
+   </wvobject>
+</wave_config>
