@@ -8,10 +8,11 @@
 */
 module processor_system (
   input  logic clk_i,
-  input  logic rst_i,
-  input  logic irq_req_i,
-  output logic irq_ret_o
+  input  logic rst_i
 );
+
+  logic irq_req;
+  logic irq_ret;
 
   // ---------------------------------------------------------------------------
   // Сигналы
@@ -43,7 +44,7 @@ module processor_system (
     .stall_i      (core_stall),
     .instr_i      (instr),
     .mem_rd_i     (core_mem_rd),
-    .irq_req_i    (irq_req_i),
+    .irq_req_i    (irq_req),
 
     .instr_addr_o (instr_addr),
     .mem_addr_o   (core_mem_addr),
@@ -51,7 +52,7 @@ module processor_system (
     .mem_req_o    (core_mem_req),
     .mem_we_o     (core_mem_we),
     .mem_wd_o     (core_mem_wd),
-    .irq_ret_o    (irq_ret_o)
+    .irq_ret_o    (irq_ret)
   );
 
   // ---------------------------------------------------------------------------

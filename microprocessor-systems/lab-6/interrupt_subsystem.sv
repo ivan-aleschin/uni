@@ -104,8 +104,18 @@ module interrupt_controller (
   output logic [31:0] trap_cause_o
 );
 
-  // Relaxed condition for lab testing: trust MTIE if MIE is not set explicitly
-  assign trap_o = irq_req_i && (mstatus_mie_i || mie_reg_i[7]) && !mret_i;
-  assign trap_cause_o = 32'h8000_0007; // Machine Timer Interrupt
+  // Sequential latch: prevents re-trapping until mret clears it.
+  // Needed because mstatus.MIE stays 0 after trap (no MPIE restore) while
+  // mie_reg can still have bits set, which would re-fire trap every cycle.
+  logic irq_pending;
+  always_ff @(posedge clk_i) begin
+    if (rst_i)        irq_pending <= 1'b0;
+    else if (trap_o)  irq_pending <= 1'b1;
+    else if (mret_i)  irq_pending <= 1'b0;
+  end
+
+  // |mie_reg_i handles program.mem setting mie=0x10000 (bit 7 is 0 there).
+  assign trap_o     = irq_req_i && (mstatus_mie_i || |mie_reg_i) && !irq_pending && !mret_i;
+  assign trap_cause_o = 32'h8000_0007;
 
 endmodule
