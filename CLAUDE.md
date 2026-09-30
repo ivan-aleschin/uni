@@ -42,6 +42,7 @@ nix shell nixpkgs#poppler-utils -c pdftotext file.pdf out.txt
 | `parallel-programming/` | C# (.NET) + C++ AVX | `dotnet build *.sln`; SIMD-проекты изначально под Windows/MSVC |
 | `software-architecture/lab-1..3` | C++ + `Makefile` | `make` в директории лабы (`./transport_factory`, `./transport_system`, `./airplane_control`) |
 | `software-architecture/lab-4..6` | C++ (+ Qt6 где нужен GUI) | `make` (см. README конкретной лабы) |
+| `software-quality/lab-*` | C# (.NET 8) | `dotnet run` в директории лабы; только C# (требование преподавателя), вариант 1 |
 | `software-testing/{tlabs-main,testing-java-lab-*}` | Java 11 + Maven (JUnit 5, Mockito, JaCoCo) | `mvn test` |
 
 Предметы, в которых только `*.md`-отчёты (`electronics/`, `human-machine-interface/`, `internet-programming/`, `math-logic/`, `otik/`, `software-design/`), кода для сборки не содержат.

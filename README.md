@@ -22,6 +22,7 @@
 | [`parallel-programming`](./parallel-programming)       | Параллельное программирование                                 |
 | [`software-architecture`](./software-architecture)     | Проектирование и архитектура программных систем               |
 | [`software-design`](./software-design)                 | Проектирование программного обеспечения                       |
+| [`software-quality`](./software-quality)               | Управление качеством программного обеспечения                 |
 | [`software-testing`](./software-testing)               | Тестирование программного обеспечения (Java)                  |
 
 ## Рекомендации
