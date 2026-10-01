@@ -103,7 +103,9 @@
 
 ```fish
 cd ~/repos/uni/compilers/lab-2/cpp
-make && ./lab2 examples/var1.txt   # строки с клавиатуры; пустая — выход
+make && ./lab2 examples/var1.txt   # 1. обычный ДКА; строки с клавиатуры, пустая — выход
+./lab2 examples/hanging.txt        # 2. висячие вершины
+./lab2 examples/var3_nd.txt        # 3. НКА → ДКА
 ./lab2 examples/var3_nd.txt ab aebf a
 make test                          # автотесты
 make clean

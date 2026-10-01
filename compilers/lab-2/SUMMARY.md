@@ -101,7 +101,9 @@
 
 ```fish
 cd ~/repos/uni/compilers/lab-2
-python3 main.py examples/var1.txt               # строки с клавиатуры; пустая — выход
+python3 main.py examples/var1.txt               # 1. обычный ДКА; строки с клавиатуры, пустая — выход
+python3 main.py examples/hanging.txt            # 2. висячие вершины
+python3 main.py examples/var3_nd.txt            # 3. НКА → ДКА
 python3 main.py examples/var3_nd.txt ab aebf a  # строки аргументами
 bash tests/run_tests.sh                         # автотесты
 ```
