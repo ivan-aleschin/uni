@@ -1,0 +1,5 @@
+examples/err_05_counts.emark:1:1: семантическая ошибка: в <block> с rows=0 ожидается 3 <column>, а найдено 2
+examples/err_05_counts.emark:5:1: семантическая ошибка: в <block> с rows=2 ожидается 2 <row>, а найдено 1
+examples/err_05_counts.emark:7:2: семантическая ошибка: в <block> с rows=2 ожидается 2 <row>, а встретился <column>
+examples/err_05_counts.emark:10:2: семантическая ошибка: блок columns=2: в каждой <row> ожидается 2 <column>, а найдено 1
+код возврата: 1

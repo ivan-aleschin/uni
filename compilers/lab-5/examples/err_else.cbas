@@ -1,0 +1,4 @@
+a = 1
+if a == 1 { print "да"; }
+print "между";
+else { print "нет"; }

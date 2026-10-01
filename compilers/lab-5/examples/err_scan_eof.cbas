@@ -1,0 +1,3 @@
+print "Введите число:";
+scan x;
+print "x = ", x;

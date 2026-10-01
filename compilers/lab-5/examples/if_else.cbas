@@ -1,0 +1,22 @@
+a = 7
+b = 12
+if a < b { print a, " < ", b; }
+if a > b { print a, " > ", b; } else { print a, " не больше ", b; }
+if a + 5 == b { print a, " + 5 == ", b; }
+if a != b { print a, " != ", b; }
+
+print "Чётность чисел 1..6:";
+for i = 1 to 7 {
+    if i - i/2*2 == 0 {
+        print "  ", i, " чётное";
+    } else {
+        print "  ", i, " нечётное";
+    }
+}
+
+x = 0 - 3
+if x < 0 {
+    if x < 0 - 10 { print "x < -10"; } else { print "-10 <= x < 0"; }
+} else {
+    print "x >= 0";
+}

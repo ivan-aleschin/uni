@@ -1,0 +1,6 @@
+print "Введите два числа:";
+scan x;
+scan y;
+print x, " + ", y, " = ", x + y;
+print x, " * ", y, " = ", x * y;
+print x, " / ", y, " = ", x / y;

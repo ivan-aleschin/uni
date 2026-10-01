@@ -1,0 +1,14 @@
+print "Простые числа меньше N. Введите N:";
+scan n;
+count = 0
+for p = 2 to n {
+    prime = 1
+    for d = 2 to p {
+        if p - p/d*d == 0 { prime = 0 }
+    }
+    if prime == 1 {
+        print p;
+        count = count + 1
+    }
+}
+print "Всего простых: ", count;

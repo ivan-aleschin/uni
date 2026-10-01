@@ -1,0 +1,21 @@
+<block rows=0 columns=3>
+	<column width=50>а</column>
+	<column width=40>б</column>
+	<column>в</column>
+</block>
+<block rows=2 columns=0>
+	<row>нет height у непоследней строки</row>
+	<row>последняя</row>
+</block>
+<block rows=0 columns=2>
+	<column width=10>
+		<block rows=30 columns=11>
+		</block>
+	</column>
+	<column width=70>
+		<block rows=2 columns=0>
+			<row height=20>а</row>
+			<row height=5>б</row>
+		</block>
+	</column>
+</block>

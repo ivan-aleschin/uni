@@ -1,0 +1,6 @@
+examples/err_03_lexical.emark:2:7: лексическая ошибка: после атрибута height ожидается '='
+examples/err_03_lexical.emark:3:17: лексическая ошибка: атрибут bgcolor указан повторно
+examples/err_03_lexical.emark:4:8: лексическая ошибка: у закрывающего тега </row> не бывает атрибутов
+examples/err_03_lexical.emark:5:2: лексическая ошибка: после '<' ожидается имя тега
+examples/err_03_lexical.emark:6:15: лексическая ошибка: не закрыта кавычка в значении атрибута bgcolor
+код возврата: 1

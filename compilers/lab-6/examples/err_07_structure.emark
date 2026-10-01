@@ -1,0 +1,13 @@
+текст вне тегов
+<block rows=0 columns=1>
+	текст прямо в блоке
+	<column>
+		текст и
+		<block rows=0 columns=1><column>блок сразу</column></block>
+	</column>
+</block>
+<block rows=0 columns=1>
+	<column>
+		<row>row внутри column без блока</row>
+	</column>
+</block>

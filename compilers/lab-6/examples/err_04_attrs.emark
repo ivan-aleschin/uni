@@ -1,0 +1,11 @@
+<block rows=0 columns=2>
+	<column width=40 valign=middle textcolor=16 color=2>текст</column>
+	<column halign=justify bgcolor=-1 width=x>текст</column>
+</block>
+<block>
+	<column>
+		<block columns=1>
+			<column height=3 width=0>текст</column>
+		</block>
+	</column>
+</block>

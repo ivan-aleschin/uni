@@ -1,0 +1,3 @@
+S > A | x
+A > B | S A
+B > S | y

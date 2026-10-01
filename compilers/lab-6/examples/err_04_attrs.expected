@@ -1,0 +1,8 @@
+examples/err_04_attrs.emark:2:19: семантическая ошибка: valign=middle: допустимы только top, center, bottom
+examples/err_04_attrs.emark:2:33: семантическая ошибка: textcolor=16: цвет должен быть от 0 до 15
+examples/err_04_attrs.emark:2:46: семантическая ошибка: у тега <column> нет атрибута color
+examples/err_04_attrs.emark:3:10: семантическая ошибка: halign=justify: допустимы только left, center, right
+examples/err_04_attrs.emark:3:25: семантическая ошибка: bgcolor=-1: ожидается целое неотрицательное число
+examples/err_04_attrs.emark:3:36: семантическая ошибка: width=x: ожидается целое неотрицательное число
+examples/err_04_attrs.emark:7:3: семантическая ошибка: у вложенного <block> обязателен атрибут rows
+код возврата: 1

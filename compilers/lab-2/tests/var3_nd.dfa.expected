@@ -1,0 +1,13 @@
+q0,a=q6
+q6,b=f2
+q6,c=q7
+q6,d=q2
+q6,e=f3
+f2,f=f0
+q7,c=q7
+q7,d=q2
+q7,f=f0
+q2,a=q5
+q2,d=f0
+f3,b=f2
+q5,f=f0

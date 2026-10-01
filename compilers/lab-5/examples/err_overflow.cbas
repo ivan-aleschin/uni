@@ -1,0 +1,5 @@
+f = 1
+for m = 1 to 20 {
+    f = f * m
+    print m, "! = ", f;
+}

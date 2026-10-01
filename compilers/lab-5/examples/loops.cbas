@@ -1,0 +1,29 @@
+print "for i = 0 to 5:";
+for i = 0 to 5 {
+    print "  i = ", i;
+}
+print "после цикла i = ", i;
+
+print "Вложенные циклы:";
+for row = 1 to 4 {
+    for col = 1 to 4 {
+        print "  ", row, " * ", col, " = ", row * col;
+    }
+}
+
+print "Граница вычисляется один раз:";
+n = 3
+for k = 0 to n {
+    n = n + 10
+    print "  k = ", k, ", n = ", n;
+}
+
+print "Цикл for j = 5 to 5 не выполняется ни разу:";
+for j = 5 to 5 {
+    print "  этого не будет";
+}
+print "j = ", j;
+
+f = 1
+for m = 1 to 11 { f = f * m }
+print "10! = ", f;

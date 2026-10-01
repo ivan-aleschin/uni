@@ -1,0 +1,13 @@
+<block rows=0 columns=3>
+	<column width=20>раз</column>
+	<column>два</column>
+</block>
+<block rows=2 columns=0>
+	<row height=5>строка</row>
+	<column>столбец в блоке со строками</column>
+</block>
+<block rows=1 columns=2>
+	<row>
+		<column width=10>один</column>
+	</row>
+</block>

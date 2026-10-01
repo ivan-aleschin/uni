@@ -1,0 +1,9 @@
+print "Переменная до присваивания равна ", fresh;
+total_sum = 0
+step = 5;
+total_sum = total_sum + step
+total_sum = total_sum * (step - 1) print "total_sum = ", total_sum;
+a = 1 b = 2 c = a + b
+print "a = ", a, ", b = ", b, ", c = ", c;
+neg = 0 - 42
+print "neg = ", neg, ", neg*neg = ", neg*neg;

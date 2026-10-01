@@ -1,0 +1,22 @@
+<block rows=2 columns=8>
+	<row height=12 valign=center halign=center textcolor=15>
+		<column width=10 bgcolor=0>0 black</column>
+		<column width=10 bgcolor=1>1 blue</column>
+		<column width=10 bgcolor=2>2 green</column>
+		<column width=10 bgcolor=3>3 cyan</column>
+		<column width=10 bgcolor=4>4 red</column>
+		<column width=10 bgcolor=5>5 magenta</column>
+		<column width=10 bgcolor=6>6 brown</column>
+		<column bgcolor=7 textcolor=0>7 light gray</column>
+	</row>
+	<row valign=center halign=center textcolor=0>
+		<column width=10 bgcolor=8 textcolor=15>8 dark gray</column>
+		<column width=10 bgcolor=9>9 light blue</column>
+		<column width=10 bgcolor=10>10 light green</column>
+		<column width=10 bgcolor=11>11 light cyan</column>
+		<column width=10 bgcolor=12>12 light red</column>
+		<column width=10 bgcolor=13>13 light magenta</column>
+		<column width=10 bgcolor=14>14 yellow</column>
+		<column bgcolor=15>15 white</column>
+	</row>
+</block>

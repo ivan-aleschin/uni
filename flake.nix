@@ -46,7 +46,7 @@
               # (psycopg2, numpy и т.д.) на NixOS: pip/uv бинарные колёса не работают
               # из-за отсутствия стандартных /lib путей. Декларация зависимостей — в
               # databases/pgcli/pyproject.toml; Nix её воспроизводит через withPackages.
-              (python3.withPackages (ps: with ps; [
+              (python314.withPackages (ps: with ps; [   # явно 3.14, а не алиас python3 (=3.13)
                 psycopg2   # PostgreSQL адаптер для лаб по БД
               ]))
               uv           # менеджер пакетов для чистых Python-проектов (без C-ext)

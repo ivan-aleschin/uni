@@ -1,0 +1,20 @@
+<block rows=0 columns=2>
+	<column width=50>
+		<block rows=2 columns=0>
+			<row height=16>
+				<block rows=2 columns=2>
+					<row height=8>
+						<column width=25 bgcolor=1>A</column>
+						<column bgcolor=2>B</column>
+					</row>
+					<row>
+						<column width=25 bgcolor=3>C</column>
+						<column bgcolor=4>D</column>
+					</row>
+				</block>
+			</row>
+			<row bgcolor=5>F</row>
+		</block>
+	</column>
+	<column bgcolor=6 textcolor=14>E</column>
+</block>

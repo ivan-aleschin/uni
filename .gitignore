@@ -150,3 +150,9 @@ erl_crash.dump
 # =========================
 
 *.dump
+
+# ТАЯК: бинари лаб 1–4 (C++)
+compilers/lab-1/cpp/lab1
+compilers/lab-2/cpp/lab2
+compilers/lab-3/cpp/lab3
+compilers/lab-4/cpp/lab4

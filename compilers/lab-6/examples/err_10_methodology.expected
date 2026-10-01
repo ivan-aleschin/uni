@@ -1,0 +1,3 @@
+examples/err_10_methodology.emark:1:1: семантическая ошибка: в <block> с rows=0 ожидается 1 <column>, а найдено 2
+examples/err_10_methodology.emark:2:2: семантическая ошибка: у <column> обязателен width: по умолчанию он считается только для последнего
+код возврата: 1

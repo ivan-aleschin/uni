@@ -1,0 +1,59 @@
+# файл	строка	ожидание (+ допускается, - нет)
+examples/var1.txt	ab+cd*e=357	+
+examples/var1.txt	ab + cd * e =357	+
+examples/var1.txt	aa + cd * eee  357	+
+examples/var1.txt	ba +cd*=357	+
+examples/var1.txt	ab   +    cd   *   =357	+
+examples/var1.txt	ab + cd * e = 357	-
+examples/var1.txt	ab+cd*e=3570	-
+examples/var1.txt	bb+cd*e=357	-
+examples/var1.txt	ab	-
+examples/var2.txt	\	+
+examples/var2.txt	/a"e	+
+examples/var2.txt	/+f\	+
+examples/var2.txt	/a,8	+
+examples/var2.txt	/a,;"e	+
+examples/var2.txt	/+g++*	+
+examples/var2.txt	/+e/	-
+examples/var2.txt	/a	-
+examples/var3_nd.txt	ab	+
+examples/var3_nd.txt	abf	+
+examples/var3_nd.txt	ae	+
+examples/var3_nd.txt	aeb	+
+examples/var3_nd.txt	aebf	+
+examples/var3_nd.txt	acdd	+
+examples/var3_nd.txt	acccf	+
+examples/var3_nd.txt	adaf	+
+examples/var3_nd.txt	a	-
+examples/var3_nd.txt	ac	-
+examples/var3_nd.txt	aef	-
+examples/var3_nd.txt	abff	-
+tests/manual_nfa.txt	a	+
+tests/manual_nfa.txt	a00	+
+tests/manual_nfa.txt	b0	+
+tests/manual_nfa.txt	b	-
+tests/manual_nfa.txt	ab	-
+tests/ends_ab.txt	ab	+
+tests/ends_ab.txt	babab	+
+tests/ends_ab.txt	aab	+
+tests/ends_ab.txt	aba	-
+tests/ends_ab.txt	b	-
+tests/hanging.txt	ab	+
+tests/hanging.txt	ac	-
+tests/hanging.txt	xyyy	-
+tests/errors.txt	ab	+
+tests/no_final.txt	aa	-
+tests/unicode.txt	даа	+
+tests/unicode.txt	д	-
+tests/for_loop.txt	  for( int abAccc= 943 ; a<478; bbc++ )	+
+tests/for_loop.txt	for(int a=1;b<2;c++)	+
+tests/for_loop.txt	for (int a = 1; b > 2; c ++)	+
+tests/for_loop.txt	for(int a=1;b<2;c+ +)	-
+tests/for_loop.txt	for(int a=1;b<2;c++	-
+tests/fig2.txt	ab	+
+tests/fig2.txt	abc	+
+tests/fig2.txt	ba	+
+tests/fig2.txt	b	-
+tests/fig2.txt	ak	-
+tests/fig2.txt	bad	-
+tests/bom_cp1251.txt	a�	+

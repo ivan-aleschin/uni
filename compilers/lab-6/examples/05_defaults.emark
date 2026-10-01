@@ -1,0 +1,27 @@
+<block>
+	<column halign=center bgcolor=1>
+		<block rows=3 columns=0>
+			<row height=3 valign=center>
+				Внешний блок без атрибутов: columns=1, rows=0.
+			</row>
+			<row height=10 textcolor=14>
+				<block rows=0 columns=2>
+					<column width=30>
+						Ширина этого столбца задана явно (30), выравнивание по центру
+						и синий фон унаследованы от внешнего столбца.
+					</column>
+					<column halign="right" valign='bottom'>
+						Последнему столбцу ширина не задана: он получает остаток 80 - 30 = 50.
+					</column>
+				</block>
+			</row>
+			<row valign=bottom>
+				Последней строке высота не задана: 24 - 3 - 10 = 11 строк.
+			</row>
+		</block>
+	</column>
+</block>
+
+<block rows=1 columns=0>
+	<row valign=center halign=center>Второй блок верхнего уровня выводится вторым экраном</row>
+</block>

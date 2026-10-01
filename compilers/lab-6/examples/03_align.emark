@@ -1,0 +1,17 @@
+<block rows=3 columns=3>
+	<row height=8 valign=top>
+		<column width=26 halign=left>top left</column>
+		<column width=27 halign=center>top center</column>
+		<column halign=right>top right</column>
+	</row>
+	<row height=8 valign=center>
+		<column width=26 halign=left>center left</column>
+		<column width=27 halign=center>center center</column>
+		<column halign=right>center right</column>
+	</row>
+	<row valign=bottom>
+		<column width=26 halign=left>bottom left</column>
+		<column width=27 halign=center>bottom center</column>
+		<column halign=right>bottom right</column>
+	</row>
+</block>
