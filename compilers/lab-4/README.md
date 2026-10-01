@@ -131,8 +131,7 @@ A → α | β: FIRST(α) ∩ FIRST(β) = ∅, а если одна из них �
 
 ## FIRST и FOLLOW
 
-Считаются по правилам из методички итерациями до неподвижной точки (`buildTables` в `cpp/grammar.hpp`,
-`build_tables` в `python/grammar.py`).
+Считаются по правилам из методички итерациями до неподвижной точки (`build_tables` в `grammar.py`).
 Последний столбец — синхронизирующие множества для режима паники (см. ниже).
 
 | Нетерминал          | FIRST                             | FOLLOW                            | synch (режим паники)                        |
@@ -272,100 +271,50 @@ A → α | β: FIRST(α) ∩ FIRST(β) = ∅, а если одна из них �
 
 ## Архитектура кода
 
-Анализатор написан дважды — на C++ (`cpp/`) и на Python (`python/`). Модули одни и те же, вывод в консоль
-и файлы `results/` у двух версий совпадает байт в байт (см. «Две реализации»).
+Программа на Python 3, только стандартная библиотека, запускается без сборки.
 
 | Файл | Что внутри |
 | --- | --- |
-| [`cpp/lexer.hpp`](cpp/lexer.hpp), [`python/lexer.py`](python/lexer.py) | `Token`, `Diagnostic`, класс `Lexer`: текст → токены с позициями (строка, столбец в символах UTF-8), лексические ошибки |
-| [`cpp/grammar.hpp`](cpp/grammar.hpp), [`python/grammar.py`](python/grammar.py) | грамматика как данные (`makeGrammar`), `firstOf`, `buildTables`: FIRST, FOLLOW, таблица M, проверка конфликтов, synch |
-| [`cpp/parser.hpp`](cpp/parser.hpp), [`python/parser.py`](python/parser.py) | класс `Parser`: стек, цикл разбора по рис. 1, режим паники (`panicTerminal`, `panicNonterminal`), режим фразы (`phraseTerminal`, `phraseNonterminal`), запись хода разбора |
-| [`cpp/main.cpp`](cpp/main.cpp), [`python/main.py`](python/main.py) | разбор аргументов, вывод ошибок со строкой исходника и стрелкой, запись файлов таблиц |
-| [`cpp/Makefile`](cpp/Makefile) | сборка `cpp/lab4`, `make test` |
-| [`tests.sh`](tests.sh) | прогон всех примеров в обоих режимах для обеих версий: сверка числа ошибок и побайтное сравнение вывода C++ и Python |
+| [`lexer.py`](lexer.py) | `Token`, `Diagnostic`, класс `Lexer`: текст → токены с позициями (строка, столбец в символах UTF-8), лексические ошибки |
+| [`grammar.py`](grammar.py) | грамматика как данные (`make_grammar`), `first_of`, `build_tables`: FIRST, FOLLOW, таблица M, проверка конфликтов, synch |
+| [`parser.py`](parser.py) | класс `Parser`: стек, цикл разбора по рис. 1, режим паники (`panic_terminal`, `panic_nonterminal`), режим фразы (`phrase_terminal`, `phrase_nonterminal`), запись хода разбора |
+| [`main.py`](main.py) | разбор аргументов, вывод ошибок со строкой исходника и стрелкой, запись файлов таблиц |
+| [`tests.sh`](tests.sh) | прогон всех примеров в обоих режимах со сверкой числа ошибок, проверка LL(1) обеих грамматик |
 | [`examples/`](examples) | примеры программ: `ok*` — правильные, `err*` — с ошибками, `ext_*` — для `--ext` |
-| [`results/`](results) | сгенерированные таблицы (их пересоздаёт `make test`; любая из двух версий пишет их одинаково) |
+| [`results/`](results) | сгенерированные таблицы (их пересоздаёт `bash tests.sh`) |
 
-Ничего в таблице не забито вручную: если поменять продукции в `makeGrammar` (`make_grammar`), FIRST, FOLLOW, M
-и synch пересчитаются.
+Ничего в таблице не забито вручную: если поменять продукции в `make_grammar`, FIRST, FOLLOW, M и synch пересчитаются.
 
-## Две реализации
-
-Python-версия — точный порт C++: та же грамматика как данные, те же алгоритмы FIRST/FOLLOW/M/synch, тот же
-нерекурсивный цикл со стеком, те же эвристики восстановления (`strongSync`, продукция по умолчанию, выбор
-«снять терминал / пропустить токен», подавление лавины, процедуры режима фразы) и те же тексты сообщений.
-Общие у версий примеры `examples/`, результаты `results/`, `tests.sh` и все документы.
-
-| Что | C++ | Python |
-| --- | --- | --- |
-| токен, ошибка | `struct Token`, `struct Diagnostic` | `@dataclass Token`, `Diagnostic` |
-| лексер | `Lexer::tokenize`, `peek`, `advance` | `Lexer.tokenize`, `peek`, `advance` |
-| грамматика | `makeGrammar`, `Grammar::firstOf`, `cell`, `defaultProduction` | `make_grammar`, `Grammar.first_of`, `cell`, `default_production` |
-| FIRST, FOLLOW, M, synch | `buildTables` | `build_tables` |
-| цикл разбора | `Parser::run` | `Parser.run` |
-| паника | `panicTerminal`, `panicNonterminal` | `panic_terminal`, `panic_nonterminal` |
-| фраза | `phraseTerminal`, `phraseNonterminal` | `phrase_terminal`, `phrase_nonterminal` |
-| эвристики | `insertable`, `firstBelow`, `strongSync`, `report` | `insertable`, `first_below`, `STRONG_SYNC`, `report` |
-| вывод | `writeParseTable`, `writeTable`, `printSourceLine` | `write_parse_table`, `write_table`, `source_line` |
-
-Чем отличаются:
-
-- **Множества.** В C++ `std::set` (обход по возрастанию байтов), в Python `set`; где порядок виден
-  (текст конфликтов таблицы), Python обходит `sorted(...)` — порядок строк по кодам символов совпадает с
-  порядком байтов UTF-8. В остальных местах множества выводятся в порядке столбцов таблицы, как в C++.
-- **Байты и UTF-8.** C++ работает со строками-байтами. Python читает файл как `bytes`, лексер идёт по байтам,
-  а текст токенов переводит в `str` через `surrogateescape` — поэтому даже битый UTF-8 возвращается в вывод
-  теми же байтами, а ширина столбцов считается по байтам, как в C++.
-- **Режим восстановления** в C++ — `enum class Recovery`, в Python — флаг `phrase: bool`.
-- **Сборка.** C++ собирается `make` в `cpp/` в бинарь `cpp/lab4`; Python запускается без сборки, только
-  стандартная библиотека (Python 3.14 из флэйка).
-- **Строка «Использование»** при неверном запуске печатает путь, по которому запустили программу (`argv[0]`),
-  поэтому у версий она отличается. Всё остальное, включая коды возврата, одинаково.
-
-Проверка совпадения: `tests.sh` сравнивает вывод на всех примерах; дополнительно 1100 случайных и испорченных
-программ (лишние, пропущенные, переставленные токены, мусорные символы, битый UTF-8, CRLF, пустые файлы)
-прогнаны во всех 4 сочетаниях `--phrase`/`--ext` — 4400 запусков, код возврата, консоль и файл хода
-разбора совпали байт в байт.
+Технические детали. Множества — обычные `set`; там, где порядок виден (текст конфликтов таблицы), они обходятся
+через `sorted(...)`, в остальных местах выводятся в порядке столбцов таблицы. Файл читается как `bytes`, лексер идёт
+по байтам, а текст токенов переводится в `str` через `surrogateescape` — поэтому даже битый UTF-8 возвращается
+в вывод теми же байтами. Режим восстановления задаётся флагом `phrase: bool`.
 
 ## Как запустить
 
-Один раз в корне репозитория (там `.envrc` с `use flake`, g++, make и python3 берутся из `flake.nix`):
+Один раз в корне репозитория (там `.envrc` с `use flake`, python3 берётся из `flake.nix`):
 
 ```bash
 cd ~/repos/uni
 direnv allow
 ```
 
-C++:
-
-```bash
-cd compilers/lab-4/cpp
-make                                         # собрать ./lab4
-./lab4 ../examples/ok.cl                     # режим паники, грамматика из методички
-./lab4 --phrase ../examples/err_multi.cl     # режим фразы
-./lab4 --ext ../examples/ext_errors.cl       # расширенная грамматика
-./lab4 --table                               # только таблица M → ../results/parse_table.md
-make test                                    # все примеры, обе версии (запускает ../tests.sh)
-```
-
-Python (из папки лабы):
+Дальше из папки лабы:
 
 ```bash
 cd compilers/lab-4
-python3 python/main.py examples/ok.cl
-python3 python/main.py --phrase examples/err_multi.cl
-python3 python/main.py --ext examples/ext_errors.cl
-python3 python/main.py --table
-bash tests.sh                                # то же, что make test
+python3 main.py examples/ok.cl                     # режим паники, грамматика из методички
+python3 main.py --phrase examples/err_multi.cl     # режим фразы
+python3 main.py --ext examples/ext_errors.cl       # расширенная грамматика
+python3 main.py --table                            # только таблица M → results/parse_table.md
+bash tests.sh                                      # все примеры
 ```
 
-Без direnv: `nix develop -c make -C cpp test` и `nix develop -c python3 python/main.py examples/ok.cl`
-(из `compilers/lab-4`).
+Без direnv: `nix develop -c python3 main.py examples/ok.cl` и `nix develop -c bash tests.sh` (из `compilers/lab-4`).
 
-Ключи у обеих версий одинаковые: `--phrase` — режим фразы, `--ext` — расширенная грамматика, `--out DIR` — куда
-писать файлы (по умолчанию `results/` в папке лабы, откуда бы ни запускали: путь считается от `cpp/lab4` или
-`python/main.py`), `--table` — только построить таблицу. Код возврата 0 — ошибок нет, 1 — есть ошибки, 2 — неверный
-запуск.
+Ключи: `--phrase` — режим фразы, `--ext` — расширенная грамматика, `--out DIR` — куда писать файлы (по умолчанию
+`results/` рядом с `main.py`, откуда бы ни запускали), `--table` — только построить таблицу. Код возврата 0 — ошибок
+нет, 1 — есть ошибки, 2 — неверный запуск.
 
 **Выходные файлы:**
 
@@ -377,38 +326,38 @@ bash tests.sh                                # то же, что make test
 
 ## Результаты
 
-### Все примеры (`make test`, обе версии)
+### Все примеры (`bash tests.sh`)
 
 ```
-$ cd cpp && make test
-  ok    examples/err_block.cl    panic  ошибок: 1, вывод C++ = Python
-  ok    examples/err_block.cl    phrase ошибок: 1, вывод C++ = Python
-  ok    examples/err_brace.cl    panic  ошибок: 1, вывод C++ = Python
-  ok    examples/err_brace.cl    phrase ошибок: 1, вывод C++ = Python
-  ok    examples/err_empty.cl    panic  ошибок: 1, вывод C++ = Python
-  ok    examples/err_empty.cl    phrase ошибок: 1, вывод C++ = Python
-  ok    examples/err_eof.cl      panic  ошибок: 1, вывод C++ = Python
-  ok    examples/err_eof.cl      phrase ошибок: 1, вывод C++ = Python
-  ok    examples/err_header.cl   panic  ошибок: 2, вывод C++ = Python
-  ok    examples/err_header.cl   phrase ошибок: 2, вывод C++ = Python
-  ok    examples/err_lexical.cl  panic  ошибок: 6, вывод C++ = Python
-  ok    examples/err_lexical.cl  phrase ошибок: 6, вывод C++ = Python
-  ok    examples/err_missing.cl  panic  ошибок: 3, вывод C++ = Python
-  ok    examples/err_missing.cl  phrase ошибок: 3, вывод C++ = Python
-  ok    examples/err_multi.cl    panic  ошибок: 8, вывод C++ = Python
-  ok    examples/err_multi.cl    phrase ошибок: 7, вывод C++ = Python
-  ok    examples/ext_errors.cl   panic  ошибок: 8, вывод C++ = Python
-  ok    examples/ext_errors.cl   phrase ошибок: 8, вывод C++ = Python
-  ok    examples/ext_ok.cl       panic  ошибок: 0, вывод C++ = Python
-  ok    examples/ext_ok.cl       phrase ошибок: 0, вывод C++ = Python
-  ok    examples/ok.cl           panic  ошибок: 0, вывод C++ = Python
-  ok    examples/ok.cl           phrase ошибок: 0, вывод C++ = Python
-  ok    examples/ok_decl.cl      panic  ошибок: 0, вывод C++ = Python
-  ok    examples/ok_decl.cl      phrase ошибок: 0, вывод C++ = Python
-  ok    examples/ok_min.cl       panic  ошибок: 0, вывод C++ = Python
-  ok    examples/ok_min.cl       phrase ошибок: 0, вывод C++ = Python
-  ok    грамматика из методички — LL(1), таблица C++ = Python
-  ok    грамматика --ext — LL(1), таблица C++ = Python
+$ bash tests.sh
+  ok    examples/err_block.cl    panic  ошибок: 1
+  ok    examples/err_block.cl    phrase ошибок: 1
+  ok    examples/err_brace.cl    panic  ошибок: 1
+  ok    examples/err_brace.cl    phrase ошибок: 1
+  ok    examples/err_empty.cl    panic  ошибок: 1
+  ok    examples/err_empty.cl    phrase ошибок: 1
+  ok    examples/err_eof.cl      panic  ошибок: 1
+  ok    examples/err_eof.cl      phrase ошибок: 1
+  ok    examples/err_header.cl   panic  ошибок: 2
+  ok    examples/err_header.cl   phrase ошибок: 2
+  ok    examples/err_lexical.cl  panic  ошибок: 6
+  ok    examples/err_lexical.cl  phrase ошибок: 6
+  ok    examples/err_missing.cl  panic  ошибок: 3
+  ok    examples/err_missing.cl  phrase ошибок: 3
+  ok    examples/err_multi.cl    panic  ошибок: 8
+  ok    examples/err_multi.cl    phrase ошибок: 7
+  ok    examples/ext_errors.cl   panic  ошибок: 8
+  ok    examples/ext_errors.cl   phrase ошибок: 8
+  ok    examples/ext_ok.cl       panic  ошибок: 0
+  ok    examples/ext_ok.cl       phrase ошибок: 0
+  ok    examples/ok.cl           panic  ошибок: 0
+  ok    examples/ok.cl           phrase ошибок: 0
+  ok    examples/ok_decl.cl      panic  ошибок: 0
+  ok    examples/ok_decl.cl      phrase ошибок: 0
+  ok    examples/ok_min.cl       panic  ошибок: 0
+  ok    examples/ok_min.cl       phrase ошибок: 0
+  ok    грамматика из методички — LL(1)
+  ok    грамматика --ext — LL(1)
 Пройдено: 28, не пройдено: 0
 ```
 

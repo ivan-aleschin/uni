@@ -32,52 +32,35 @@
 
 ## Как запустить
 
-Программа сделана в двух вариантах с одинаковым выводом: C++ (`cpp/`) и Python (`python/`),
-см. раздел [«Две реализации»](#две-реализации). Примеры автоматов (`examples/`) и тесты (`tests/`) общие.
-
-Один раз в корне репозитория (там `.envrc` с `use flake`; g++, make и Python приходят из `flake.nix`):
+Python 3.13+, только стандартная библиотека, сборки нет. Один раз в корне репозитория
+(там `.envrc` с `use flake`, Python приходит из `flake.nix`):
 
 ```bash
 cd ~/repos/uni
 direnv allow
 ```
 
-C++:
-
-```bash
-cd compilers/lab-2/cpp
-make                                      # собирает ./lab2
-./lab2 ../examples/var1.txt               # строки вводятся с клавиатуры, пустая строка — выход
-./lab2 ../examples/var3_nd.txt ab aebf a  # строки сразу аргументами
-make test                                 # автотесты обеих версий и сверка их вывода
-make clean
-```
-
-Python (3.13+, только стандартная библиотека, сборки нет):
+Дальше из папки лабы:
 
 ```bash
 cd compilers/lab-2
-python3 python/main.py examples/var1.txt
-python3 python/main.py examples/var3_nd.txt ab aebf a
-bash tests/run_tests.sh python            # автотесты только Python-версии
+python3 main.py examples/var1.txt                # строки вводятся с клавиатуры, пустая строка — выход
+python3 main.py examples/var3_nd.txt ab aebf a   # строки сразу аргументами
+bash tests/run_tests.sh                          # автотесты
 ```
 
-Без direnv — через `nix develop -c …`: `nix develop -c make -C cpp`,
-`nix develop -c python3 python/main.py examples/var1.txt` (из папки лабы).
+Без direnv — через `nix develop -c …` (из папки лабы):
+`nix develop -c python3 main.py examples/var1.txt`, `nix develop -c bash tests/run_tests.sh`.
 
-В `cpp/Makefile` компилятор задан явно (`CXX := g++`): flake выставляет переменную `CXX` под
-RISC-V кросс-компилятор для лаб по микропроцессорам, и с `CXX ?= g++` собрался бы бинарь
-не под x86.
-
-Полный синтаксис (у Python то же самое, вместо `./lab2` — `python3 python/main.py`):
+Полный синтаксис:
 
 ```
-./lab2 <файл автомата> [строка ...] [--dot] [--dfa-out <файл>]
+python3 main.py <файл автомата> [строка ...] [--dot] [--dfa-out <файл>]
   --dot              записать графы <файл>.dot и <файл>.dfa.dot для Graphviz
   --dfa-out <файл>   сохранить правила ДКА в формате входного файла
 ```
 
-Строку с пробелами в аргументе надо взять в кавычки: `./lab2 ../examples/var1.txt "ab + cd * e =357"`.
+Строку с пробелами в аргументе надо взять в кавычки: `python3 main.py examples/var1.txt "ab + cd * e =357"`.
 
 ## Формат файла и принятые решения
 
@@ -157,7 +140,7 @@ RISC-V кросс-компилятор для лаб по микропроцес
 по `c` — только `t(q1,c) = {q1,q5}`. `f2 = {q5,f1}` конечное, потому что содержит `f1`; из него
 есть переход по `f` (от `q5`) — вот зачем нужен `f` в левой части правила.
 
-Результат программы совпал с ручным построением строка в строку (это проверяет `make test`,
+Результат программы совпал с ручным построением строка в строку (это проверяет `bash tests/run_tests.sh`,
 эталон — [`tests/var3_nd.dfa.expected`](tests/var3_nd.dfa.expected)):
 
 ![ДКА var3_nd](img/var3_nd.dfa.png)
@@ -172,66 +155,34 @@ RISC-V кросс-компилятор для лаб по микропроцес
 
 | Файл | Содержимое |
 | --- | --- |
-| [`cpp/automaton.h`](cpp/automaton.h) | `State`, `Rule`, `SyntaxError`, `Conflict`, `RunResult`; классы `RuleFileReader` и `FiniteAutomaton`; `Determinized` |
-| [`cpp/automaton.cpp`](cpp/automaton.cpp) | разбор строки файла, анализ автомата, детерминизация, разбор строк, печать таблицы и DOT |
-| [`cpp/main.cpp`](cpp/main.cpp) | аргументы командной строки, порядок вывода, интерактивный ввод строк |
-| [`python/automaton.py`](python/automaton.py) | то же, что `automaton.h` + `automaton.cpp`, на Python |
-| [`python/main.py`](python/main.py) | то же, что `main.cpp` |
+| [`automaton.py`](automaton.py) | `State`, `Rule`, `SyntaxError_`, `Conflict`, `RunResult`; классы `RuleFileReader` и `FiniteAutomaton`; `Determinized`; разбор строки файла, анализ автомата, детерминизация, разбор строк, печать таблицы и DOT |
+| [`main.py`](main.py) | аргументы командной строки, порядок вывода, интерактивный ввод строк |
 | [`tests/`](tests) | свои автоматы, `cases.tsv` (файл / строка / ожидание), `run_tests.sh` |
 
-- `State` — пара (конечное?, номер); сравнение по умолчанию (`operator<=>`), поэтому состояния и
-  множества состояний можно класть в `std::set`/`std::map`. Это и есть ключ таблицы подмножеств.
-- `RuleFileReader` отвечает только за файл: разбирает каждую строку, хорошие правила складывает
-  в `rules()`, плохие — в `errors()` с номером строки.
-- `FiniteAutomaton` хранит функцию переходов как `map<State, map<Symbol, set<State>>>` —
+- `State(NamedTuple)` — пара (конечное?, номер). Кортеж неизменяемый и сравнивается по полям,
+  поэтому состояния можно класть в `set`, а множества состояний (`frozenset`) — использовать как
+  ключ словаря. Это и есть ключ таблицы подмножеств. Порядок: сначала все `q`, потом все `f`.
+- `Rule`, `Conflict`, `RunResult`, `Determinized` — `@dataclass` (у `Rule` поле `from_`, потому что
+  `from` — ключевое слово). `SyntaxError_` назван с подчёркиванием, чтобы не перекрыть встроенный
+  `SyntaxError`.
+- `RuleFileReader` отвечает только за файл: разбирает каждую строку (`parse_line` возвращает
+  пару «правило, ошибка»), хорошие правила складывает в `rules()`, плохие — в `errors()` с номером строки.
+- `FiniteAutomaton` хранит функцию переходов как `dict[State, dict[str, set[State]]]` —
   это сразу НКА; ДКА — частный случай, когда все множества одноэлементные. Методы:
-  `conflicts()`, `unreachable()`, `dead()`, `determinize()`, `run()` (ДКА), `runNfa()` (НКА),
-  `printRules()`, `printTable()`, `writeDot()`.
+  `conflicts()`, `unreachable()`, `dead()`, `determinize()`, `run()` (ДКА), `run_nfa()` (НКА),
+  `print_rules()`, `print_table()`, `write_dot()`.
 - `determinize()` возвращает новый `FiniteAutomaton` плюс таблицу «новое состояние = множество
   старых», так что к ДКА применимы те же проверки и та же печать.
+- Файл и аргументы декодируются из UTF-8 с `errors="surrogateescape"`: байт, который не
+  складывается в UTF-8 (буква в cp1251), не теряется и при выводе возвращается тем же байтом.
+  Обрезка пробелов и чтение номера сделаны явно по ASCII: `str.strip()` и `str.isdigit()`
+  приняли бы неразрывный пробел и арабские цифры.
 
-Исходники: C++ — [`cpp/automaton.h`](cpp/automaton.h), [`cpp/automaton.cpp`](cpp/automaton.cpp),
-[`cpp/main.cpp`](cpp/main.cpp); Python — [`python/automaton.py`](python/automaton.py),
-[`python/main.py`](python/main.py).
-
-## Две реализации
-
-Python-версия — построчный перевод C++: те же классы, те же методы (в `snake_case`), те же правила
-разбора файла, та же нумерация новых состояний ДКА и те же сообщения. Вывод совпадает побайтно,
-включая файлы `--dfa-out` и `.dot`; это проверяет `make test` (раздел 7 в `run_tests.sh`) и
-проверялось на сотнях случайных автоматов с ошибками, НКА, висячими вершинами и спецсимволами.
-
-| C++ | Python |
-| --- | --- |
-| `struct State` (`operator<=>`) | `class State(NamedTuple)` — кортеж сравнивается так же |
-| `StateSet = std::set<State>` | `set` / `frozenset` (ключ таблицы подмножеств), печать через `sorted` |
-| `struct Rule`, `Conflict`, `RunResult`, `Determinized` | `@dataclass` с теми же полями (`from` → `from_`) |
-| `struct SyntaxError` | `SyntaxError_` (чтобы не перекрыть встроенный `SyntaxError`) |
-| `RuleFileReader::parseLine`, `totalLines`, … | `RuleFileReader.parse_line` (возвращает `(правило, ошибка)`), `total_lines`, … |
-| `FiniteAutomaton::addRule`, `conflicts`, `unreachable`, `dead`, `determinize`, `run`, `runNfa` | `add_rule`, `conflicts`, `unreachable`, `dead`, `determinize`, `run`, `run_nfa` |
-| `printRules`, `printTable`, `writeDot` | `print_rules`, `print_table`, `write_dot` |
-| `splitSymbols`, `symLen`, `showSym`, `showSet` | `split_symbols`, `sym_len`, `show_sym`, `show_set` |
-| `main.cpp`: `describe`, `reportHanging`, `checkString`, `main` | `main.py`: `describe`, `report_hanging`, `check_string`, `main` |
-
-Чем отличаются:
-
-- **Байты и строки.** C++ хранит строки как байты, Python — как `str`. Файл и аргументы
-  декодируются из UTF-8 с `errors="surrogateescape"`: байт, который не складывается в UTF-8
-  (буква в cp1251), превращается в «заменитель» и при выводе возвращается тем же байтом. Деление
-  на символы (`sym_len`) и сортировка символов (`key=raw`) идут по исходным байтам, как в C++.
-- **Порядок.** `std::set`/`std::map` упорядочены сами, в Python перед выводом стоит `sorted`
-  (состояния, алфавит, конфликты, рёбра графа).
-- **Пробелы и цифры.** `str.strip()` и `str.isdigit()` в Python понимают Unicode (неразрывный
-  пробел, арабские цифры), поэтому обрезка и чтение номера сделаны явно по ASCII — как
-  `std::isspace`/`std::isdigit` в C++.
-- **Ошибки.** `parseLine` возвращает `bool` и пишет результат в аргументы, `parse_line` —
-  кортеж; «файл не открыть» — `runtime_error` в C++ и `RuntimeError` в Python.
-- **Справка** (`-h` или запуск без файла) различается только именем программы в первой строке.
+Исходники: [`automaton.py`](automaton.py), [`main.py`](main.py).
 
 ## Результаты
 
-Вывод ниже получен из папки лабы командой `cpp/lab2 <файл> <строки>`;
-`python3 python/main.py <файл> <строки>` печатает то же самое байт в байт.
+Вывод ниже получен из папки лабы командой `python3 main.py <файл> <строки>`.
 
 ### `examples/var1.txt` — ДКА
 
@@ -557,15 +508,14 @@ q1,0=f1
 
 Кроме того, в тестах есть автомат из приложения 1 методички (`for (...)`,
 [`tests/for_loop.txt`](tests/for_loop.txt)) — строка из примера кода
-`"  for( int abAccc= 943 ; a<478; bbc++ )"` допускается; автомат без конечных состояний
+`"  for( int abAccc= 943 ; a<478; …)"` (полностью — в приложении 1) допускается; автомат без конечных состояний
 (`tests/no_final.txt`, предупреждение и `q0` в тупиках), автомат на русских буквах
 (`tests/unicode.txt`) и автомат с рис. 2 методички ([`tests/fig2.txt`](tests/fig2.txt)):
 `ab`, `abc`, `ba` допускаются, `b`, `ak`, `bad` — нет, как написано в задании.
 
 ### Автотесты
 
-`make test` (в `cpp/`) прогоняет [`tests/run_tests.sh`](tests/run_tests.sh) для обеих версий;
-`bash tests/run_tests.sh cpp` или `… python` — только одну. Для каждой версии:
+`bash tests/run_tests.sh` (из папки лабы) проверяет:
 
 - 58 строк из [`tests/cases.tsv`](tests/cases.tsv) по всем примерам — допускается / нет;
 - ДКА для `var3_nd.txt` совпадает с ручным построением;
@@ -575,22 +525,16 @@ q1,0=f1
 - `--dot` создаёт оба файла графа, в том числе для файла без расширения (`./board`);
 - файл с BOM в начале и буквой в cp1251 читается без ошибок.
 
-Затем на всех 12 файлах из `examples/` и `tests/` (со всеми строками из `cases.tsv`, `--dot`
-и `--dfa-out`) сравнивается вывод C++ и Python: stdout, stderr, код возврата и записанные файлы.
-
 ```
-$ make test
-bash ../tests/run_tests.sh
-C++ — пройдено: 98, провалено: 0
+$ bash tests/run_tests.sh
 Python — пройдено: 98, провалено: 0
-Сравнение C++ и Python — совпало: 12, различий: 0
 ```
 
 ## Граф в Graphviz
 
 ```bash
 # из папки лабы; графы examples/var3_nd.dot и examples/var3_nd.dfa.dot
-cpp/lab2 examples/var3_nd.txt --dot               # или: python3 python/main.py examples/var3_nd.txt --dot
+python3 main.py examples/var3_nd.txt --dot
 nix shell nixpkgs#graphviz -c dot -Tpng examples/var3_nd.dfa.dot -o dfa.png
 ```
 
@@ -614,8 +558,7 @@ Graphviz в `flake.nix` не добавлен: он нужен только дл
    q1,b=f0
    q2,c=f0
    EOF
-   cpp/lab2 board.txt --dot                  # C++ (после make -C cpp)
-   python3 python/main.py board.txt --dot    # или Python — вывод тот же
+   python3 main.py board.txt --dot
    ```
 
    Команды — из папки `compilers/lab-2`; файл можно положить куда угодно, графы появятся рядом с ним.

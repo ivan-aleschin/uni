@@ -6,7 +6,7 @@
 //          ./lab4 --table [--ext] [--out DIR]
 //   --phrase  восстановление в режиме фразы (по умолчанию — режим паники)
 //   --ext     расширенная грамматика: в { } последовательность операторов
-//   --out     куда писать таблицы (по умолчанию results/ в папке лабы, рядом с cpp/)
+//   --out     куда писать таблицы (по умолчанию results/ рядом с бинарём, т. е. cpp/results)
 //   --table   только построить таблицу предиктивного анализа
 //
 // Файлы:  DIR/<имя>.trace.md         — ход разбора (как пример 4), режим паники
@@ -69,8 +69,8 @@ static std::string joinSet(const std::set<std::string>& s, const std::vector<std
 static void writeParseTable(const Grammar& g, const fs::path& file) {
     std::ofstream out(file);
     out << "# Таблица предиктивного анализа C-light" << (g.ext ? " (расширенная грамматика, --ext)" : "")
-        << "\n\nСгенерировано программой ЛР4 (`cpp/lab4` или `python/main.py`, вывод одинаковый) по грамматике\n"
-        << "из `cpp/grammar.hpp` (`python/grammar.py`).\n"
+        << "\n\nСгенерировано программой ЛР4 (`lab4`) по грамматике\n"
+        << "из `grammar.hpp`.\n"
         << "Нетерминалы — в угловых скобках, `id` и `num` — токены лексера (`<identifier>` и `<number>`).\n\n";
 
     out << "## Продукции\n\n```\n";
@@ -144,9 +144,9 @@ static void printSourceLine(const std::vector<std::string>& lines, int line, int
 
 int main(int argc, char** argv) {
     bool phrase = false, ext = false, tableOnly = false;
-    // По умолчанию пишем в lab-4/results: бинарь лежит в lab-4/cpp, значит, это ../results
-    // относительно него. Так результат один и тот же, откуда бы ни запускали.
-    fs::path outDir = (fs::path(argv[0]).parent_path() / ".." / "results").lexically_normal(), input;
+    // По умолчанию пишем в results/ рядом с бинарём (lab-4/cpp/results), а не в текущую папку.
+    // Так результат один и тот же, откуда бы ни запускали.
+    fs::path outDir = (fs::path(argv[0]).parent_path() / "results").lexically_normal(), input;
     for (int i = 1; i < argc; ++i) {  // ЦИКЛ по аргументам командной строки
         std::string a = argv[i];
         if (a == "--phrase") phrase = true;

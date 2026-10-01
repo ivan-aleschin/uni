@@ -1,29 +1,18 @@
 #!/usr/bin/env bash
-# Автотесты ЛР2. Запуск: bash tests/run_tests.sh [cpp|python|all] (по умолчанию all —
-# обе версии подряд); из cpp/ то же самое делает make test.
+# Автотесты ЛР2. Запуск из папки лабы: bash tests/run_tests.sh
 # 1) строки из tests/cases.tsv: допускается / не допускается;
 # 2) детерминизация var3_nd.txt совпадает с ручным построением;
 # 3) ДКА, сохранённый в файл, читается обратно, детерминирован и даёт те же ответы;
 # 4) синтаксические ошибки и висячие вершины находятся;
 # 5) --dot пишет файлы графов;
-# 6) файл с BOM и буквой в cp1251 читается без ошибок;
-# 7) при all — вывод C++ и Python на всех примерах совпадает побайтно.
+# 6) файл с BOM и буквой в cp1251 читается без ошибок.
 set -u
 cd "$(dirname "$0")/.."
 ROOT=$PWD
 PY=${PYTHON:-python3}
-WHICH=${1:-all}
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
 total_fail=0
-
-case "$WHICH" in
-    cpp|python|all) ;;
-    *) echo "Использование: bash tests/run_tests.sh [cpp|python|all]"; exit 2 ;;
-esac
-if [[ "$WHICH" != python ]]; then
-    make -s -C cpp lab2 || exit 1
-fi
 
 # Прогон всех проверок для одной версии: suite <название> <команда запуска ...>
 suite() {
@@ -92,29 +81,6 @@ suite() {
     total_fail=$((total_fail + fail))
 }
 
-CPP=("$ROOT/cpp/lab2")
-PYV=("$PY" "$ROOT/python/main.py")
-[[ "$WHICH" != python ]] && suite C++ "${CPP[@]}"
-[[ "$WHICH" != cpp ]] && suite Python "${PYV[@]}"
-
-# --- 7. обе версии печатают одно и то же (stdout, stderr, код возврата, файлы) ---
-if [[ "$WHICH" == all ]]; then
-    same=0 diffs=0
-    for f in examples/*.txt tests/*.txt; do
-        strs=()
-        while IFS=$'\t' read -r file str want; do
-            [[ "$file" == "$f" ]] && strs+=("$str")
-        done < tests/cases.tsv
-        for impl in cpp py; do
-            mkdir -p "$TMP/$impl" && cp "$f" "$TMP/$impl/a.txt"
-            if [[ $impl == cpp ]]; then cmd=("${CPP[@]}"); else cmd=("${PYV[@]}"); fi
-            (cd "$TMP/$impl" && "${cmd[@]}" a.txt --dot --dfa-out a.out "" "${strs[@]}" >stdout 2>stderr; echo $? >rc)
-        done
-        if diff -r "$TMP/cpp" "$TMP/py" >/dev/null; then same=$((same + 1)); else diffs=$((diffs + 1)); echo "РАСХОЖДЕНИЕ C++/Python: $f"; fi
-        rm -rf "$TMP/cpp" "$TMP/py"
-    done
-    echo "Сравнение C++ и Python — совпало: $same, различий: $diffs"
-    total_fail=$((total_fail + diffs))
-fi
+suite Python "$PY" "$ROOT/main.py"
 
 [[ "$total_fail" == 0 ]]

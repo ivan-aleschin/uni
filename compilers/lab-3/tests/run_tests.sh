@@ -1,15 +1,12 @@
 #!/usr/bin/env bash
 # Тесты ЛР3: для каждой цепочки сверяем заключение автомата с ожидаемым,
 # для испорченных грамматик — что программа падает с нужным сообщением.
-# Один и тот же набор прогоняется на обеих версиях: C++ (cpp/lab3) и Python (python/main.py).
-# Запуск: make test (из папки cpp/) или bash tests/run_tests.sh (из папки лабы).
+# Запуск: bash tests/run_tests.sh (из папки лабы).
 
 cd "$(dirname "$0")/.." || exit 1
-make -s -C cpp lab3 || exit 1
 passed=0
 failed=0
-BIN=()   # команда запуска текущей версии
-NAME=""  # её название для сообщений об ошибках
+BIN=(python3 main.py)  # команда запуска программы
 
 # accept ФАЙЛ ЦЕПОЧКА... — все цепочки должны допускаться
 # reject ФАЙЛ ЦЕПОЧКА... — ни одна не должна допускаться
@@ -27,7 +24,7 @@ check() {
             passed=$((passed + 1))
         else
             failed=$((failed + 1))
-            echo "ОШИБКА [$NAME]: $file «$s»: ожидалось $want, получено $got"
+            echo "ОШИБКА: $file «$s»: ожидалось $want, получено $got"
         fi
     done
 }
@@ -43,11 +40,11 @@ bad() {
         passed=$((passed + 1))
     else
         failed=$((failed + 1))
-        echo "ОШИБКА [$NAME]: $file: ожидалась ошибка «$fragment», получено (код $code): $out"
+        echo "ОШИБКА: $file: ожидалась ошибка «$fragment», получено (код $code): $out"
     fi
 }
 
-# Весь набор проверок; вызывается по разу для каждой версии.
+# Весь набор проверок.
 suite() {
     # Пример 1 преподавателя: E>mT|!T|T, T>/P/, P>R|S, R>C-C, C>a|b|c|0|>, S>C|CS
     accept examples/test1.txt '/a-b/' 'm/abc/' '!/>/' '/0-0/' '/>->/' 'm/a/' '/ab0c>/' '! / a - c /'
@@ -102,8 +99,7 @@ suite() {
     bad tests/bad/missing.txt 'не удалось открыть файл'
 }
 
-BIN=(./cpp/lab3);                NAME=C++;    suite
-BIN=(python3 python/main.py);    NAME=Python; suite
+suite
 
 echo "Пройдено: $passed, не пройдено: $failed"
 [[ $failed -eq 0 ]]
