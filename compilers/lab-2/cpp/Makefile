@@ -9,9 +9,10 @@ HDR = automaton.h
 lab2: $(SRC) $(HDR)
 	$(CXX) $(CXXFLAGS) -o $@ $(SRC)
 
-# Прогон на примерах преподавателя и своих тестах (tests/run_tests.sh)
+# Автотесты из ../tests: обе версии (C++ и Python) и сверка их вывода.
+# Только C++: bash ../tests/run_tests.sh cpp
 test: lab2
-	bash tests/run_tests.sh
+	bash ../tests/run_tests.sh
 
 clean:
 	rm -f lab2

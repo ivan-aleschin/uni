@@ -10,7 +10,7 @@ $(TARGET): main.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
 test: $(TARGET)
-	@bash run_tests.sh
+	@bash ../run_tests.sh cpp
 
 clean:
 	rm -f $(TARGET)
