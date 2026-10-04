@@ -1,0 +1,19 @@
+# Оформление PDF для документов проекта (pandoc + typst)
+papersize: a4
+fontsize: 11pt
+mainfont: "Libertinus Serif"
+lang: ru
+margin:
+  x: 2cm
+  y: 2cm
+header-includes: |
+  ```{=typst}
+  // Таблицы: сетка, текст в ячейках по левому краю и без растяжки,
+  // длинная таблица может переходить на следующую страницу
+  #set table(stroke: 0.5pt + luma(150), inset: (x: 5pt, y: 4pt))
+  #show table.cell: set par(justify: false)
+  #show table.cell: set align(left)
+  #show table.cell.where(y: 0): set text(weight: "bold")
+  #show figure: set block(breakable: true)
+  #show heading: set block(above: 1.3em, below: 0.7em)
+  ```

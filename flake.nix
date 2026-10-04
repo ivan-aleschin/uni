@@ -60,6 +60,9 @@
               # --- RISC-V кросс-компилятор (ЛР14: кросс-компиляция C → rv32i) ---
               pkgsCross.riscv32-embedded.buildPackages.gcc
               pkgsCross.riscv32-embedded.buildPackages.binutils
+              # --- Документы: Markdown → PDF (project-management) ---
+              pandoc
+              typst         # движок PDF для pandoc: маленькие файлы, кириллица из коробки
               # --- LSP серверы для Neovim ---
               lua-language-server    # Lua (конфиг Neovim / скрипты)
               pyright                # Python (статический анализ + LSP)
