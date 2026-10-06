@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Матлогика · Часть I — Исчисление высказываний (1–10)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root{
+    --navy:#1e466e; --navy2:#2c5d92; --ink:#1e2a3a; --muted:#5b6e8c;
+    --line:#cbd5e1; --bg:#f5f7fb; --side:#0f2440; --side2:#16335a;
+    --gold:#f4c430; --indigo:#4f46e5;
+  }
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family:'Segoe UI','Georgia',serif; background:var(--bg); color:var(--ink);
+    line-height:1.62;
+  }
+  /* ---------- progress bar ---------- */
+  #progress{ position:fixed; top:0; left:0; height:4px; width:0;
+    background:linear-gradient(90deg,#2c5d92,#4f46e5); z-index:60; transition:width .08s linear; }
+
+  /* ---------- layout ---------- */
+  .layout{ display:grid; grid-template-columns:286px minmax(0,1fr);
+    max-width:1500px; margin:0 auto; }
+  .content{ padding:2.2rem 2.6rem 5rem; min-width:0; }
+
+  /* ---------- sidebar ---------- */
+  .sidebar{ position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto;
+    background:var(--side); color:#c7d6ea; padding:1.1rem .8rem 2rem; }
+  .sidebar::-webkit-scrollbar{ width:8px; }
+  .sidebar::-webkit-scrollbar-thumb{ background:#2c456b; border-radius:8px; }
+  .side-title{ color:#fff; font-size:1.02rem; font-weight:700; padding:.3rem .6rem .1rem; letter-spacing:.2px; }
+  .side-sub{ color:#7d9bc4; font-size:.72rem; padding:0 .6rem .8rem; }
+  .side-group{ color:#6f93c2; font-size:.7rem; text-transform:uppercase; letter-spacing:1px;
+    margin:1rem .6rem .3rem; font-weight:700; }
+  .sidebar a{ display:block; color:#bcd0ea; text-decoration:none; font-size:.83rem;
+    padding:.34rem .6rem; border-radius:7px; border-left:3px solid transparent; line-height:1.3; }
+  .sidebar a:hover{ background:rgba(255,255,255,.07); color:#fff; }
+  .sidebar a.active{ background:var(--navy2); color:#fff; border-left-color:var(--gold); font-weight:600; }
+  .sidebar a .n{ display:inline-block; min-width:1.5em; color:#7d9bc4; font-weight:700; }
+  .sidebar a.active .n{ color:#fff; }
+  .side-star{ background:#23304a; border:1px solid #3a4d72; border-radius:9px; margin:.2rem .4rem 0;
+    padding:.1rem; }
+  .side-star a{ font-weight:700; color:var(--gold); }
+  .side-star a .n{ color:var(--gold); }
+  .side-star a:hover{ background:rgba(244,196,48,.12); }
+
+  /* ---------- mobile toggle ---------- */
+  #menu-btn{ display:none; position:fixed; right:16px; bottom:16px; z-index:55;
+    background:var(--navy); color:#fff; border:none; border-radius:50%;
+    width:54px; height:54px; font-size:1.4rem; box-shadow:0 6px 18px rgba(0,0,0,.25); cursor:pointer; }
+  #overlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:50; }
+
+  /* ---------- typography ---------- */
+  h1{ font-size:1.8rem; font-weight:700; color:var(--navy);
+    border-left:6px solid var(--navy); padding-left:1rem; margin-bottom:.3rem; }
+  .subtitle{ color:var(--muted); margin-bottom:1.4rem; padding-left:1.2rem; font-size:.97rem; }
+  h2.part{ font-size:1.45rem; color:#fff; background:var(--navy);
+    padding:.65rem 1.1rem; border-radius:12px; margin:2.4rem 0 1.2rem; scroll-margin-top:14px;
+    box-shadow:0 4px 14px rgba(30,70,110,.22); }
+  h2.part span{ opacity:.7; font-weight:400; font-size:.95rem; }
+  .ticket{ background:#fff; border:1px solid #e3e9f1; border-radius:16px;
+    padding:1.2rem 1.4rem 1.4rem; margin:1.1rem 0; box-shadow:0 4px 16px rgba(20,40,70,.05);
+    scroll-margin-top:14px; }
+  .ticket-head{ display:flex; align-items:flex-start; gap:.7rem; margin-bottom:.5rem; }
+  .num{ flex:0 0 auto; background:var(--navy); color:#fff; font-weight:700;
+    min-width:2rem; height:2rem; padding:0 .45rem; border-radius:8px;
+    display:flex; align-items:center; justify-content:center; font-size:.95rem; }
+  .ticket-head h3{ font-size:1.12rem; color:var(--navy); line-height:1.35; padding-top:.15rem; }
+  h4{ font-size:1rem; color:#2c3e66; margin:1rem 0 .35rem; }
+  p{ margin:.5rem 0; }
+  ul,ol{ margin:.45rem 0 .55rem 1.5rem; }
+  li{ margin:.3rem 0; }
+  code{ font-family:'Courier New',monospace; background:#eef2f7; padding:.08rem .34rem;
+    border-radius:5px; font-size:.9em; }
+
+  /* ---------- callout boxes ---------- */
+  .box{ border-radius:11px; padding:.7rem 1.05rem; margin:.75rem 0; font-size:.95rem; }
+  .box .lab{ display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.6px;
+    font-weight:700; margin-bottom:.25rem; opacity:.85; }
+  .def{ background:#eef0ff; border-left:4px solid var(--indigo); }
+  .def .lab{ color:#3f37c9; }
+  .idea{ background:#fffdf5; border-left:4px solid #d9b441; }
+  .idea .lab{ color:#92670c; }
+  .intu{ background:#eef6fb; border-left:4px solid #2c8fd4; }
+  .intu .lab{ color:#1d6fa5; }
+  .warn{ background:#fef2f2; border-left:4px solid #ef4444; }
+  .warn .lab{ color:#b91c1c; }
+  .good{ background:#ecfdf5; border-left:4px solid #10b981; }
+  .good .lab{ color:#047857; }
+
+  .formula{ font-family:'Cambria Math','Georgia',serif; font-size:1.1rem; text-align:center;
+    background:#f8fafc; padding:.6rem .7rem; border-radius:10px; margin:.7rem 0;
+    border:1px solid #e2e8f0; overflow-x:auto; }
+  .f{ font-family:'Cambria Math','Georgia',serif; }
+
+  .proof{ background:#fcfbf3; border:1px solid #e9e5c3; border-radius:11px;
+    padding:.9rem 1.1rem; font-family:'Courier New',monospace; font-size:.86rem;
+    overflow-x:auto; margin:.8rem 0; white-space:pre-wrap; line-height:1.5; }
+
+  table{ border-collapse:collapse; margin:.8rem 0; width:100%; font-size:.9rem; }
+  th,td{ border:1px solid var(--line); padding:.42rem .6rem; text-align:left; vertical-align:top; }
+  th{ background:#e8eef6; color:var(--navy); }
+  td.c,th.c{ text-align:center; }
+
+  hr{ margin:1.3rem 0; border:none; border-top:1px dashed #d3dceb; }
+  .tag{ display:inline-block; background:#e8eef6; color:var(--navy); font-size:.74rem;
+    font-weight:600; padding:.12rem .55rem; border-radius:20px; margin-left:.4rem; vertical-align:middle; }
+  footer{ text-align:center; margin-top:3rem; padding-top:1.2rem; border-top:1px solid #dbe3ef;
+    font-size:.82rem; color:var(--muted); }
+
+  /* cheat sheet */
+  #shpora{ border:2px solid var(--gold); background:linear-gradient(180deg,#fffdf3,#fff); }
+  #shpora .ticket-head h3{ color:#8a6a00; }
+  #shpora .num{ background:var(--gold); color:#3a2c00; }
+  .mini-def{ margin:.55rem 0; padding-left:.2rem; }
+  .mini-def b{ color:var(--navy); }
+
+  @media (max-width:960px){
+    .layout{ grid-template-columns:1fr; }
+    .sidebar{ position:fixed; top:0; left:0; width:300px; max-width:84vw; z-index:51;
+      transform:translateX(-100%); transition:transform .25s ease; box-shadow:4px 0 24px rgba(0,0,0,.3); }
+    .sidebar.open{ transform:translateX(0); }
+    #menu-btn{ display:block; }
+    .content{ padding:1.4rem 1.1rem 4rem; }
+    .ticket{ padding:1rem 1rem 1.1rem; }
+  }
+
+  /* ---------- file switcher ---------- */
+  .file-nav{ display:flex; flex-wrap:wrap; gap:.3rem; margin:.2rem .4rem .6rem; }
+  .file-nav .fn{ flex:1 1 44%; display:flex; align-items:center; gap:.3rem;
+    font-size:.74rem; color:#bcd0ea; text-decoration:none; background:#16243f;
+    border:1px solid #294063; border-radius:8px; padding:.3rem .45rem; line-height:1.15; }
+  .file-nav .fn:hover{ background:#1d3252; color:#fff; }
+  .file-nav .fn.active{ background:var(--navy2); color:#fff; border-color:var(--gold); }
+  .file-nav .fk{ background:#0f2440; color:#9fc0ea; font-weight:700; border-radius:5px;
+    min-width:1.1rem; text-align:center; font-size:.72rem; padding:0 .15rem; }
+  .file-nav .fn.active .fk{ color:var(--gold); }
+  .plan-link{ display:block; }
+  .sidebar a.cross{ opacity:.82; }
+  .sidebar a.cross::after{ content:"↗"; float:right; color:#6f93c2; font-size:.7rem; padding-left:.3rem; }
+  .sidebar a.cross:hover::after{ color:#cfe0f5; }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="overlay"></div>
+<button id="menu-btn" aria-label="Оглавление">☰</button>
+
+<div class="layout">
+
+  <nav class="sidebar" id="sidebar">
+    <div class="side-title">Матлогика · экзамен</div>
+    <div class="side-sub">42 билета · 5 файлов · разбор и интуиция</div>
+    <div class="file-nav">
+      <a class="fn active" href="#"><span class="fk">1</span>I · ИВ</a>
+      <a class="fn" href="02-moshchnosti.html"><span class="fk">2</span>II · Мощности</a>
+      <a class="fn" href="03-poryadki-chisla.html"><span class="fk">3</span>III–IV · Числа</a>
+      <a class="fn" href="04-predikaty-modeli.html"><span class="fk">4</span>V · Предикаты</a>
+      <a class="fn" href="05-algoritmy.html"><span class="fk">5</span>VI · Алгоритмы</a>
+    </div>
+    <div class="side-star"><a href="#shpora"><span class="n">★</span>Шпаргалка-минимум (10 определений)</a></div>
+    <a class="plan-link" href="#plan"><span class="n">⏱</span>План на 1 день</a>
+    <div class="side-group">I · Исчисление высказываний</div>
+    <a class="tlink" href="#b1"><span class="n">1</span>Формулы. Единственность разбора</a>
+    <a class="tlink" href="#b2"><span class="n">2</span>Правила вывода. Секвенции</a>
+    <a class="tlink" href="#b3"><span class="n">3</span>Секвенции φ∧¬φ⊢, ⊢φ∨¬φ</a>
+    <a class="tlink" href="#b4"><span class="n">4</span>Интерпретация. Тавтологии</a>
+    <a class="tlink" href="#b5"><span class="n">5</span>Непротиворечивость ИВ</a>
+    <a class="tlink" href="#b6"><span class="n">6</span>Лемма Линденбаума</a>
+    <a class="tlink" href="#b7"><span class="n">7</span>Свойства макс. непрот. мн-ва</a>
+    <a class="tlink" href="#b8"><span class="n">8</span>Полнота ИВ</a>
+    <a class="tlink" href="#b9"><span class="n">9</span>Интуиционизм</a>
+    <a class="tlink" href="#b10"><span class="n">10</span>Интуиц. ИВ. Недоказ. ИТ</a>
+    <div class="side-group">II · Мощности множеств</div>
+    <a class="tlink cross" href="02-moshchnosti.html#b11"><span class="n">11</span>Равномощность</a>
+    <a class="tlink cross" href="02-moshchnosti.html#b12"><span class="n">12</span>Кантора–Шрёдера–Бернштейна</a>
+    <a class="tlink cross" href="02-moshchnosti.html#b13"><span class="n">13</span>Счётные множества</a>
+    <a class="tlink cross" href="02-moshchnosti.html#b14"><span class="n">14</span>Континуум</a>
+    <a class="tlink cross" href="02-moshchnosti.html#b15"><span class="n">15</span>Счётное vs континуум</a>
+    <a class="tlink cross" href="02-moshchnosti.html#b16"><span class="n">16</span>Теорема Кантора (P(X))</a>
+    <a class="tlink cross" href="02-moshchnosti.html#b17"><span class="n">17</span>(X^Y)^Z ≅ X^(Y×Z)</a>
+    <div class="side-group">III · Порядки, выбор, числа</div>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b18"><span class="n">18</span>Вполне упорядоченные мн-ва</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b19"><span class="n">19</span>Аксиома выбора. Цермело</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b20"><span class="n">20</span>Лемма Цорна</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b21"><span class="n">21</span>Ординалы</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b22"><span class="n">22</span>Кардиналы</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b23"><span class="n">23</span>𝔪+𝔪=𝔪</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b24"><span class="n">24</span>Мощность A×A</a>
+    <div class="side-group">IV · Аксиоматики чисел</div>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b25"><span class="n">25</span>Аксиомы Пеано. Коммут. +</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b26"><span class="n">26</span>Аксиомы ℝ</a>
+    <div class="side-group">V · Логика предикатов и модели</div>
+    <a class="tlink cross" href="04-predikaty-modeli.html#b27"><span class="n">27</span>Модель. Сигнатура. Термы</a>
+    <a class="tlink cross" href="04-predikaty-modeli.html#b28"><span class="n">28</span>Истинность на модели</a>
+    <a class="tlink cross" href="04-predikaty-modeli.html#b29"><span class="n">29</span>Элиминация кванторов</a>
+    <a class="tlink cross" href="04-predikaty-modeli.html#b30"><span class="n">30</span>Выразимость. Автоморфизмы</a>
+    <a class="tlink cross" href="04-predikaty-modeli.html#b31"><span class="n">31</span>Фильтры и ультрафильтры</a>
+    <a class="tlink cross" href="04-predikaty-modeli.html#b32"><span class="n">32</span>Центрированные системы</a>
+    <a class="tlink cross" href="04-predikaty-modeli.html#b33"><span class="n">33</span>Ультрапроизведение</a>
+    <a class="tlink cross" href="04-predikaty-modeli.html#b34"><span class="n">34</span>Теорема Лося</a>
+    <a class="tlink cross" href="04-predikaty-modeli.html#b35"><span class="n">35</span>Гёделя–Мальцева (компактность)</a>
+    <div class="side-group">VI · Теория алгоритмов</div>
+    <a class="tlink cross" href="05-algoritmy.html#b36"><span class="n">36</span>Машины Тьюринга. Тезис Чёрча</a>
+    <a class="tlink cross" href="05-algoritmy.html#b37"><span class="n">37</span>Суперпозиция и прим. рекурсия</a>
+    <a class="tlink cross" href="05-algoritmy.html#b38"><span class="n">38</span>Минимизация. Рекурс. функции</a>
+    <a class="tlink cross" href="05-algoritmy.html#b39"><span class="n">39</span>Разрешимые и перечислимые</a>
+    <a class="tlink cross" href="05-algoritmy.html#b40"><span class="n">40</span>Универсальные функции</a>
+    <a class="tlink cross" href="05-algoritmy.html#b41"><span class="n">41</span>Перечисл. неразрешимое мн-во</a>
+    <a class="tlink cross" href="05-algoritmy.html#b42"><span class="n">42</span>Проблема остановки</a>
+  </nav>
+
+  <main class="content">
+
+  <h1>Матлогика · Часть I — Исчисление высказываний (1–10)</h1>
+  <p class="subtitle">Строгое определение → идея доказательства → объяснение «на пальцах» → типичные ловушки. Слева — оглавление по всем 5 файлам: текущий файл листается мгновенно, билеты других файлов (со стрелкой&nbsp;↗) открываются в своём файле. Файлы держите в одной папке.</p>
+
+  <div class="box good" id="plan" style="scroll-margin-top:14px">
+    <span class="lab">⏱ как пройти за 1 день (≈6–8 часов)</span>
+    <ul style="margin-bottom:0">
+      <li><b>0:00–0:20.</b> Прочитать <a href="#shpora">шпаргалку-минимум</a> — это тот каркас, на который всё навешивается. Без этих 10 определений теорию не сдать.</li>
+      <li><b>0:20–2:00. Часть I (ИВ).</b> Главные теоремы курса: непротиворечивость (5), Линденбаум (6), полнота (8). Их любят спрашивать «докажите».</li>
+      <li><b>2:00–3:30. Части II–III (множества, мощности, ординалы).</b> Много коротких, но строгих фактов. Диагональный метод Кантора (16) и КШБ (12) — обязательно уметь.</li>
+      <li><b>3:30–4:30. Часть V (модели).</b> Связка «фильтр → ультрафильтр → ультрапроизведение → Лось → компактность» (31–35) — это один сюжет, учить цепочкой.</li>
+      <li><b>4:30–6:00. Часть VI (алгоритмы).</b> Цепочка «универсальная функция → диагональ → неразрешимое перечислимое → остановка» (40–42) — тоже один сюжет.</li>
+      <li><b>Последний час.</b> Закрыть ответ и вслух проговорить формулировку + идею каждой теоремы. Если можете объяснить «на пальцах» — вы её знаете.</li>
+    </ul>
+  </div>
+
+  <article class="ticket" id="shpora">
+    <div class="ticket-head"><span class="num">★</span><h3>Шпаргалка-минимум: 10 определений, без которых не сдать теорию</h3></div>
+    <p style="font-size:.92rem;color:#6b6b50">Это «несгораемый запас» из <code>important.txt</code>. Каждое определение здесь дано кратко и точно; подробный разбор — в соответствующем билете (ссылки рядом).</p>
+
+    <div class="mini-def"><b>1. Формулы и их значения.</b> <span class="tag">→ б.1, 27, 4, 28</span><br>
+      <i>ИВ:</i> формула строится из пропозициональных переменных <code>p,q,…</code> связками <span class="f">¬,∧,∨,→</span> по индукции. <i>Предикаты:</i> к этому добавляются термы, предикатные символы и кванторы <span class="f">∀x, ∃x</span>. <b>Значение</b> формулы ИВ — это <span class="f">И/Л</span>, вычисляемое по таблицам истинности на наборе значений переменных; значение формулы предикатов — это <span class="f">И/Л</span> на модели при фиксированной оценке свободных переменных (определение Тарского).</div>
+
+    <div class="mini-def"><b>2. Сигнатура.</b> <span class="tag">→ б.27</span><br>
+      Набор символов: константы, функциональные символы (с указанием местности) и предикатные символы (с местностью). Это «словарь» языка — какие операции и отношения вообще можно упоминать.</div>
+
+    <div class="mini-def"><b>3. Модель.</b> <span class="tag">→ б.27</span><br>
+      <span class="f">M = ⟨A; …⟩</span>: непустое <b>множество-носитель</b> <span class="f">A</span> плюс <b>интерпретация</b> каждого символа сигнатуры — константам сопоставлены элементы <span class="f">A</span>, <span class="f">n</span>-местным функциям — отображения <span class="f">A<sup>n</sup>→A</span>, <span class="f">n</span>-местным предикатам — отношения <span class="f">⊆ A<sup>n</sup></span>.</div>
+
+    <div class="mini-def"><b>4. Множества: ∪, ∩, ×.</b><br>
+      <span class="f">A∪B</span> = элементы хотя бы одного; <span class="f">A∩B</span> = элементы обоих; <b>декартово произведение</b> <span class="f">A×B = { ⟨a,b⟩ : a∈A, b∈B }</span> — множество упорядоченных пар.</div>
+
+    <div class="mini-def"><b>5. Функции, вложения, наложения, биекции.</b> <span class="tag">→ б.11</span><br>
+      <b>Функция</b> <span class="f">f:A→B</span> — каждому <span class="f">a</span> ровно один <span class="f">f(a)</span>. <b>Вложение (инъекция)</b>: <span class="f">f(a)=f(a′) ⇒ a=a′</span> (разные в разные). <b>Наложение (сюръекция)</b>: каждый <span class="f">b∈B</span> чем-то достигается. <b>Взаимно однозначное (биекция)</b> = инъекция + сюръекция (идеальное «спаривание»).</div>
+
+    <div class="mini-def"><b>6. Мощности и их сравнение.</b> <span class="tag">→ б.11,12,22</span><br>
+      <span class="f">|A|=|B|</span> (равномощны) — есть биекция <span class="f">A↔B</span>. <span class="f">|A|≤|B|</span> — есть инъекция <span class="f">A↪B</span>. Теорема <b>Кантора–Шрёдера–Бернштейна</b>: <span class="f">|A|≤|B|</span> и <span class="f">|B|≤|A| ⇒ |A|=|B|</span>.</div>
+
+    <div class="mini-def"><b>7. Счётные множества.</b> <span class="tag">→ б.13</span><br>
+      Равномощные <span class="f">ℕ</span>, т.е. элементы можно занумеровать в бесконечный список <span class="f">x<sub>0</sub>,x<sub>1</sub>,x<sub>2</sub>,…</span> без пропусков и так, что каждый встретится. Мощность <span class="f">ℵ<sub>0</sub></span> — наименьшая бесконечная.</div>
+
+    <div class="mini-def"><b>8. Вполне упорядоченные множества и ординалы.</b> <span class="tag">→ б.18,21</span><br>
+      <b>Вполне упорядоченное</b> — линейный порядок, в котором у <i>любого непустого</i> подмножества есть наименьший элемент. <b>Ординал</b> — «тип» такого порядка (по фон Нейману: транзитивное множество, вполне упорядоченное отношением <span class="f">∈</span>; каждый ординал = множество всех меньших).</div>
+
+    <div class="mini-def"><b>9. Алгоритмы, машины Тьюринга.</b> <span class="tag">→ б.36</span><br>
+      <b>Алгоритм</b> — конечная механическая пошаговая процедура. <b>Машина Тьюринга</b> формализует это: конечное управление (состояния) + бесконечная лента из ячеек + головка, читающая/пишущая символ и сдвигающаяся влево/вправо по правилу перехода <span class="f">δ</span>.</div>
+
+    <div class="mini-def"><b>10. Вычислимые функции, разрешимые множества.</b> <span class="tag">→ б.36,39</span><br>
+      Функция <b>вычислима</b>, если её считает какая-то МТ (останавливается с ответом). Множество <span class="f">A</span> <b>разрешимо</b>, если вычислима его характеристическая функция <span class="f">χ<sub>A</sub></span> — то есть алгоритм всегда отвечает «да/нет» на вопрос «<span class="f">x∈A?</span>».</div>
+  </article>
+
+  <h2 class="part" id="part1">Часть I · Исчисление высказываний <span>(билеты 1–10)</span></h2>
+
+
+  <div class="box warn">
+    <span class="lab">оговорка про аппарат</span>
+    Конкретный список аксиом и правил ИВ у разных лекторов различается. Ниже — <b>самая распространённая</b> система (гильбертовская: 3 схемы аксиом + modus ponens) и эквивалентный взгляд через натуральный вывод. Идеи доказательств от выбора системы не зависят. Если ваш конспект задаёт другие аксиомы — сверьте именно билеты 1–3.
+  </div>
+
+  <!-- Б1 -->
+  <article class="ticket" id="b1">
+    <div class="ticket-head"><span class="num">1</span><h3>Исчисление высказываний. Формулы. Теорема о единственности представления формулы ИВ.</h3></div>
+
+    <div class="box def"><span class="lab">определение</span>
+      <b>Формула ИВ</b> определяется индуктивно:
+      <ol style="margin-bottom:.2rem">
+        <li>каждая пропозициональная переменная <span class="f">p, q, r, …</span> — формула (атом);</li>
+        <li>если <span class="f">A</span> — формула, то <span class="f">(¬A)</span> — формула;</li>
+        <li>если <span class="f">A, B</span> — формулы и <span class="f">□ ∈ {∧, ∨, →}</span>, то <span class="f">(A □ B)</span> — формула;</li>
+        <li>других формул нет.</li>
+      </ol>
+    </div>
+
+    <p><b>Теорема о единственности представления (об однозначности разбора).</b> Каждая формула принадлежит ровно одному из видов и притом единственным образом: она либо переменная, либо имеет вид <span class="f">(¬A)</span> с однозначно определённой <span class="f">A</span>, либо вид <span class="f">(A □ B)</span> с однозначно определёнными главной связкой <span class="f">□</span> и подформулами <span class="f">A, B</span>.</p>
+
+    <div class="box idea"><span class="lab">идея доказательства</span>
+      Вводим <b>баланс скобок</b>: читая слово слева направо, считаем <code>+1</code> на «<span class="f">(</span>» и <code>−1</code> на «<span class="f">)</span>». Ключевая лемма: у любого <i>собственного начального отрезка</i> формулы баланс строго положителен (скобки «не успели закрыться»). Значит, никакой собственный начальный отрезок формулы сам формулой не является. Отсюда главная связка ищется однозначно: это та связка верхнего уровня, на которой баланс впервые становится нулевым после открывающей скобки. Дальше — индукция по длине.
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      Полные скобки играют роль «обязательной разметки»: запись <span class="f">((p∧q)∨r)</span> невозможно прочитать как <span class="f">(p∧(q∨r))</span>. Это как правильная скобочная последовательность — у неё ровно одно дерево вложенности. Теорема говорит, что формула — это не просто строка символов, а <b>дерево разбора</b>, и это дерево восстанавливается однозначно. Без этого нельзя было бы корректно определять «значение формулы» рекурсией по построению (б.4).
+    </div>
+  </article>
+
+  <!-- Б2 -->
+  <article class="ticket" id="b2">
+    <div class="ticket-head"><span class="num">2</span><h3>Правила вывода. Секвенции. Доказательства. Допустимые правила.</h3></div>
+
+    <div class="box def"><span class="lab">определения</span>
+      <b>Секвенция</b> <span class="f">Γ ⊢ A</span>: <span class="f">Γ</span> — конечное множество формул (гипотезы, посылки), <span class="f">A</span> — формула (заключение). Читается «из <span class="f">Γ</span> выводимо <span class="f">A</span>».<br>
+      <b>Правило вывода</b> — переход от посылок (уже доказанных секвенций/формул) к заключению. В гильбертовской системе: схемы аксиом плюс одно правило <b>modus ponens</b> (MP): из <span class="f">A</span> и <span class="f">A→B</span> получаем <span class="f">B</span>.<br>
+      <b>Доказательство (вывод)</b> формулы <span class="f">A</span> из <span class="f">Γ</span> — конечная последовательность формул <span class="f">A<sub>1</sub>,…,A<sub>n</sub>=A</span>, в которой каждая <span class="f">A<sub>i</sub></span> есть аксиома, либо элемент <span class="f">Γ</span>, либо получена из предыдущих по правилу.
+    </div>
+
+    <div class="box def"><span class="lab">типичные схемы аксиом (гильберт)</span>
+      <span class="f">A1: A→(B→A)</span> &nbsp;·&nbsp; <span class="f">A2: (A→(B→C))→((A→B)→(A→C))</span> &nbsp;·&nbsp; <span class="f">A3</span> — про отрицание (классически, напр. <span class="f">(¬B→¬A)→((¬B→A)→B)</span>). Плюс схемы для <span class="f">∧, ∨</span>.
+    </div>
+
+    <p><b>Выводимое vs допустимое правило.</b> Правило <span class="f">«из посылок P получить заключение Q»</span> называется:</p>
+    <ul>
+      <li><b>выводимым (производным)</b>, если <span class="f">Q</span> можно получить из <span class="f">P</span> фиксированной цепочкой шагов исходной системы (есть «макрос»);</li>
+      <li><b>допустимым</b>, если добавление этого правила не меняет множество выводимых секвенций: как только посылки выводимы, заключение тоже выводимо.</li>
+    </ul>
+
+    <div class="box good"><span class="lab">ключевой факт</span>
+      Всякое выводимое правило допустимо; обратное в общем случае неверно. Главный пример полезного производного/допустимого правила — <b>теорема о дедукции</b>: <span class="f">Γ, A ⊢ B &nbsp;⇒&nbsp; Γ ⊢ A→B</span>. Она радикально сокращает выводы (см. б.3).
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      Аксиомы и правила — это «детали Lego и инструкция сборки». <b>Допустимое</b> правило — это безопасный短cut: пользуясь им, вы никогда не соберёте то, чего нельзя было собрать длинным путём. Поэтому такими правилами можно свободно пользоваться, не расширяя силу системы.
+    </div>
+  </article>
+
+  <!-- Б3 -->
+  <article class="ticket" id="b3">
+    <div class="ticket-head"><span class="num">3</span><h3>Доказательство секвенций <span class="f">φ∧¬φ ⊢</span> и <span class="f">⊢ φ∨¬φ</span>.</h3></div>
+
+    <div class="box def"><span class="lab">что требуется доказать</span>
+      Две конкретные секвенции из билета:<br>
+      • <span class="f">φ∧¬φ ⊢</span> — «противоречие <span class="f">φ∧¬φ</span> ни с чем не совместимо»: из него выводится <span class="f">⊥</span>, а значит и любая формула.<br>
+      • <span class="f">⊢ φ∨¬φ</span> — закон исключённого третьего: <span class="f">φ∨¬φ</span> доказуемо без всяких гипотез (теорема классического ИВ).
+    </div>
+
+    <div class="box idea"><span class="lab">1) вывод <span class="f">φ∧¬φ ⊢</span></span>
+      Три шага натурального вывода:
+      <div class="proof">1. φ ∧ ¬φ        — гипотеза
+2. φ             — выкинули второй член (∧-удаление из 1)
+3. ¬φ            — выкинули первый член (∧-удаление из 1)
+4. ⊥             — φ и ¬φ вместе дают противоречие</div>
+      Итак <span class="f">φ∧¬φ ⊢ ⊥</span>. По правилу «из лжи следует что угодно» отсюда <span class="f">φ∧¬φ ⊢ ψ</span> для любой формулы <span class="f">ψ</span>. ∎
+    </div>
+
+    <div class="box idea"><span class="lab">2) вывод <span class="f">⊢ φ∨¬φ</span> (от противного)</span>
+      Предположим противное — что <span class="f">¬(φ∨¬φ)</span> — и придём к противоречию:
+      <div class="proof">• Допустим φ.  Тогда φ∨¬φ  (∨-введение)  — противоречит ¬(φ∨¬φ).
+  Значит φ невозможно, то есть доказано  ¬φ.
+• Но из ¬φ снова φ∨¬φ  (∨-введение)  — опять противоречие с ¬(φ∨¬φ).</div>
+      Допущение <span class="f">¬(φ∨¬φ)</span> привело к противоречию, то есть доказано <span class="f">¬¬(φ∨¬φ)</span>. Снятие двойного отрицания (классическая аксиома) даёт <span class="f">⊢ φ∨¬φ</span>. ∎
+    </div>
+
+    <div class="box good"><span class="lab">тонкость про интуиционизм</span>
+      Первая секвенция выводится и в интуиционистском ИВ (там доказуем закон непротиворечия <span class="f">⊢ ¬(φ∧¬φ)</span> — без классических средств). А вторая, <span class="f">⊢ φ∨¬φ</span>, существенно опирается на снятие двойного отрицания и в интуиционистском ИВ <b>не выводима</b> (см. б.10).
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      <span class="f">φ∧¬φ ⊢</span>: утверждать сразу <span class="f">φ</span> и <span class="f">не φ</span> — это уже катастрофа, из неё формально следует всё что угодно. <span class="f">⊢ φ∨¬φ</span>: «либо <span class="f">φ</span>, либо нет» — в классической логике всегда верно, потому что третьего не дано; доказываем это, показав, что отрицать такую дизъюнкцию невозможно.
+    </div>
+  </article>
+
+  <!-- Б4 -->
+  <article class="ticket" id="b4">
+    <div class="ticket-head"><span class="num">4</span><h3>Интерпретация ИВ. Истинность формул и секвенций на наборе переменных. Тождественная истинность.</h3></div>
+
+    <div class="box def"><span class="lab">определение</span>
+      <b>Интерпретация (оценка)</b> — функция <span class="f">v</span>, сопоставляющая каждой переменной значение <span class="f">И</span> или <span class="f">Л</span> (1 или 0). Она <b>однозначно</b> (по б.1!) продолжается на все формулы таблицами истинности связок:
+    </div>
+    <table>
+      <tr><th class="c">A</th><th class="c">B</th><th class="c">¬A</th><th class="c">A∧B</th><th class="c">A∨B</th><th class="c">A→B</th></tr>
+      <tr><td class="c">И</td><td class="c">И</td><td class="c">Л</td><td class="c">И</td><td class="c">И</td><td class="c">И</td></tr>
+      <tr><td class="c">И</td><td class="c">Л</td><td class="c">Л</td><td class="c">Л</td><td class="c">И</td><td class="c">Л</td></tr>
+      <tr><td class="c">Л</td><td class="c">И</td><td class="c">И</td><td class="c">Л</td><td class="c">И</td><td class="c">И</td></tr>
+      <tr><td class="c">Л</td><td class="c">Л</td><td class="c">И</td><td class="c">Л</td><td class="c">Л</td><td class="c">И</td></tr>
+    </table>
+
+    <div class="box def"><span class="lab">истинность секвенции и тавтология</span>
+      Секвенция <span class="f">Γ ⊢ A</span> <b>истинна на</b> <span class="f">v</span> (семантически: <span class="f">Γ ⊨ A</span>), если всякий раз, когда все формулы <span class="f">Γ</span> истинны на <span class="f">v</span>, истинна и <span class="f">A</span>.<br>
+      Формула <b>тождественно истинна (тавтология)</b>, <span class="f">⊨ A</span>, если она истинна на <i>любой</i> интерпретации.
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      Интерпретация — это «один конкретный сценарий»: каким переменным мы приписали правду. Тавтология истинна во всех сценариях сразу (напр. <span class="f">A∨¬A</span>, <span class="f">A→A</span>). Семантическое следствие <span class="f">Γ⊨A</span> — это «гарантия»: при любом сценарии, где верны посылки, верно и заключение. Внимание: <span class="f">⊢</span> (синтаксис, «можно вывести по правилам») и <span class="f">⊨</span> (семантика, «истинно в моделях») — пока это <i>разные</i> вещи; их совпадение — содержание теорем 5 и 8.
+    </div>
+  </article>
+
+  <!-- Б5 -->
+  <article class="ticket" id="b5">
+    <div class="ticket-head"><span class="num">5</span><h3>Теорема о непротиворечивости ИВ (корректность).</h3></div>
+
+    <div class="box def"><span class="lab">формулировка</span>
+      ИВ <b>непротиворечиво</b>: не существует формулы <span class="f">A</span>, для которой одновременно <span class="f">⊢A</span> и <span class="f">⊢¬A</span>. Равносильно: выводимо не всё (например, <span class="f">⊬ p</span> для переменной <span class="f">p</span>).
+    </div>
+
+    <div class="box idea"><span class="lab">доказательство (через корректность)</span>
+      <b>Лемма о корректности:</b> всё выводимое тождественно истинно, <span class="f">⊢A ⇒ ⊨A</span>. Доказывается индукцией по длине вывода: <i>(база)</i> каждая аксиома — тавтология (проверка по таблице); <i>(шаг)</i> правило MP сохраняет истинность: если на любой <span class="f">v</span> истинны <span class="f">A</span> и <span class="f">A→B</span>, то истинна и <span class="f">B</span>.<br>
+      Теперь, если бы <span class="f">⊢A</span> и <span class="f">⊢¬A</span>, то были бы тавтологиями обе — <span class="f">A</span> и <span class="f">¬A</span>, что невозможно (на любой <span class="f">v</span> ровно одна из них ложна). ∎
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      Это «лёгкая половина». Правила вывода устроены так, что из истины делают только истину — они «не врут». Поэтому из них в принципе нельзя «вывести ложь», а значит и противоречие. Сложная половина (что выводимого <i>достаточно много</i>) — это полнота, б.8.
+    </div>
+  </article>
+
+  <!-- Б6 -->
+  <article class="ticket" id="b6">
+    <div class="ticket-head"><span class="num">6</span><h3>Вложение непротиворечивого множества формул в максимальное (лемма Линденбаума).</h3></div>
+
+    <div class="box def"><span class="lab">определения</span>
+      Множество формул <span class="f">Γ</span> <b>непротиворечиво</b>, если из него нельзя вывести противоречие (нет <span class="f">A</span> с <span class="f">Γ⊢A</span> и <span class="f">Γ⊢¬A</span>).<br>
+      <span class="f">Γ</span> <b>максимально непротиворечиво</b>, если оно непротиворечиво и добавление любой формулы вне <span class="f">Γ</span> делает его противоречивым (для каждой <span class="f">A</span>: либо <span class="f">A∈Γ</span>, либо <span class="f">Γ∪{A}</span> противоречиво).
+    </div>
+
+    <p><b>Лемма (Линденбаум).</b> Всякое непротиворечивое множество формул содержится в некотором максимальном непротиворечивом множестве.</p>
+
+    <div class="box idea"><span class="lab">доказательство (счётный язык)</span>
+      Занумеруем все формулы <span class="f">A<sub>1</sub>, A<sub>2</sub>, …</span> Строим цепочку:
+      <div class="formula">Γ<sub>0</sub>=Γ; &nbsp; Γ<sub>n+1</sub> = Γ<sub>n</sub>∪{A<sub>n+1</sub>}, если это непротиворечиво, иначе Γ<sub>n+1</sub>=Γ<sub>n</sub>.</div>
+      Положим <span class="f">Γ*=⋃<sub>n</sub>Γ<sub>n</sub></span>. <b>Непротиворечивость <span class="f">Γ*</span>:</b> любой вывод противоречия использует конечно много формул, значит целиком лежит в некотором <span class="f">Γ<sub>n</sub></span> — но все <span class="f">Γ<sub>n</sub></span> непротиворечивы. <b>Максимальность:</b> каждую формулу <span class="f">A<sub>n+1</sub></span> мы пытались добавить; если её нет в <span class="f">Γ*</span>, то на шаге <span class="f">n+1</span> добавление давало противоречие. ∎
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      Идём по списку всех утверждений и <b>жадно</b> добавляем каждое, если оно не ссорится с уже принятым. В итоге получаем «полное непротиворечивое мировоззрение», которое про <i>каждую</i> формулу определилось — принять её или нет. (Для несчётного языка вместо нумерации нужна лемма Цорна, б.20.)
+    </div>
+  </article>
+
+  <!-- Б7 -->
+  <article class="ticket" id="b7">
+    <div class="ticket-head"><span class="num">7</span><h3>Свойства максимального непротиворечивого множества формул.</h3></div>
+
+    <p>Пусть <span class="f">Γ</span> максимально непротиворечиво. Тогда:</p>
+    <ul>
+      <li><b>Дедуктивная замкнутость:</b> <span class="f">Γ⊢A ⇒ A∈Γ</span> (всё выводимое уже внутри; иначе добавление <span class="f">A</span> не портило бы непротиворечивость, противореча максимальности).</li>
+      <li><b>Полнота по отрицанию:</b> для каждой <span class="f">A</span> ровно одно из <span class="f">A∈Γ</span>, <span class="f">¬A∈Γ</span>.</li>
+      <li><span class="f">A∧B∈Γ ⟺ A∈Γ и B∈Γ.</span></li>
+      <li><span class="f">A∨B∈Γ ⟺ A∈Γ или B∈Γ.</span></li>
+      <li><span class="f">A→B∈Γ ⟺ (A∉Γ или B∈Γ).</span></li>
+      <li>содержит все теоремы (все <span class="f">A</span> с <span class="f">⊢A</span>).</li>
+    </ul>
+
+    <div class="box good"><span class="lab">зачем это нужно</span>
+      Эти свойства означают, что <span class="f">Γ</span> ведёт себя <b>как интерпретация</b>: положив <span class="f">v(p)=И ⟺ p∈Γ</span>, получаем (индукцией по формуле), что <span class="f">v(A)=И ⟺ A∈Γ</span> для <i>всех</i> <span class="f">A</span>. То есть из максимального непротиворечивого множества «считывается» модель. Это мост к полноте (б.8).
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      «Полное непротиворечивое мнение» по каждому вопросу говорит ровно «да» или «нет» (полнота по отрицанию) и согласовано со связками так же, как таблицы истинности. Поэтому такое множество <i>и есть</i> замаскированная строка таблицы истинности — конкретный сценарий <span class="f">v</span>.
+    </div>
+  </article>
+
+  <!-- Б8 -->
+  <article class="ticket" id="b8">
+    <div class="ticket-head"><span class="num">8</span><h3>Теорема о полноте классического ИВ.</h3></div>
+
+    <div class="box def"><span class="lab">формулировка</span>
+      Всякая тавтология выводима: <span class="f">⊨A ⇒ ⊢A</span>. В общей форме: <span class="f">Γ⊨A ⇒ Γ⊢A</span>. Вместе с корректностью (б.5) это даёт <b><span class="f">⊢A ⟺ ⊨A</span></b> — синтаксис и семантика совпадают.
+    </div>
+
+    <div class="box idea"><span class="lab">доказательство (Хенкин–Линденбаум, от противного)</span>
+      Пусть <span class="f">Γ⊬A</span>. Тогда <span class="f">Γ∪{¬A}</span> непротиворечиво (иначе <span class="f">Γ⊢A</span>). По лемме Линденбаума (б.6) расширим его до максимального непротиворечивого <span class="f">Δ</span>. Зададим оценку <span class="f">v(p)=И ⟺ p∈Δ</span>. По свойствам из б.7: <span class="f">v(B)=И ⟺ B∈Δ</span> для всех <span class="f">B</span>. Значит все формулы <span class="f">Γ⊆Δ</span> истинны на <span class="f">v</span>, а <span class="f">¬A∈Δ</span> истинна, то есть <span class="f">A</span> ложна. Получили интерпретацию, где <span class="f">Γ</span> верны, а <span class="f">A</span> нет: <span class="f">Γ⊭A</span>. Контрапозиция даёт <span class="f">Γ⊨A ⇒ Γ⊢A</span>. ∎
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      Полнота = «система достаточно сильна»: что всегда истинно — то и доказуемо по правилам, ничего не упущено. Логика этого доказательства: <i>«если не доказать <span class="f">A</span>, то отрицание <span class="f">A</span> можно мирно достроить до целого мировоззрения — а это и есть контрпример-модель»</i>. Так несуществование вывода превращается в существование модели.
+    </div>
+  </article>
+
+  <!-- Б9 -->
+  <article class="ticket" id="b9">
+    <div class="ticket-head"><span class="num">9</span><h3>Понятие об интуиционизме и конструктивизме в математике.</h3></div>
+
+    <div class="box def"><span class="lab">суть</span>
+      <b>Интуиционизм (Брауэр):</b> математические объекты — это мысленные конструкции, а «истинно» значит «построено/доказано», а не «соответствует платоновской реальности». Завершённая (актуальная) бесконечность отвергается; отвергается и безусловный <b>закон исключённого третьего</b> и доказательство существования «от противного».<br>
+      <b>Конструктивизм:</b> чтобы утверждать <span class="f">∃x P(x)</span>, нужно <i>предъявить</i> конкретный <span class="f">x</span>; чтобы утверждать <span class="f">A∨B</span>, нужно знать, <i>какой именно</i> из дизъюнктов верен.
+    </div>
+
+    <div class="box def"><span class="lab">интерпретация БХК (Брауэр–Гейтинг–Колмогоров)</span>
+      Доказательство <span class="f">A∧B</span> = пара (доказ. A, доказ. B); &nbsp; <span class="f">A∨B</span> = указание дизъюнкта + его доказательство; &nbsp; <span class="f">A→B</span> = метод, перерабатывающий доказательства <span class="f">A</span> в доказательства <span class="f">B</span>; &nbsp; <span class="f">∃x A</span> = свидетель + доказательство; &nbsp; <span class="f">∀x A</span> = метод по <span class="f">x</span>; &nbsp; <span class="f">¬A := A→⊥</span>.
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      Девиз — «<b>покажи</b>». Фраза «либо гипотеза верна, либо нет» неинформативна, пока вы не умеете выяснить, что именно. Поэтому <span class="f">A∨¬A</span> не принимается как универсальный принцип. Заметьте: <span class="f">A→¬¬A</span> интуиционисты принимают, а вот <span class="f">¬¬A→A</span> — нет (из «нельзя опровергнуть» не следует «есть конструкция»).
+    </div>
+  </article>
+
+  <!-- Б10 -->
+  <article class="ticket" id="b10">
+    <div class="ticket-head"><span class="num">10</span><h3>Интуиционистское ИВ. Недоказуемость закона исключённого третьего.</h3></div>
+
+    <div class="box def"><span class="lab">что такое ИИВ</span>
+      <b>Интуиционистское ИВ</b> — тот же язык, но без аксиомы/правила, дающего классическое снятие двойного отрицания (<span class="f">¬¬A→A</span>) / закон <span class="f">A∨¬A</span>. Берут <span class="f">⊥</span> и «из лжи — всё» (<span class="f">⊥→A</span>), остальные интро/элим-правила, но <i>без</i> классического A3.
+    </div>
+
+    <p><b>Утверждение.</b> <span class="f">A∨¬A</span> в ИИВ <b>не выводимо</b>.</p>
+
+    <div class="box idea"><span class="lab">доказательство 1 — топологическая модель (алгебра Гейтинга)</span>
+      Интерпретируем формулы открытыми множествами на прямой <span class="f">ℝ</span>: <span class="f">∧=∩</span>, <span class="f">∨=∪</span>, <span class="f">¬U=int(ℝ∖U)</span> (внутренность дополнения). ИИВ <i>корректно</i> для такой семантики: выводимое получает значение «всё <span class="f">ℝ</span>». Возьмём <span class="f">⟦p⟧=ℝ∖{0}</span> (открыто). Тогда
+      <div class="formula">¬p = int(ℝ∖(ℝ∖{0})) = int({0}) = ∅, &nbsp; p∨¬p = (ℝ∖{0})∪∅ = ℝ∖{0} ≠ ℝ.</div>
+      Значение не «всё <span class="f">ℝ</span>», значит <span class="f">p∨¬p</span> не теорема ИИВ. ∎
+    </div>
+
+    <div class="box idea"><span class="lab">доказательство 2 — модель Крипке</span>
+      Модель Крипке — частично упорядоченное множество «миров» (состояний знания) с монотонным форсингом (<span class="f">⊩</span> сохраняется вверх по порядку). Возьмём два мира <span class="f">w<sub>0</sub> ≤ w<sub>1</sub></span>, где <span class="f">p</span> не форсится в <span class="f">w<sub>0</sub></span>, но форсится в <span class="f">w<sub>1</sub></span>. В <span class="f">w<sub>0</sub></span>: <span class="f">p</span> не форсится; <span class="f">¬p</span> значит «во всех будущих мирах <span class="f">p</span> ложно», но в <span class="f">w<sub>1</sub></span> оно истинно — значит и <span class="f">¬p</span> не форсится. Поэтому <span class="f">p∨¬p</span> не форсится в <span class="f">w<sub>0</sub></span>. По корректности — не теорема. ∎
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      Смысл моделей — «знание растёт со временем». В состоянии, где про <span class="f">p</span> ещё ничего не решено, нет ни доказательства <span class="f">p</span>, ни доказательства <span class="f">¬p</span> (вдруг в будущем <span class="f">p</span> подтвердится) — поэтому дизъюнкция <span class="f">p∨¬p</span> «провисает». Классически она верна, потому что классика смотрит только на финальные «истинно/ложно», игнорируя процесс узнавания.
+    </div>
+  </article>
+
+  <footer>Подготовка к экзамену по математической логике · 42 билета + шпаргалка · материал разбит на 5 связанных файлов для удобной навигации и заучивания за один день.</footer>
+  </main>
+</div>
+
+<script>
+(function(){
+  var prog=document.getElementById('progress');
+  var sidebar=document.getElementById('sidebar');
+  var btn=document.getElementById('menu-btn');
+  var overlay=document.getElementById('overlay');
+  // progress bar
+  function onScroll(){
+    var h=document.documentElement;
+    var max=(h.scrollHeight-h.clientHeight)||1;
+    prog.style.width=(100*h.scrollTop/max)+'%';
+  }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+  // mobile menu
+  function close(){ sidebar.classList.remove('open'); overlay.style.display='none'; }
+  if(btn){ btn.addEventListener('click',function(){
+      var open=sidebar.classList.toggle('open');
+      overlay.style.display=open?'block':'none'; }); }
+  if(overlay){ overlay.addEventListener('click',close); }
+  sidebar.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click',function(){ if(window.innerWidth<=960) close(); });
+  });
+  // scroll-spy (only same-file anchors: href starts with '#')
+  var map={};
+  sidebar.querySelectorAll('a[href^="#"]').forEach(function(a){
+    var id=a.getAttribute('href').slice(1); if(id) map[id]=a;
+  });
+  var targets=[];
+  Object.keys(map).forEach(function(id){
+    var el=document.getElementById(id); if(el) targets.push(el);
+  });
+  var current=null;
+  function spy(){
+    var best=null, bestTop=-1e9, line=120;
+    targets.forEach(function(el){
+      var t=el.getBoundingClientRect().top;
+      if(t-line<=0 && t>bestTop){ bestTop=t; best=el; }
+    });
+    if(best && best.id!==current){
+      if(current && map[current]) map[current].classList.remove('active');
+      current=best.id; map[current].classList.add('active');
+      var link=map[current];
+      var r=link.getBoundingClientRect(), sr=sidebar.getBoundingClientRect();
+      if(r.top<sr.top||r.bottom>sr.bottom) link.scrollIntoView({block:'center'});
+    }
+  }
+  window.addEventListener('scroll',spy,{passive:true});
+  window.addEventListener('resize',spy); spy();
+})();
+</script>
+</body>
+</html>

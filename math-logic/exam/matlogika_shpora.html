@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Матлогика — шпаргалка к экзамену (42 билета)</title>
+<style>
+  :root{
+    --bg:#eceff3; --card:#ffffff; --ink:#1b1f24; --muted:#5c6470; --line:#dfe3e9;
+    --iv:#3a4cae;      /* логика высказываний */
+    --set:#0e8a7d;     /* теория множеств */
+    --pred:#7a3dac;    /* предикаты / модели */
+    --alg:#b2552e;     /* алгоритмы */
+    --thm:#0e6b8a; --proof:#5c6470; --key:#9a5a00; --def:#3a4cae;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
+    line-height:1.55; font-size:16px;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:0 18px; display:flex; gap:26px;}
+  /* ---- nav ---- */
+  nav{
+    width:260px; flex:0 0 260px; position:sticky; top:0; align-self:flex-start;
+    height:100vh; overflow-y:auto; padding:18px 8px 40px 0; font-size:13px;
+  }
+  nav h2{font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:18px 0 6px;}
+  nav a{display:block; color:var(--ink); text-decoration:none; padding:3px 8px; border-radius:6px; border-left:3px solid transparent;}
+  nav a:hover{background:#f1f3f7;}
+  nav a.active{background:#eef1fb; border-left-color:var(--iv); font-weight:600;}
+  nav .b-set a.active{background:#e7f6f4; border-left-color:var(--set);}
+  nav .b-pred a.active{background:#f3ebf8; border-left-color:var(--pred);}
+  nav .b-alg a.active{background:#f8ece6; border-left-color:var(--alg);}
+  nav small{color:var(--muted)}
+  /* ---- main ---- */
+  main{flex:1 1 auto; min-width:0; padding:22px 0 120px;}
+  header.top{padding:26px 0 6px;}
+  header.top h1{font-size:25px; margin:0 0 4px; letter-spacing:-.01em;}
+  header.top p{margin:2px 0; color:var(--muted); font-size:14px;}
+  .howto{background:#fff; border:1px solid var(--line); border-radius:10px; padding:12px 16px; margin:16px 0 26px; font-size:14px;}
+  .howto b{color:var(--ink)}
+  .howto .leg{display:flex; flex-wrap:wrap; gap:14px; margin-top:8px;}
+  .howto .leg span{display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:var(--muted)}
+  .dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+  /* блоки */
+  .block-h{font-size:13px; text-transform:uppercase; letter-spacing:.1em; font-weight:700; margin:34px 0 10px; padding-bottom:6px; border-bottom:2px solid;}
+  .block-iv{color:var(--iv); border-color:var(--iv)}
+  .block-set{color:var(--set); border-color:var(--set)}
+  .block-pred{color:var(--pred); border-color:var(--pred)}
+  .block-alg{color:var(--alg); border-color:var(--alg)}
+  /* карточка вопроса */
+  .q{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 20px 18px; margin:0 0 14px; scroll-margin-top:14px;}
+  .q > h3{display:flex; gap:10px; align-items:baseline; margin:0 0 10px; font-size:17.5px; line-height:1.35;}
+  .num{flex:0 0 auto; font-weight:700; color:#fff; border-radius:7px; min-width:30px; height:26px; padding:0 7px; display:inline-flex; align-items:center; justify-content:center; font-size:14px; transform:translateY(1px);}
+  .n-iv{background:var(--iv)} .n-set{background:var(--set)} .n-pred{background:var(--pred)} .n-alg{background:var(--alg)}
+  .q p{margin:7px 0;}
+  .q ul{margin:7px 0; padding-left:20px;}
+  .q li{margin:3px 0;}
+  /* математика */
+  .m{font-family:Georgia,"Times New Roman",serif; font-style:italic;}
+  .fml{font-family:Georgia,"Times New Roman",serif; font-style:italic; background:#f7f8fb; border-left:3px solid #c9cfdb; padding:7px 12px; margin:9px 0; border-radius:0 6px 6px 0; overflow-x:auto;}
+  .tree{font-family:"JetBrains Mono","Cascadia Code",Consolas,monospace; font-style:normal; font-size:13px; white-space:pre; background:#1e232b; color:#e6e9ee; padding:11px 14px; border-radius:8px; margin:9px 0; overflow-x:auto; line-height:1.45;}
+  /* колауты */
+  .box{border-radius:8px; padding:9px 13px; margin:9px 0; font-size:14.5px; border:1px solid;}
+  .box .lab{font-weight:700; font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:3px;}
+  .def{background:#eef1fb; border-color:#d4dbf3;}  .def .lab{color:var(--def)}
+  .thm{background:#e9f4f8; border-color:#cfe6ee;}  .thm .lab{color:var(--thm)}
+  .proof{background:#f5f6f8; border-color:#e1e4ea;} .proof .lab{color:var(--proof)}
+  .key{background:#fdf6e7; border-color:#f0e0bd;}   .key .lab{color:var(--key)}
+  .q strong{font-weight:650}
+  /* back to top */
+  #top{position:fixed; right:18px; bottom:18px; background:var(--ink); color:#fff; border:none; border-radius:50%; width:44px; height:44px; font-size:18px; cursor:pointer; opacity:0; pointer-events:none; transition:.2s; box-shadow:0 4px 14px rgba(0,0,0,.25);}
+  #top.show{opacity:.9; pointer-events:auto;}
+  .navtoggle{display:none}
+  @media(max-width:860px){
+    .wrap{flex-direction:column; gap:0}
+    nav{position:static; width:100%; height:auto; max-height:60vh; padding:10px 0; border-bottom:1px solid var(--line); display:none;}
+    nav.open{display:block}
+    .navtoggle{display:inline-block; position:sticky; top:0; z-index:5; margin:8px 0; background:var(--ink); color:#fff; border:none; padding:9px 14px; border-radius:8px; font-size:14px; cursor:pointer;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ===================== NAV ===================== -->
+<button class="navtoggle" id="ntog">☰ Список билетов</button>
+<nav id="nav">
+  <h2>Логика высказываний</h2>
+  <div class="b-iv">
+    <a href="#q1">1. Формулы. Единственность разбора</a>
+    <a href="#q2">2. Правила вывода, секвенции</a>
+    <a href="#q3">3. φ∧¬φ⊢ и ⊢φ∨¬φ</a>
+    <a href="#q4">4. Интерпретация ИВ</a>
+    <a href="#q5">5. Непротиворечивость (корректность)</a>
+    <a href="#q6">6. Вложение в максимальное</a>
+    <a href="#q7">7. Свойства макс. непротив. мн-ва</a>
+    <a href="#q8">8. Полнота ИВ</a>
+    <a href="#q9">9. Интуиционизм, конструктивизм</a>
+    <a href="#q10">10. ИИВ, недоказуемость ИТ</a>
+  </div>
+  <h2>Теория множеств</h2>
+  <div class="b-set">
+    <a href="#q11">11. Эквивалентность множеств</a>
+    <a href="#q12">12. Кантор–Шрёдер–Бернштейн</a>
+    <a href="#q13">13. Счётные множества</a>
+    <a href="#q14">14. Континуум</a>
+    <a href="#q15">15. Счётные ↔ континуум</a>
+    <a href="#q16">16. Теорема Кантора (2ˣ)</a>
+    <a href="#q17">17. (Xᵞ)ᶻ ~ Xᵞˣᶻ</a>
+    <a href="#q18">18. Вполне упорядоченные мн-ва</a>
+    <a href="#q19">19. Аксиома выбора, Цермело</a>
+    <a href="#q20">20. Лемма Цорна</a>
+    <a href="#q21">21. Ординальные числа</a>
+    <a href="#q22">22. Кардинальные числа</a>
+    <a href="#q23">23. 𝔪+𝔪=𝔪</a>
+    <a href="#q24">24. Мощность A×A</a>
+  </div>
+  <h2>Предикаты и модели</h2>
+  <div class="b-pred">
+    <a href="#q25">25. Аксиомы Пеано, коммут. +</a>
+    <a href="#q26">26. Аксиомы действ. чисел</a>
+    <a href="#q27">27. Модель, сигнатура, термы</a>
+    <a href="#q28">28. Истинность на модели</a>
+    <a href="#q29">29. Элиминация кванторов</a>
+    <a href="#q30">30. Выразимость, автоморфизмы</a>
+    <a href="#q31">31. Фильтры, ультрафильтры</a>
+    <a href="#q32">32. Центрированные системы</a>
+    <a href="#q33">33. Ультрапроизведение</a>
+    <a href="#q34">34. Теорема Лося</a>
+    <a href="#q35">35. Гёдель–Мальцев</a>
+  </div>
+  <h2>Алгоритмы</h2>
+  <div class="b-alg">
+    <a href="#q36">36. Машины Тьюринга, тезис Чёрча</a>
+    <a href="#q37">37. Суперпозиция, прим. рекурсия</a>
+    <a href="#q38">38. Минимизация, рекурс. функции</a>
+    <a href="#q39">39. Разрешимые / перечислимые</a>
+    <a href="#q40">40. Универсальные функции</a>
+    <a href="#q41">41. Перечислимое неразрешимое</a>
+    <a href="#q42">42. Проблема остановки</a>
+  </div>
+  <h2>&nbsp;</h2>
+  <small style="padding:0 8px">По учебнику Кожухов–Романов «Матлогика», МИЭТ.</small>
+</nav>
+
+<!-- ===================== MAIN ===================== -->
+<main>
+<header class="top">
+  <h1>Математическая логика — шпаргалка к экзамену</h1>
+  <p>42 билета · краткие, но полные ответы для быстрого повторения</p>
+</header>
+
+<div class="howto">
+  <b>Как читать.</b> Каждый билет = одна карточка. <span class="m">Голубые</span> блоки — <b>определения</b>,
+  <span style="color:var(--thm)">бирюзовые</span> — <b>теоремы</b>, серые — <b>идея доказательства</b>,
+  <span style="color:var(--key)">жёлтые</span> — <b>что сказать на экзамене / суть</b>. Если времени мало —
+  читай заголовок, жёлтый и бирюзовый блоки.
+  <div class="leg">
+    <span><i class="dot" style="background:var(--iv)"></i>Высказывания</span>
+    <span><i class="dot" style="background:var(--set)"></i>Множества</span>
+    <span><i class="dot" style="background:var(--pred)"></i>Предикаты/модели</span>
+    <span><i class="dot" style="background:var(--alg)"></i>Алгоритмы</span>
+  </div>
+</div>
+
+<!-- ================= БЛОК 1: ИВ ================= -->
+<div class="block-h block-iv">I. Логика высказываний</div>
+
+<section class="q" id="q1">
+  <h3><span class="num n-iv">1</span> Исчисление высказываний. Формулы. Теорема о единственности представления формулы ИВ.</h3>
+  <div class="box def"><span class="lab">Алфавит и формулы</span>
+  Символы ИВ: пропозициональные переменные <span class="m">p₁, p₂, …</span> (множество <span class="m">PVar</span>); абсурд <span class="m">⊥</span>; связки <span class="m">¬</span> (одноместная), <span class="m">∧, ∨, →</span> (двухместные); скобки.
+  <b>Атомарные формулы</b> — переменные и <span class="m">⊥</span>. Множество <span class="m">Prop</span> порождается атомарными формулами и операциями: если <span class="m">φ</span> формула, то <span class="m">¬φ</span>; если <span class="m">φ, ψ</span> формулы и <span class="m">:</span> бинарная связка, то <span class="m">(φ : ψ)</span>.
+  </div>
+  <p>Грамматика: <span class="m">φ ::= p | ⊥ | ¬φ | (φ : ψ)</span>. Длина задаётся рекурсией.</p>
+  <div class="box proof"><span class="lab">Лемма о начале</span>
+  Если <span class="m">φ, ψ</span> — формулы и <span class="m">ψ</span> является началом <span class="m">φ</span>, то <span class="m">ψ = φ</span> (индукция по построению <span class="m">φ</span>).
+  </div>
+  <div class="box thm"><span class="lab">Теорема (единственность разбора)</span>
+  Всякая неатомарная формула единственным образом представима в одном из видов
+  <span class="m">¬φ₁, (φ₁∧φ₂), (φ₁∨φ₂), (φ₁→φ₂)</span>. Соответствующая связка — <b>главная</b>, <span class="m">φ₁, φ₂</span> — главные подформулы.
+  </div>
+  <div class="box proof"><span class="lab">Доказательство</span>
+  Существование — из определения. Единственность: <span class="m">¬φ₁</span> не может равняться <span class="m">(φ₁:φ₂)</span> (разные первые символы). Если <span class="m">(φ₁:φ₂)=(φ₁′:φ₂′)</span>, то одна из <span class="m">φ₁, φ₁′</span> — начало другой, по лемме о начале <span class="m">φ₁=φ₁′</span>, значит <span class="m">:=:′</span> и <span class="m">φ₂=φ₂′</span>.
+  </div>
+  <div class="box key"><span class="lab">Суть</span>
+  Однозначность разбора ⇔ определение формул <b>свободно</b> ⇒ есть алгоритм распознавания формул, корректно определены рекурсивные функции на формулах. Внешние скобки обязательны: без них <span class="m">p∧q∨p</span> разбирается двумя способами.
+  </div>
+</section>
+
+<section class="q" id="q2">
+  <h3><span class="num n-iv">2</span> Правила вывода. Секвенции. Доказательства. Допустимые правила.</h3>
+  <div class="box def"><span class="lab">Секвенция</span>
+  <span class="m">Γ ⊢ φ</span> — «из гипотез <span class="m">Γ</span> (конечное множество, контекст) выводится <span class="m">φ</span>». Аксиомы НД: <span class="m">Γ, φ ⊢ φ</span>.
+  </div>
+  <p>Натуральная дедукция Генцена: для каждой связки — правило <b>введения</b> (I) и <b>исключения</b> (E):</p>
+  <ul>
+    <li><span class="m">∧</span>: <b>∧I</b> из <span class="m">φ, ψ</span> ⊢ <span class="m">φ∧ψ</span>; <b>∧E</b> из <span class="m">φ∧ψ</span> ⊢ <span class="m">φ</span> (или <span class="m">ψ</span>).</li>
+    <li><span class="m">∨</span>: <b>∨I</b> из <span class="m">φ</span> ⊢ <span class="m">φ∨ψ</span>; <b>∨E</b> (разбор случаев): из <span class="m">φ∨ψ</span> и двух выводов <span class="m">φ⊢χ, ψ⊢χ</span> ⊢ <span class="m">χ</span>.</li>
+    <li><span class="m">→</span>: <b>→I</b> из вывода <span class="m">φ⊢ψ</span> ⊢ <span class="m">φ→ψ</span>; <b>→E</b> (modus ponens): из <span class="m">φ</span> и <span class="m">φ→ψ</span> ⊢ <span class="m">ψ</span>.</li>
+    <li><span class="m">¬</span>: <b>¬I</b> из <span class="m">φ⊢⊥</span> ⊢ <span class="m">¬φ</span>; <b>¬E</b> из <span class="m">φ, ¬φ</span> ⊢ <span class="m">⊥</span>.</li>
+    <li><span class="m">⊥</span><b>E</b>: из <span class="m">⊥</span> ⊢ любая <span class="m">φ</span>. <b>RAA</b> (от противного): из <span class="m">Γ,¬φ ⊢ ⊥</span> ⊢ <span class="m">φ</span>.</li>
+  </ul>
+  <p><b>Вывод</b> — дерево: корень <span class="m">Γ⊢φ</span>, листья — аксиомы, узлы — заключения правил. Выводимость <span class="m">⊢<sub>ND</sub></span>. I читаем снизу вверх, E — сверху вниз.</p>
+  <div class="box key"><span class="lab">Допустимые правила</span>
+  Комбинации основных правил (для удобства): <b>MT</b> (modus tollens), <b>TND</b> (исключённое третье <span class="m">⊢φ∨¬φ</span>), <b>¬¬I, ¬¬E</b> (снятие/введение двойного отрицания), <b>DS</b> (дизъюнктивный силлогизм: <span class="m">φ∨ψ, ¬φ ⊢ ψ</span>). Каждое сводится к выводу через основные правила.
+  </div>
+</section>
+
+<section class="q" id="q3">
+  <h3><span class="num n-iv">3</span> Доказательство секвенций <span class="m">φ∧¬φ ⊢</span> и <span class="m">⊢ φ∨¬φ</span>.</h3>
+  <p><b>(а)</b> <span class="m">φ∧¬φ ⊢ ⊥</span> (противоречивость конъюнкции). Из <span class="m">φ∧¬φ</span> двумя <span class="m">∧E</span> получаем <span class="m">φ</span> и <span class="m">¬φ</span>, затем <span class="m">¬E</span> даёт <span class="m">⊥</span>:</p>
+  <div class="tree">  φ∧¬φ ⊢ φ∧¬φ          φ∧¬φ ⊢ φ∧¬φ
+  ──────────── ∧E       ──────────── ∧E
+   φ∧¬φ ⊢ φ              φ∧¬φ ⊢ ¬φ
+  ─────────────────────────────────── ¬E
+              φ∧¬φ ⊢ ⊥</div>
+  <p><b>(б)</b> <span class="m">⊢ φ∨¬φ</span> (закон исключённого третьего). Доказывается через <b>RAA</b>.</p>
+  <div class="box proof"><span class="lab">Идея</span>
+  Цель: <span class="m">⊢ φ∨¬φ</span>. Предположим <span class="m">¬(φ∨¬φ)</span> (для RAA).
+  ① Если допустить <span class="m">φ</span>, то <span class="m">∨I</span> даёт <span class="m">φ∨¬φ</span>, что вместе с <span class="m">¬(φ∨¬φ)</span> даёт <span class="m">⊥</span>; по <span class="m">¬I</span> получаем <span class="m">¬φ</span>.
+  ② Но из <span class="m">¬φ</span> снова <span class="m">∨I</span> даёт <span class="m">φ∨¬φ</span>, опять <span class="m">⊥</span> с <span class="m">¬(φ∨¬φ)</span>.
+  Итак <span class="m">¬(φ∨¬φ) ⊢ ⊥</span>, и <b>RAA</b> даёт <span class="m">⊢ φ∨¬φ</span>.
+  </div>
+  <div class="box key"><span class="lab">Запомни</span>
+  (а) — чистые <span class="m">∧E + ¬E</span>. (б) — обязательно RAA (классическое правило), поэтому в интуиционизме <span class="m">φ∨¬φ</span> недоказуема (билет 10).
+  </div>
+</section>
+
+<section class="q" id="q4">
+  <h3><span class="num n-iv">4</span> Интерпретация ИВ. Истинность формул и секвенций. Тождественная истинность.</h3>
+  <div class="box def"><span class="lab">Оценка и интерпретация</span>
+  <span class="m">B={0,1}</span>. <b>Оценка</b> <span class="m">θ : P → B</span>. Соответствующая <b>интерпретация</b> <span class="m">θ̄ : PExpr → B</span> по рекурсии:
+  <div class="fml">θ̄(p)=θ(p); &nbsp; θ̄(⊥)=0; &nbsp; θ̄(¬φ)=¬θ̄(φ); &nbsp; θ̄(φ:ψ)=θ̄(φ):θ̄(ψ);<br>
+  θ̄(Γ)=⋀<sub>φ∈Γ</sub> θ̄(φ) &nbsp;(⋀∅=1); &nbsp; θ̄(Γ⊢φ)=¬θ̄(Γ) ∨ θ̄(φ).</div>
+  По теореме о рекурсии каждой оценке отвечает единственная интерпретация.
+  </div>
+  <div class="box thm"><span class="lab">Теорема</span>
+  <span class="m">θ̄(φ)</span> зависит только от значений переменных из <span class="m">PVar(φ)</span> (индукция по построению).
+  </div>
+  <p><span class="m">θ⊨φ</span>, если <span class="m">θ̄(φ)=1</span>. Секвенция <span class="m">Γ⊢ψ</span> истинна при <span class="m">θ</span>, если хотя бы одна гипотеза ложна <b>или</b> <span class="m">ψ</span> истинна; ложна — если все гипотезы истинны, а <span class="m">ψ</span> ложна.</p>
+  <div class="box key"><span class="lab">Термины</span>
+  <b>Тождественно истинна (общезначима)</b> — истинна при всех оценках. <b>Выполнима</b> — при некоторой. <span class="m">Γ⊨φ</span> — <span class="m">φ</span> следствие <span class="m">Γ</span>. <b>Контрпример</b> — оценка, на которой ложно.
+  </div>
+</section>
+
+<section class="q" id="q5">
+  <h3><span class="num n-iv">5</span> Теорема о непротиворечивости ИВ (корректность).</h3>
+  <div class="box thm"><span class="lab">Лемма о корректности</span>
+  <span class="m">Γ ⊢<sub>ND</sub> φ ⇒ Γ ⊨ φ</span>: всякая выводимая в НД секвенция тождественно истинна.
+  </div>
+  <div class="box proof"><span class="lab">Доказательство</span>
+  Индукция по построению вывода.
+  ① Аксиома <span class="m">Γ,φ⊢φ</span> очевидно тождественно истинна.
+  ② Надо показать, что каждое правило переводит тождественно истинные посылки в тождественно истинное заключение. Например, <span class="m">∧I</span>: если <span class="m">Γ₁⊨φ</span> и <span class="m">Γ₂⊨ψ</span>, то для любой <span class="m">θ</span> при <span class="m">θ(Γ₁,Γ₂)=1</span> имеем <span class="m">θ(φ)=θ(ψ)=1</span>, значит <span class="m">θ(φ∧ψ)=1</span>. Аналогично для <span class="m">∨E, →E, RAA</span> и др.
+  </div>
+  <div class="box key"><span class="lab">Следствие (непротиворечивость)</span>
+  Нельзя одновременно <span class="m">⊢φ</span> и <span class="m">⊢¬φ</span>: иначе <span class="m">⊢⊥</span>, но <span class="m">⊥</span> не тождественно истинна — противоречие. То есть пустой контекст непротиворечив.
+  </div>
+</section>
+
+<section class="q" id="q6">
+  <h3><span class="num n-iv">6</span> Вложение непротиворечивого множества формул в максимальное.</h3>
+  <div class="box def"><span class="lab">Определения</span>
+  <span class="m">Γ</span> <b>противоречиво</b>, если <span class="m">Γ⊢⊥</span>. <b>Максимальное непротиворечивое</b> — непротиворечивое, не имеющее непротиворечивых надмножеств.
+  </div>
+  <div class="box thm"><span class="lab">Лемма</span>
+  Любое непротиворечивое <span class="m">Γ</span> содержится в некотором максимальном непротиворечивом <span class="m">Γ*</span>.
+  </div>
+  <div class="box proof"><span class="lab">Доказательство</span>
+  Занумеруем все формулы <span class="m">φ₁, φ₂, …</span>. Строим: <span class="m">Γ₀=Γ</span>;
+  <span class="m">Γ<sub>n+1</sub> = Γ<sub>n</sub>∪{φ<sub>n</sub>}</span>, если непротиворечиво, иначе <span class="m">Γ<sub>n</sub></span>. Полагаем <span class="m">Γ* = ⋃Γ<sub>n</sub></span>.
+  Все <span class="m">Γ<sub>n</sub></span> непротиворечивы (индукция). Если <span class="m">Γ*</span> противоречиво, то вывод <span class="m">⊥</span> использует <b>конечное</b> число гипотез <span class="m">ψ₁,…,ψ<sub>m</sub></span>; все они лежат в некотором <span class="m">Γ<sub>n</sub></span> (берём максимальный индекс), значит <span class="m">Γ<sub>n</sub></span> противоречиво — противоречие. Максимальность: любое непротиворечивое <span class="m">Δ⊇Γ*</span> совпадает с <span class="m">Γ*</span> (каждая <span class="m">ψ=φ<sub>n</sub></span> добавлена бы на шаге <span class="m">n</span>).
+  </div>
+  <div class="box key"><span class="lab">Ключ</span>
+  Главное — <b>компактность вывода</b>: доказательство <span class="m">⊥</span> конечно, поэтому «утечка» противоречия ловится на конечном шаге.
+  </div>
+</section>
+
+<section class="q" id="q7">
+  <h3><span class="num n-iv">7</span> Свойства максимального непротиворечивого множества формул.</h3>
+  <div class="box thm"><span class="lab">Лемма</span>
+  Пусть <span class="m">Γ</span> — максимальное непротиворечивое. Тогда:
+  <ol style="margin:5px 0 0">
+    <li><span class="m">Γ⊢φ ⇒ φ∈Γ</span> (замкнутость относительно выводимости);</li>
+    <li><span class="m">⊥∉Γ</span>;</li>
+    <li>для всякой <span class="m">φ</span>: либо <span class="m">φ∈Γ</span>, либо <span class="m">¬φ∈Γ</span>;</li>
+    <li><span class="m">φ→ψ∈Γ ⟺ (ψ∈Γ или φ∉Γ)</span>;</li>
+    <li><span class="m">φ∧ψ∈Γ ⟺ φ∈Γ и ψ∈Γ</span>;</li>
+    <li><span class="m">φ∨ψ∈Γ ⟺ φ∈Γ или ψ∈Γ</span>.</li>
+  </ol>
+  </div>
+  <div class="box proof"><span class="lab">Доказательство п.1</span>
+  Если <span class="m">φ∉Γ</span>, то <span class="m">Γ,φ</span> противоречиво (по максимальности), тогда <span class="m">Γ⊢¬φ</span> (правило RAA), но <span class="m">Γ⊢φ</span> ⇒ <span class="m">Γ⊢⊥</span> — противоречие. Остальные пункты — аналогично, через свойства выводимости.
+  </div>
+  <div class="box key"><span class="lab">Зачем</span>
+  Эти свойства показывают: <span class="m">Γ</span> ведёт себя как «строка таблицы истинности» (для каждой формулы решено, истинна она или нет, согласованно со связками). Это фундамент для построения модели в теореме о полноте.
+  </div>
+</section>
+
+<section class="q" id="q8">
+  <h3><span class="num n-iv">8</span> Теорема о полноте классического ИВ.</h3>
+  <div class="box thm"><span class="lab">Лемма о выполнимости</span>
+  Если <span class="m">Γ</span> непротиворечиво, то выполнимо.
+  </div>
+  <div class="box proof"><span class="lab">Доказательство</span>
+  Расширяем <span class="m">Γ</span> до максимального непротиворечивого <span class="m">Γ*</span> (билет 6). Берём оценку <span class="m">θ(p<sub>i</sub>)=1 ⟺ p<sub>i</sub>∈Γ*</span>. Индукцией по построению формулы (используя свойства из билета 7) показываем: <span class="m">θ̄(φ)=1 ⟺ φ∈Γ*</span>. Значит <span class="m">θ⊨Γ</span>.
+  </div>
+  <div class="box thm"><span class="lab">Теорема о полноте</span>
+  <span class="m">Γ ⊢<sub>ND</sub> φ ⟺ Γ ⊨ φ</span>.
+  </div>
+  <p><b>Следствие (⊨ ⇒ ⊢):</b> если <span class="m">Γ⊬φ</span>, то <span class="m">Γ,¬φ</span> непротиворечиво, значит выполнимо, значит <span class="m">Γ⊭φ</span>. Вместе с корректностью (билет 5) — равносильность <span class="m">⊢</span> и <span class="m">⊨</span>.</p>
+  <div class="box key"><span class="lab">Теорема о компактности ИВ</span>
+  Если <span class="m">Γ⊨φ</span>, то существует конечное <span class="m">Γ₀⊆Γ</span> с <span class="m">Γ₀⊨φ</span> (по полноте есть вывод, он использует конечно гипотез).
+  </div>
+</section>
+
+<section class="q" id="q9">
+  <h3><span class="num n-iv">9</span> Понятие об интуиционизме и конструктивизме.</h3>
+  <p><b>Брауэр:</b> причина антиномий — чрезмерная абстрактность и отход связок от интуитивного смысла. Утверждать, что формула истинна, можно <b>только предъявив её доказательство</b> (BHK-интерпретация). Доказательства неатомарных формул строятся из доказательств подформул:</p>
+  <div class="box def"><span class="lab">Смысл связок (через множества доказательств Pr)</span>
+  <ul style="margin:3px 0">
+    <li><span class="m">(∧)</span> доказать <span class="m">φ∧ψ</span> = доказать <span class="m">φ</span> и <span class="m">ψ</span>: &nbsp;<span class="m">Pr(φ∧ψ)=Pr(φ)×Pr(ψ)</span>.</li>
+    <li><span class="m">(∨)</span> доказать <span class="m">φ∨ψ</span> = доказать <span class="m">φ</span> либо <span class="m">ψ</span> (с указанием, какую).</li>
+    <li><span class="m">(→)</span> доказательство <span class="m">φ→ψ</span> — <b>конструктивная функция</b>, превращающая любое доказательство <span class="m">φ</span> в доказательство <span class="m">ψ</span>.</li>
+    <li><span class="m">(⊥)</span> <span class="m">Pr(⊥)=∅</span>; &nbsp; <span class="m">(¬)</span> <span class="m">¬φ ≡ φ→⊥</span>.</li>
+  </ul>
+  </div>
+  <div class="box key"><span class="lab">Следствия</span>
+  <span class="m">p∨¬p</span> недоказуемо: чтобы его доказать, нужен единый способ за конечное время решить любую задачу. Правило <b>RAA отвергается</b>. <b>Конструктивисты</b> (А. А. Марков) идут дальше: не признают «голых теорем существования» и аксиому выбора за их неконструктивность.
+  </div>
+</section>
+
+<section class="q" id="q10">
+  <h3><span class="num n-iv">10</span> Интуиционистское ИВ. Недоказуемость закона исключённого третьего.</h3>
+  <p><b>ИИВ</b> = натуральная дедукция <b>без правила RAA</b> (единственное некорректное с точки зрения интуиционизма; остальные правила сохраняют силу). Многие классические теоремы остаются: <span class="m">φ⊢¬¬φ</span>, тройное отрицание <span class="m">¬¬¬φ ⊣⊢ ¬φ</span> и т.д. Но <span class="m">⊬ p∨¬p</span>, <span class="m">¬¬p ⊬ p</span>.</p>
+  <div class="box proof"><span class="lab">Недоказуемость p∨¬p (3-значная модель)</span>
+  Берём <span class="m">B₃={0, 1, ½}</span> (½ — «неопределённость»). Операции:
+  <span class="m">∧=min, ∨=max</span>; <span class="m">¬1=0, ¬0=1, ¬½=½</span>; <span class="m">x→y = 1 если x≤y, иначе y</span>.
+  Секвенция тождественно истинна в <span class="m">B₃</span>, если при всех оценках <span class="m">max<sub>ψ∈Γ</sub> θ(ψ) ≤ θ(φ)</span>.
+  Проверяется, что <b>все правила НД, кроме RAA</b>, корректны на <span class="m">B₃</span>, а аксиомы тождественно истинны ⇒ всё выводимое в ИИВ тождественно истинно в <span class="m">B₃</span>.
+  Но при <span class="m">θ(p)=½</span>: <span class="m">θ(p∨¬p)=½∨¬½=½∨½=½ ≠ 1</span>. Значит <span class="m">p∨¬p</span> в ИИВ невыводима.
+  </div>
+  <div class="box key"><span class="lab">Замечание</span>
+  Никакой конечнозначной логики не хватает, чтобы полностью описать ИИВ (есть тождественно истинные в <span class="m">B₃</span>, но невыводимые формулы).
+  </div>
+</section>
+
+<!-- ================= БЛОК 2: множества ================= -->
+<div class="block-h block-set">II. Теория множеств</div>
+
+<section class="q" id="q11">
+  <h3><span class="num n-set">11</span> Эквивалентные множества и их свойства.</h3>
+  <div class="box def"><span class="lab">Определение</span>
+  <span class="m">A ~ B</span> (равномощны, <span class="m">|A|=|B|</span>), если существует <b>биекция</b> (взаимно однозначное отображение) <span class="m">A → B</span>.
+  </div>
+  <div class="box thm"><span class="lab">Свойства</span>
+  <span class="m">A~A</span>; &nbsp; <span class="m">A~B ⇒ B~A</span>; &nbsp; <span class="m">A~B, B~C ⇒ A~C</span>.
+  </div>
+  <div class="box proof"><span class="lab">Доказательство</span>
+  Тождественное отображение — биекция (рефлексивность); <span class="m">f⁻¹</span> — биекция (симметричность); композиция <span class="m">g∘f</span> биекций — биекция (транзитивность).
+  </div>
+  <p><b>Сравнение:</b> <span class="m">|A|≤|B|</span> — есть вложение (инъекция) <span class="m">A→B</span>; <span class="m">|A|&lt;|B|</span> — вложение есть, биекции нет. Замечание: «эквивалентность множеств» не является отношением эквивалентности на множестве (нет «множества всех множеств»).</p>
+</section>
+
+<section class="q" id="q12">
+  <h3><span class="num n-set">12</span> Теорема Кантора–Шрёдера–Бернштейна.</h3>
+  <div class="box thm"><span class="lab">Теорема</span>
+  Если <span class="m">|A|≤|B|</span> и <span class="m">|B|≤|A|</span>, то <span class="m">A~B</span>. Т.е. из вложений <span class="m">f:A→B</span> и <span class="m">g:B→A</span> следует биекция <span class="m">h:A→B</span>.
+  </div>
+  <div class="box proof"><span class="lab">Идея доказательства</span>
+  Полагаем <span class="m">A₀=A, B₀=B</span>, <span class="m">A<sub>i+1</sub>=g(B<sub>i</sub>), B<sub>i+1</sub>=f(A<sub>i</sub>)</span>; <span class="m">C=⋂A<sub>n</sub></span>, <span class="m">D=⋂B<sub>n</sub></span>. Тогда <span class="m">f</span> биективно переводит <span class="m">C</span> на <span class="m">D</span> и «кольца» <span class="m">A<sub>2k</sub>\A<sub>2k+1</sub></span>, а <span class="m">g⁻¹</span> — «кольца» <span class="m">A<sub>2k−1</sub>\A<sub>2k</sub></span>. Склеиваем:
+  <div class="fml">h(a) = f(a) на чётных кольцах и на C; &nbsp; h(a)=g⁻¹(a) на нечётных кольцах.</div>
+  </div>
+  <div class="box key"><span class="lab">Зачем</span>
+  Позволяет доказывать <span class="m">A~B</span> построением <b>двух вложений</b> вместо явной биекции. Пример: <span class="m">[0,1] ~ (0,1)</span> (вкладываем <span class="m">(0,1)↪[0,1]</span> тождественно и <span class="m">[0,1]↪(−1,2)~(0,1)</span>).
+  </div>
+</section>
+
+<section class="q" id="q13">
+  <h3><span class="num n-set">13</span> Счётные множества и их свойства.</h3>
+  <div class="box def"><span class="lab">Определение</span>
+  <span class="m">A</span> <b>счётно</b>, если <span class="m">A~ℕ</span>. Мощность <span class="m">ℕ</span> — <span class="m">ℵ₀</span> (самая маленькая бесконечная).
+  </div>
+  <div class="box thm"><span class="lab">Свойства</span>
+  <ol style="margin:5px 0 0">
+    <li>объединение двух счётных счётно;</li>
+    <li>прямое произведение двух счётных счётно;</li>
+    <li>счётное объединение счётных счётно;</li>
+    <li>всякое бесконечное множество имеет счётное подмножество.</li>
+  </ol>
+  </div>
+  <div class="box proof"><span class="lab">Доказательство</span>
+  (2): располагаем <span class="m">A×B</span> в таблицу и пересчитываем «по диагоналям» (номер пары <span class="m">(a<sub>i</sub>,b<sub>j</sub>)</span> — явная формула). (3) следует из (2) и КШБ (каждый элемент <span class="m">⋃A<sub>i</sub></span> кодируем парой индексов ⇒ вложение в <span class="m">ℕ×ℕ~ℕ</span>). (1) — частный случай (3). (4): выбираем <span class="m">a₁∈A</span>, <span class="m">a₂∈A∖{a₁}</span>, … (бесконечность гарантирует новый элемент).
+  </div>
+  <p><span class="m">ℵ₀+ℵ₀=ℵ₀</span>, &nbsp; <span class="m">ℵ₀·ℵ₀=ℵ₀</span>. &nbsp;Пример: <span class="m">ℚ</span> счётно (вложение <span class="m">r=a/b ↦ (a,b)</span> в <span class="m">ℤ×ℕ</span>).</p>
+</section>
+
+<section class="q" id="q14">
+  <h3><span class="num n-set">14</span> Множества мощности континуума и их свойства.</h3>
+  <div class="box thm"><span class="lab">Теорема Кантора</span>
+  <span class="m">[0,1]</span> несчётно. Мощность <span class="m">c=|[0,1]| &gt; ℵ₀</span>.
+  </div>
+  <div class="box proof"><span class="lab">Диагональный метод</span>
+  Пусть <span class="m">[0,1]={α₁,α₂,…}</span>, каждое <span class="m">α<sub>i</sub>=0,a<sub>i1</sub>a<sub>i2</sub>…</span>. Строим <span class="m">β=0,b₁b₂…</span> с <span class="m">b<sub>i</sub>≠a<sub>ii</sub></span> и <span class="m">b<sub>i</sub>≠9</span>. Тогда <span class="m">β≠α<sub>i</sub></span> при всех <span class="m">i</span>, но <span class="m">β∈[0,1]</span> — противоречие.
+  </div>
+  <div class="box thm"><span class="lab">Свойства континуума</span>
+  <span class="m">c+c=c</span>; &nbsp; <span class="m">c·c=c</span>; &nbsp; <span class="m">c+ℵ₀=c·ℵ₀=c</span>.
+  </div>
+  <div class="box proof"><span class="lab">c·c=c («квадрат = отрезок»)</span>
+  <span class="m">A=[0,1)</span>. Вложить <span class="m">A↪A×A</span> легко (<span class="m">a↦(a,a₀)</span>). Вложить <span class="m">A×A↪A</span>: для <span class="m">(0,α₁α₂…, &nbsp;0,β₁β₂…)</span> берём <span class="m">0,α₁β₁α₂β₂…</span> (перемешивание знаков). По КШБ <span class="m">A×A~A</span>.
+  </div>
+</section>
+
+<section class="q" id="q15">
+  <h3><span class="num n-set">15</span> Связь между счётными множествами и множествами мощности континуума.</h3>
+  <div class="box thm"><span class="lab">Теорема</span>
+  <span class="m">2<sup>ℵ₀</sup> = c</span>: множество всех подмножеств счётного множества имеет мощность континуума.
+  </div>
+  <div class="box proof"><span class="lab">Доказательство (через КШБ)</span>
+  Строим два вложения:
+  <span class="m">2<sup>ℕ</sup> ↪ [0,1]</span>: функции <span class="m">f:ℕ→{0,1}</span> ставим в соответствие десятичную дробь <span class="m">0,f(1)f(2)f(3)…</span>;
+  <span class="m">[0,1] ↪ 2<sup>ℕ</sup></span>: число в виде двоичной дроби <span class="m">0,ε₁ε₂… ↦</span> функция <span class="m">i↦ε<sub>i</sub></span> (с запретом «хвоста из единиц» для однозначности). По КШБ они равномощны.
+  </div>
+  <p>Также <span class="m">2<sup>X</sup> ~ P(X)</span> (характеристические функции, билет 16). Доп.: <span class="m">ℵ₀<sup>ℵ₀</sup>=c</span>, мощность множества всех функций <span class="m">ℕ→ℕ</span> равна <span class="m">c</span>.</p>
+</section>
+
+<section class="q" id="q16">
+  <h3><span class="num n-set">16</span> Теорема Кантора о мощности множества всех подмножеств.</h3>
+  <div class="box thm"><span class="lab">Теорема</span>
+  Для любого <span class="m">X</span>: &nbsp; <span class="m">|2<sup>X</sup>| &gt; |X|</span> &nbsp;(<span class="m">|P(X)| &gt; |X|</span>).
+  </div>
+  <div class="box proof"><span class="lab">Доказательство (диагональ)</span>
+  Вложение <span class="m">X↪2<sup>X</sup></span>: <span class="m">x↦{x}</span>. Биекции нет: предположим, что каждому <span class="m">x</span> сопоставлено <span class="m">A<sub>x</sub>⊆X</span> и любое подмножество так получается. Берём <span class="m">Y={x∈X : x∉A<sub>x</sub>}</span>. Пусть <span class="m">Y=A<sub>z</sub></span>. Тогда: если <span class="m">z∈A<sub>z</sub></span> — то <span class="m">z∉Y=A<sub>z</sub></span>; если <span class="m">z∉A<sub>z</sub></span> — то <span class="m">z∈Y=A<sub>z</sub></span>. Оба случая — противоречие.
+  </div>
+  <div class="box key"><span class="lab">Следствие</span>
+  Наибольшей мощности нет: <span class="m">|X| &lt; |2<sup>X</sup>| &lt; |2<sup>2<sup>X</sup></sup>| &lt; …</span> &nbsp;Из этой же идеи — антиномия Кантора («множества всех множеств» не существует).
+  </div>
+</section>
+
+<section class="q" id="q17">
+  <h3><span class="num n-set">17</span> Эквивалентность множеств <span class="m">(X<sup>Y</sup>)<sup>Z</sup></span> и <span class="m">X<sup>Y×Z</sup></span>.</h3>
+  <div class="box def"><span class="lab">Обозначение</span>
+  <span class="m">X<sup>Y</sup></span> — множество всех отображений <span class="m">Y→X</span>.
+  </div>
+  <div class="box thm"><span class="lab">Теорема (каррирование)</span>
+  <span class="m">(X<sup>Y</sup>)<sup>Z</sup> ~ X<sup>Y×Z</sup></span>.
+  </div>
+  <div class="box proof"><span class="lab">Доказательство</span>
+  Для <span class="m">f:Y×Z→X</span> и каждого <span class="m">z∈Z</span> определим <span class="m">f<sub>z</sub>:Y→X</span>, <span class="m">y↦f(y,z)</span>. Тогда <span class="m">φ:z↦f<sub>z</sub></span> лежит в <span class="m">(X<sup>Y</sup>)<sup>Z</sup></span>. Отображение <span class="m">Φ(f)=φ</span> — биекция:
+  <b>инъекция</b> (если <span class="m">f≠f′</span>, различаются в <span class="m">(y,z)</span> ⇒ <span class="m">φ≠φ′</span>);
+  <b>сюръекция</b> (по <span class="m">ψ∈(X<sup>Y</sup>)<sup>Z</sup></span> восстанавливаем <span class="m">f(y,z)=ψ(z)(y)</span>).
+  </div>
+</section>
+
+<section class="q" id="q18">
+  <h3><span class="num n-set">18</span> Вполне упорядоченные множества. Их свойства.</h3>
+  <div class="box def"><span class="lab">Определение</span>
+  <span class="m">A</span> <b>вполне упорядочено (ВУМ)</b>: линейно упорядочено <b>и</b> любое непустое подмножество имеет наименьший элемент.
+  </div>
+  <div class="box thm"><span class="lab">Критерий и свойства</span>
+  ЛУМ — ВУМ ⟺ нет бесконечных убывающих цепей <span class="m">x₁&gt;x₂&gt;…</span>.
+  Подмножество ВУМ — ВУМ; упорядоченная сумма двух непересекающихся ВУМ — ВУМ.
+  Примеры: <span class="m">ℕ</span>; <span class="m">ℕ×ℕ</span> с лексикографическим порядком; <span class="m">ℕ<sup>k</sup></span> лекс.
+  </div>
+  <div class="box def"><span class="lab">Начальный отрезок</span>
+  <span class="m">A⊆X</span>: <span class="m">x∈X, a∈A, x≤a ⇒ x∈A</span>. Лемма: для любых двух начальных отрезков <span class="m">A,B</span> — либо <span class="m">A⊆B</span>, либо <span class="m">B⊆A</span>.
+  </div>
+  <div class="box thm"><span class="lab">Основная теорема о сравнении ВУМ</span>
+  Для любых двух ВУМ одно изоморфно начальному отрезку другого; такой изоморфизм единствен; ВУМ <b>не</b> изоморфно своему собственному начальному отрезку.
+  </div>
+</section>
+
+<section class="q" id="q19">
+  <h3><span class="num n-set">19</span> Аксиома выбора. Теорема Цермело.</h3>
+  <div class="box def"><span class="lab">Аксиома выбора (AC)</span>
+  Для непустого <span class="m">A</span> существует <b>функция выбора</b> <span class="m">f: 2<sup>A</sup>∖{∅} → A</span> с <span class="m">f(B)∈B</span> для всех непустых <span class="m">B⊆A</span>. («В каждом непустом подмножестве можно выбрать элемент».)
+  </div>
+  <div class="box thm"><span class="lab">Теорема Цермело</span>
+  На всяком множестве можно ввести порядок, делающий его вполне упорядоченным.
+  </div>
+  <p>AC, лемма Цорна и теорема Цермело <b>эквивалентны</b> (доказывается по схеме <span class="m">(1)⇒(2)⇒(3)⇒(1)</span>).</p>
+  <div class="box proof"><span class="lab">Цорн ⇒ Цермело</span>
+  <span class="m">X</span> — пары <span class="m">(B,θ)</span>, где <span class="m">B⊆A</span> вполне упорядочено отношением <span class="m">θ</span>. Порядок: <span class="m">(B,θ)≤(B′,θ′)</span>, если <span class="m">B</span> — начальный отрезок <span class="m">B′</span> с тем же порядком. Каждая цепь имеет мажоранту (объединение). По Цорну есть максимальный <span class="m">(C,τ)</span>. Если <span class="m">C≠A</span>, добавим элемент <span class="m">a∈A∖C</span> «в конец» — получим больший элемент, противоречие. Значит <span class="m">C=A</span> вполне упорядочено.
+  <br><b>Цермело ⇒ AC:</b> вполне упорядочиваем <span class="m">A</span>, полагаем <span class="m">f(B)=min B</span>.
+  </div>
+  <div class="box key"><span class="lab">Замечание</span>
+  Все три неконструктивны: утверждают существование, но не дают способа построения (несчётное множество, например <span class="m">ℝ</span>, никто явно не вполне упорядочил).
+  </div>
+</section>
+
+<section class="q" id="q20">
+  <h3><span class="num n-set">20</span> Лемма Цорна.</h3>
+  <div class="box def"><span class="lab">Определения</span>
+  <b>Цепь</b> — линейно упорядоченное подмножество ЧУМ. <b>Мажоранта</b> цепи <span class="m">Γ</span> — элемент <span class="m">a</span> с <span class="m">x≤a</span> для всех <span class="m">x∈Γ</span>.
+  </div>
+  <div class="box thm"><span class="lab">Лемма Цорна</span>
+  Если в частично упорядоченном множестве <span class="m">A</span> каждая цепь имеет мажоранту, то <span class="m">A</span> имеет максимальный элемент.
+  </div>
+  <div class="box proof"><span class="lab">Идея (AC ⇒ Цорн)</span>
+  Берём функцию выбора <span class="m">f</span>. Предположим, макс. элемента нет ⇒ для любой цепи <span class="m">B(Γ)∖Γ≠∅</span>. Назовём <span class="m">Γ</span> <b>отмеченным</b>, если оно вполне упорядочено и <span class="m">a=f(B(Γ<sub>a</sub>)∖Γ<sub>a</sub>)</span> для всех <span class="m">a∈Γ</span> (каждый следующий элемент выбирается канонически). Любые два отмеченных — одно начальный отрезок другого; объединение <span class="m">Γ</span> всех отмеченных — отмеченное и наибольшее. Тогда <span class="m">Γ∪{f(B(Γ)∖Γ)}</span> тоже отмечено и больше — противоречие.
+  </div>
+  <div class="box key"><span class="lab">Применения</span>
+  Всякое линейное пространство имеет базис; всякое кольцо с 1 имеет максимальный идеал <span class="m">≠R</span>; всякий частичный порядок продолжается до линейного.
+  </div>
+</section>
+
+<section class="q" id="q21">
+  <h3><span class="num n-set">21</span> Ординальные числа и их свойства.</h3>
+  <div class="box def"><span class="lab">Ординал</span>
+  <b>Порядковый тип</b> ВУМ — совокупность всех изоморфных ему ВУМ. Конечные: <span class="m">0,1,2,…</span>; наименьший бесконечный — <span class="m">ω</span> (тип <span class="m">ℕ</span>).
+  </div>
+  <div class="box thm"><span class="lab">Порядок и арифметика</span>
+  <span class="m">α≤β</span>, если <span class="m">A</span> изоморфно начальному отрезку <span class="m">B</span>. Свойства: рефлексивность, транзитивность, антисимметрия; любые два ординала сравнимы.
+  <b>Сумма</b> <span class="m">α+β</span> — тип упорядоченной суммы <span class="m">A∪B</span>; <b>произведение</b> <span class="m">αβ</span> — тип лекс. произведения <span class="m">A×B</span>. Обе ассоциативны, но <b>не коммутативны</b>: <span class="m">1+ω=ω≠ω+1</span>, &nbsp;<span class="m">2·ω=ω≠ω·2</span>.
+  </div>
+  <div class="box thm"><span class="lab">Ключевые теоремы</span>
+  В любом множестве ординалов есть наименьший. Каждый <span class="m">α</span> имеет следующий <span class="m">α+1</span>; <span class="m">α</span> <b>предельный</b> ⟺ нет непосредственно предшествующего. Всякий <span class="m">α=β+k</span> (<span class="m">β</span> предельный или 0). У любого множества ординалов есть <span class="m">sup</span>.
+  </div>
+  <div class="box key"><span class="lab">Парадокс Бурали-Форти</span>
+  «Множества всех ординалов» не существует: иначе нашёлся бы ординал <span class="m">β</span> больше любого, в т.ч. больше себя.
+  </div>
+</section>
+
+<section class="q" id="q22">
+  <h3><span class="num n-set">22</span> Кардинальные числа и их свойства.</h3>
+  <div class="box def"><span class="lab">Кардинал</span>
+  <b>Кардинальное число</b> — наименьший ординал заданной мощности (корректно: в любой совокупности ординалов есть наименьший). Отождествляется с мощностью; <span class="m">ω=ℵ₀</span>.
+  </div>
+  <div class="box thm"><span class="lab">Шкала алефов</span>
+  <span class="m">ℵ₀=ω</span>; &nbsp;<span class="m">ℵ<sub>α+1</sub>=min{m : m&gt;ℵ<sub>α</sub>}</span>; &nbsp;<span class="m">ℵ<sub>α</sub>=sup<sub>β&lt;α</sub> ℵ<sub>β</sub></span> для предельного <span class="m">α</span>.
+  Всякая бесконечная мощность — предельный ординал. В любой совокупности множеств есть наименьшее по мощности.
+  </div>
+  <div class="box thm"><span class="lab">Теорема (m²=m)</span>
+  Для бесконечной <span class="m">m</span>: <span class="m">m·m=m</span> (подробно — билет 24).
+  </div>
+  <div class="box key"><span class="lab">Гипотеза континуума (CH)</span>
+  <span class="m">ℵ₁=c</span>, т.е. нет мощности <span class="m">m</span> с <span class="m">ℵ₀&lt;m&lt;c</span>. GCH: нет <span class="m">m</span> с <span class="m">ℵ<sub>α</sub>&lt;m&lt;ℵ<sub>α+1</sub></span>. <b>Коэн (1963):</b> CH <b>независима</b> от аксиом ZF (как 5-й постулат от остальных аксиом Евклида).
+  </div>
+</section>
+
+<section class="q" id="q23">
+  <h3><span class="num n-set">23</span> Равенство <span class="m">𝔪+𝔪=𝔪</span> для бесконечных множеств.</h3>
+  <div class="box thm"><span class="lab">Теорема</span>
+  Бесконечное <span class="m">A</span> мощности <span class="m">m</span> можно разбить на два непересекающихся подмножества мощности <span class="m">m</span> каждое ⇒ <span class="m">m+m=m</span> (<span class="m">=2·m</span>).
+  </div>
+  <div class="box proof"><span class="lab">Идея</span>
+  По теореме Цермело вполне упорядочим <span class="m">A</span>. Элемент <b>предельный</b>, если у него нет предыдущего. Множество <span class="m">A</span> распадается в объединение непересекающихся счётных «цепочек» <span class="m">{c, c+1, c+2, …}</span> по предельным <span class="m">c</span>. В каждой цепочке берём элементы на чётных позициях в <span class="m">A′</span>, на нечётных — в <span class="m">A″</span>. Получаем <span class="m">A=A′⊔A″</span>, причём <span class="m">|A′|=|A″|=m</span>.
+  </div>
+  <div class="box key"><span class="lab">Следствия</span>
+  <span class="m">m+m=m</span>, <span class="m">m·2=m</span>, <span class="m">m·n=m</span>; <span class="m">m+n=max(m,n)</span>; <span class="m">|A∪B|=max(|A|,|B|)</span>; если <span class="m">|B|&lt;|A|</span>, то <span class="m">|A∖B|=|A|</span>.
+  </div>
+</section>
+
+<section class="q" id="q24">
+  <h3><span class="num n-set">24</span> Мощность множества <span class="m">A×A</span>.</h3>
+  <div class="box thm"><span class="lab">Теорема</span>
+  Для бесконечного <span class="m">A</span>: &nbsp;<span class="m">|A×A|=|A|</span> &nbsp;(<span class="m">m²=m</span>).
+  </div>
+  <div class="box proof"><span class="lab">Доказательство (лемма Цорна)</span>
+  От противного: пусть <span class="m">A</span> — множество <b>наименьшей</b> мощности с <span class="m">|A×A|≠|A|</span>; вполне упорядочим его. Рассматриваем начальные отрезки <span class="m">B</span> с <span class="m">|B×B|=|B|</span> (есть, напр. <span class="m">~ℕ</span>) и пары <span class="m">(B,φ)</span>, <span class="m">φ:B×B→B</span> — биекция, с естественным порядком. Условия Цорна выполнены ⇒ есть максимальный <span class="m">(B,φ)</span>.
+  Если <span class="m">|B|&lt;|A|</span>, то <span class="m">|A∖B|=|A|&gt;|B|</span>; берём в <span class="m">A∖B</span> начальный отрезок <span class="m">B′</span> мощности <span class="m">|B|</span>, <span class="m">C=B∪B′</span>. Тогда
+  <span class="m">C×C=(B×B)∪(B×B′)∪(B′×B)∪(B′×B′)</span> — все четыре равномощны <span class="m">B</span>, продолжаем биекцию на <span class="m">C×C</span> — противоречие с максимальностью. Значит <span class="m">|B|=|A|</span> и <span class="m">|A×A|=|A|</span>.
+  </div>
+</section>
+
+<!-- ================= БЛОК 3: предикаты/модели ================= -->
+<div class="block-h block-pred">III. Логика предикатов и модели</div>
+
+<section class="q" id="q25">
+  <h3><span class="num n-pred">25</span> Аксиомы Пеано натуральных чисел. Коммутативность сложения.</h3>
+  <div class="box def"><span class="lab">PA (1-го порядка), сигнатура ⟨=; ′/1; 0⟩</span>
+  <ul style="margin:3px 0">
+    <li>(П1) <span class="m">∀n ¬(n′=0)</span>;</li>
+    <li>(П2) <span class="m">∀n ∀m (n′=m′ → n=m)</span>;</li>
+    <li>(П3-φ) схема индукции: для каждой формулы <span class="m">φ</span>:
+        <span class="m">( φ(0) ∧ ∀n(φ(n)→φ(n′)) ) → ∀n φ(n)</span>.</li>
+  </ul>
+  В <span class="m">PA₂</span> (2-го порядка) индукция — одна аксиома <span class="m">∀φ(…)</span>, причём (П3-φ) — её частные случаи.
+  </div>
+  <div class="box def"><span class="lab">Сложение</span>
+  <span class="m">n+0=n</span>; &nbsp; <span class="m">n+m′=(n+m)′</span>.
+  </div>
+  <div class="box proof"><span class="lab">Коммутативность ∀n,m: n+m=m+n</span>
+  Три леммы:
+  <b>Л1:</b> <span class="m">0+n=n</span> (индукция по <span class="m">n</span>).
+  <b>Л2:</b> <span class="m">n+0=0+n</span> (из определения и Л1).
+  <b>Л3:</b> <span class="m">n′+m=(n+m)′</span> (индукция по <span class="m">m</span>).
+  <b>Теорема:</b> индукция по <span class="m">m</span>. База <span class="m">m=0</span> — это Л2. Шаг:
+  <span class="m">n+m′=(n+m)′=(m+n)′=m′+n</span> (использовали предположение индукции и Л3).
+  </div>
+</section>
+
+<section class="q" id="q26">
+  <h3><span class="num n-pred">26</span> Аксиомы действительных чисел.</h3>
+  <p><span class="m">ℝ</span> — множество с операциями <span class="m">+, ·</span>, отношением <span class="m">≤</span>, константами <span class="m">0, 1</span>, аксиомы (1)–(18):</p>
+  <div class="box def"><span class="lab">Группы аксиом</span>
+  <ul style="margin:3px 0">
+    <li><b>Поле:</b> ассоциативность и коммутативность <span class="m">+</span>, нейтральный <span class="m">0</span>, обратные по <span class="m">+</span>; ассоц. и коммут. <span class="m">·</span>, нейтральный <span class="m">1</span> (<span class="m">1≠0</span>), обратные по <span class="m">·</span> (кроме 0); дистрибутивность.</li>
+    <li><b>Линейный порядок:</b> рефлексивность, транзитивность, антисимметрия, линейность <span class="m">∀a,b (a≤b ∨ b≤a)</span>.</li>
+    <li><b>Согласование:</b> <span class="m">a≤b ⇒ a+c≤b+c</span>; &nbsp;<span class="m">(a≤b ∧ c≥0) ⇒ ac≤bc</span>.</li>
+    <li>(17) <b>Архимеда:</b> <span class="m">∀a,b ( a&gt;0 ∧ b&gt;0 → ∃n∈ℕ &nbsp;na&gt;b )</span>.</li>
+    <li>(18) <b>Непрерывности (Дедекинда):</b> для непустых <span class="m">A,B⊆ℝ</span> с <span class="m">∀a∈A ∀b∈B &nbsp;a≤b</span> существует <span class="m">c</span> с <span class="m">∀a≤c≤b</span>.</li>
+  </ul>
+  </div>
+  <div class="box key"><span class="lab">Важное</span>
+  (1)–(18) определяют <span class="m">ℝ</span> однозначно с точностью до изоморфизма. (1)–(17) недостаточно (им удовлетворяет <span class="m">ℚ</span>) ⇒ аксиома (18) <b>независима</b>. (18) эквивалентна принципу вложенных отрезков и существованию точной верхней грани.
+  </div>
+</section>
+
+<section class="q" id="q27">
+  <h3><span class="num n-pred">27</span> Модель. Сигнатура. Термы. Формулы УИП.</h3>
+  <div class="box def"><span class="lab">Сигнатура</span>
+  <span class="m">Ω=⟨Σ; Π; Φ; C⟩</span>: сорта <span class="m">Σ</span>; символы предикатов <span class="m">Π</span> (<span class="m">P</span> типа <span class="m">α=(S₁,…,Sₙ)→B</span>); операций <span class="m">Φ</span> (<span class="m">f</span> типа <span class="m">(S₁,…,Sₙ)→S<sub>n+1</sub></span>); констант <span class="m">C</span>. Первого порядка.
+  </div>
+  <div class="box def"><span class="lab">Термы и формулы</span>
+  <b>Термы</b> сорта <span class="m">S</span>: переменные и константы сорта <span class="m">S</span>; <span class="m">f(t₁,…,tₙ)</span>, если <span class="m">f:(S₁,…,Sₙ)→S</span> и <span class="m">t<sub>i</sub></span> — термы сортов <span class="m">S<sub>i</sub></span>.
+  <b>Формулы:</b> атомарные <span class="m">P(t₁,…,tₙ)</span>, <span class="m">⊥</span>; <span class="m">¬φ, (φ:ψ)</span>; <span class="m">∀x:S φ</span>, <span class="m">∃x:S φ</span>.
+  Вхождения переменных — свободные/связанные (кванторы связывают). <b>Замкнутая</b> формула (предложение) — без свободных переменных.
+  </div>
+  <div class="box def"><span class="lab">Структура (модель)</span>
+  <span class="m">M</span>: носители <span class="m">M<sub>S</sub></span>, отношения <span class="m">M<sub>P</sub></span>, функции <span class="m">M<sub>f</sub></span>, элементы <span class="m">M<sub>c</sub></span> — интерпретации символов сигнатуры.
+  </div>
+</section>
+
+<section class="q" id="q28">
+  <h3><span class="num n-pred">28</span> Истинность формулы на модели.</h3>
+  <div class="box def"><span class="lab">Оценка и значение терма</span>
+  Оценка <span class="m">π:Var<sub>S</sub>→M<sub>S</sub></span>. Значение терма: <span class="m">π̄(x)=π(x)</span>; <span class="m">π̄(c)=M<sub>c</sub></span>; <span class="m">π̄(f(t₁,…))=M<sub>f</sub>(π̄(t₁),…)</span>.
+  </div>
+  <div class="box def"><span class="lab">Значение истинности π̄(φ)</span>
+  <ul style="margin:3px 0">
+    <li>атомарная: <span class="m">M<sub>P</sub>(π̄(t₁),…)</span>; равенство <span class="m">t₁=t₂ ⟺</span> значения совпадают; <span class="m">⊥=0</span>; связки как в ИВ;</li>
+    <li><span class="m">∀x:S φ</span> истинна ⟺ для всех <span class="m">a∈M<sub>S</sub></span> истинна <span class="m">π[x↦a](φ)</span>;</li>
+    <li><span class="m">∃x:S φ</span> истинна ⟺ для некоторого <span class="m">a</span> истинна.</li>
+  </ul>
+  </div>
+  <div class="box thm"><span class="lab">Теорема</span>
+  <span class="m">π̄(φ)</span> зависит только от значений <b>свободных</b> переменных. Следствие: замкнутая формула либо истинна, либо ложна в <span class="m">M</span> сразу при всех оценках — пишем <span class="m">M⊨φ</span> (<span class="m">M</span> — <b>модель</b> для <span class="m">φ</span>, иначе контрмодель).
+  </div>
+  <p><span class="m">Γ⊨φ</span> — следствие (во всех структурах при всех оценках, где истинно <span class="m">Γ</span>, истинно <span class="m">φ</span>). <b>Тождественно истинна</b> — во всех структурах. <b>Теория</b> — множество предложений, замкнутое относительно следования.</p>
+</section>
+
+<section class="q" id="q29">
+  <h3><span class="num n-pred">29</span> Элиминация кванторов.</h3>
+  <div class="box def"><span class="lab">Определение</span>
+  Модель <span class="m">M</span> <b>допускает элиминацию кванторов</b>, если для всякой формулы <span class="m">φ</span> есть эквивалентная ей в <span class="m">M</span> <b>бескванторная</b> <span class="m">φ′</span> (с теми же свободными переменными).
+  </div>
+  <div class="box thm"><span class="lab">Теорема</span>
+  Модель <span class="m">⟨ℤ; =, S, 0⟩</span> допускает элиминацию кванторов.
+  </div>
+  <div class="box proof"><span class="lab">Идея</span>
+  Индукция по числу кванторов. <span class="m">∀x τ ≡ ¬∃x¬τ</span> ⇒ хватит убирать <span class="m">∃</span>. Бескванторную часть приводим к ДНФ; <span class="m">∃x(τ₁∨…∨τ<sub>l</sub>) ≡ ∃xτ₁ ∨ … ∨ ∃xτ<sub>l</sub></span>. Остаётся <span class="m">∃x σ</span>, где <span class="m">σ</span> — элементарная конъюнкция атомарных формул и их отрицаний вида <span class="m">S<sup>n</sup>(x)=S<sup>m</sup>(v)</span>. Формулы <span class="m">S<sup>n</sup>(x)=S<sup>m</sup>(x)</span> тождественно истинны/ложны. Если все <span class="m">σ<sub>i</sub></span> — отрицания, <span class="m">∃x σ</span> тождественно истинна; иначе из одного равенства выражаем <span class="m">x</span> и подставляем во все остальные — кванторов больше нет.
+  </div>
+  <div class="box key"><span class="lab">Следствие</span>
+  Теория <span class="m">⟨ℤ;=,S,0⟩</span> <b>разрешима</b>: <span class="m">φ′</span> замкнута и бескванторна ⇒ её атомарные подформулы <span class="m">S<sup>n</sup>(0)=S<sup>m</sup>(0)</span> вычисляются, дальше — таблицы истинности.
+  </div>
+</section>
+
+<section class="q" id="q30">
+  <h3><span class="num n-pred">30</span> Выразимые и невыразимые предикаты. Метод автоморфизмов.</h3>
+  <div class="box def"><span class="lab">Выразимость</span>
+  Формула <span class="m">φ(x₁,…,xₙ)</span> <b>выражает</b> предикат <span class="m">P</span> в <span class="m">M</span>, если <span class="m">∀ā: M⊨φ(ā) ⟺ P(ā)</span>. <span class="m">P</span> <b>выразим</b>, если есть выражающая формула.
+  </div>
+  <p><b>Примеры (выразимы):</b> в <span class="m">⟨ℕ;=,S⟩</span> предикат <span class="m">«y=x+2»</span> выражается <span class="m">y=S(S(x))</span>; <span class="m">«x=0»</span> — <span class="m">∀y ¬(S(y)=x)</span>.</p>
+  <div class="box thm"><span class="lab">Метод автоморфизмов</span>
+  <b>Автоморфизм</b> модели — биекция <span class="m">f:A→A</span>, сохраняющая истинность всех формул (а значит, и всех выразимых предикатов). <b>Если предикат не инвариантен относительно некоторого автоморфизма — он невыразим.</b>
+  </div>
+  <div class="box proof"><span class="lab">Примеры (невыразимы)</span>
+  В <span class="m">⟨ℤ;=⟩</span> предикат <span class="m">«x=0»</span> невыразим: автоморфизм <span class="m">f(x)=x+1</span> сдвигает всё, а <span class="m">«x=0»</span> переходит в <span class="m">«x=1»</span>.
+  В <span class="m">⟨ℚ;=,&lt;⟩</span> предикат <span class="m">«x=1»</span> невыразим: автоморфизм <span class="m">f(x)=2x</span> сохраняет <span class="m">=, &lt;</span>, но переводит его в <span class="m">«x=½»</span>.
+  </div>
+</section>
+
+<section class="q" id="q31">
+  <h3><span class="num n-pred">31</span> Фильтры. Вложение фильтра в ультрафильтр. Характеризация ультрафильтров.</h3>
+  <div class="box def"><span class="lab">Фильтр на X</span>
+  <span class="m">F⊆P(X)</span>: (1) <span class="m">∅∉F</span>; (2) <span class="m">A∈F, A⊆B ⇒ B∈F</span>; (3) <span class="m">A,B∈F ⇒ A∩B∈F</span>.
+  Примеры: главный <span class="m">F(a)={B : a∈B}</span>; фильтр коконечных множеств <span class="m">{A : |X∖A|&lt;ℵ₀}</span>.
+  <b>Ультрафильтр</b> <span class="m">U</span> — максимальный по включению фильтр.
+  </div>
+  <div class="box thm"><span class="lab">Теорема (вложение)</span>
+  Всякий фильтр <span class="m">F</span> содержится в некотором ультрафильтре <span class="m">U</span>.
+  </div>
+  <div class="box proof"><span class="lab">Доказательство</span>
+  <span class="m">P={</span>фильтры <span class="m">⊇F}</span>. Любая цепь фильтров имеет верхнюю границу — их объединение (проверяется, что это фильтр). По лемме Цорна в <span class="m">P</span> есть максимальный элемент — это и есть ультрафильтр <span class="m">⊇F</span>.
+  </div>
+  <div class="box thm"><span class="lab">Характеризация</span>
+  Фильтр <span class="m">U</span> — ультрафильтр ⟺ для любого <span class="m">A⊆X</span>: <span class="m">A∈U</span> или <span class="m">X∖A∈U</span>.
+  </div>
+  <div class="box proof"><span class="lab">Идея</span>
+  <b>(⇐)</b> если <span class="m">F′⊋U</span> и <span class="m">A∈F′∖U</span>, то <span class="m">X∖A∈U⊆F′</span>, значит <span class="m">∅=A∩(X∖A)∈F′</span> — противоречие.
+  <b>(⇒)</b> если <span class="m">A∉U</span> и <span class="m">X∖A∉U</span>, то <span class="m">{A∩B : B∈U}</span> — центрированная система; порождённый ею фильтр строго больше <span class="m">U</span> — противоречие.
+  </div>
+</section>
+
+<section class="q" id="q32">
+  <h3><span class="num n-pred">32</span> Центрированные системы множеств. Вложение в фильтр.</h3>
+  <div class="box def"><span class="lab">Центрированная система</span>
+  <span class="m">S⊆P(X)</span> центрирована, если пересечение любого <b>конечного</b> числа множеств из <span class="m">S</span> непусто: <span class="m">A₁,…,Aₙ∈S ⇒ ⋂A<sub>i</sub>≠∅</span>.
+  </div>
+  <div class="box thm"><span class="lab">Теорема</span>
+  Для всякой центрированной системы <span class="m">S</span> на <span class="m">X</span> существует фильтр <span class="m">F⊇S</span>.
+  </div>
+  <div class="box proof"><span class="lab">Доказательство</span>
+  Полагаем <span class="m">F={B⊆X : ∃A₁,…,Aₙ∈S, ⋂A<sub>i</sub>⊆B}</span>. Проверяем аксиомы фильтра:
+  <span class="m">∅∉F</span> (т.к. <span class="m">⋂A<sub>i</sub>≠∅</span> по центрированности); замкнутость вверх (если <span class="m">⋂A<sub>i</sub>⊆B⊆C</span>); замкнутость относительно <span class="m">∩</span> (объединяем два набора).
+  </div>
+  <div class="box key"><span class="lab">Где используется</span>
+  В доказательстве характеризации ультрафильтров (билет 31) и в существовании <b>неглавных</b> ультрафильтров: фильтр коконечных множеств вкладывается в ультрафильтр, который заведомо не главный.
+  </div>
+</section>
+
+<section class="q" id="q33">
+  <h3><span class="num n-pred">33</span> Ультрапроизведение моделей.</h3>
+  <div class="box def"><span class="lab">Конструкция</span>
+  <span class="m">{M<sub>i</sub> : i∈I}</span> — модели одной сигнатуры, <span class="m">U</span> — ультрафильтр на <span class="m">I</span>. Прямое произведение <span class="m">∏M<sub>i</sub></span> — наборы <span class="m">(a<sub>i</sub>)</span>; операции/предикаты покомпонентно (но оно <b>не</b> сохраняет свойства 1-го порядка: <span class="m">ℤ₂×ℤ₂</span> — не поле).
+  </div>
+  <div class="box def"><span class="lab">Отношение ∼<sub>U</sub></span>
+  <span class="m">(a<sub>i</sub>) ∼<sub>U</sub> (b<sub>i</sub>) ⟺ {i : a<sub>i</sub>=b<sub>i</sub>} ∈ U</span>. Это отношение эквивалентности (рефлексивность из <span class="m">I∈U</span>, транзитивность из замкнутости <span class="m">U</span> относительно <span class="m">∩</span>).
+  </div>
+  <div class="box def"><span class="lab">Ультрапроизведение ∏<sub>U</sub> M<sub>i</sub></span>
+  Множество классов <span class="m">[(a<sub>i</sub>)]</span>. Операции и предикаты:
+  <div class="fml">f([(a<sub>i</sub>)],…)=[(f(a<sub>i</sub>,…))]; &nbsp; P([(a<sub>i</sub>)],…) ⟺ {i : P(a<sub>i</sub>,…)}∈U.</div>
+  Корректность (независимость от представителей) — следует из замкнутости <span class="m">U</span> относительно конечных пересечений.
+  </div>
+</section>
+
+<section class="q" id="q34">
+  <h3><span class="num n-pred">34</span> Теорема Лося.</h3>
+  <div class="box thm"><span class="lab">Теорема Лося</span>
+  Формула <span class="m">φ(x₁,…,xₖ)</span> истинна в <span class="m">∏<sub>U</sub>M<sub>i</sub></span> на наборе <span class="m">[(a<sub>i</sub>¹)],…,[(a<sub>i</sub>ᵏ)]</span>
+  <b>⟺</b> <span class="m">{i : M<sub>i</sub> ⊨ φ(a<sub>i</sub>¹,…,a<sub>i</sub>ᵏ)} ∈ U</span>.
+  </div>
+  <div class="box proof"><span class="lab">Доказательство</span>
+  Избавляемся от <span class="m">∨, →, ∀</span> (через <span class="m">¬, ∧, ∃</span>), индукция по длине <span class="m">φ</span>.
+  <b>Атомарные:</b> прямо по определению предикатов в ультрапроизведении.
+  <b>¬:</b> используем характеризацию ультрафильтра (<span class="m">A∈U ⟺ X∖A∉U</span>).
+  <b>∧:</b> множество, на котором истинна конъюнкция, есть пересечение двух множеств из <span class="m">U</span> ⇒ в <span class="m">U</span>.
+  <b>∃:</b> два включения. Если <span class="m">∃x ψ</span> истинна (есть свидетель <span class="m">(a<sub>i</sub>)</span>), то <span class="m">{i:ψ(a<sub>i</sub>,…)}∈U</span> вкладывается в <span class="m">{i:∃x ψ}</span>; обратно — по каждому <span class="m">i</span> из «∃-множества» выбираем свидетеля <span class="m">a<sub>i</sub></span>.
+  </div>
+  <div class="box key"><span class="lab">Следствие</span>
+  Класс, заданный аксиомами 1-го порядка, замкнут относительно ультрапроизведений: ультрапроизведение полей — поле; ультрапроизведение линейно упорядоченных множеств линейно упорядочено.
+  </div>
+</section>
+
+<section class="q" id="q35">
+  <h3><span class="num n-pred">35</span> Теорема Гёделя–Мальцева и следствие из неё.</h3>
+  <div class="box thm"><span class="lab">Теорема Гёделя–Мальцева (компактность)</span>
+  Множество предложений <span class="m">T</span> логики 1-го порядка имеет модель ⟺ <b>каждое конечное</b> подмножество <span class="m">T</span> имеет модель.
+  </div>
+  <div class="box proof"><span class="lab">Доказательство (через ультрапроизведения)</span>
+  Нетривиально <span class="m">⇐</span>. Для каждого конечного <span class="m">S⊆T</span> берём модель <span class="m">M<sub>S</sub>⊨S</span>. Пусть <span class="m">I</span> — множество всех конечных подмножеств <span class="m">T</span>. Для <span class="m">φ∈T</span> положим <span class="m">Î<sub>φ</sub>={S : φ∈S}</span>. Семейство <span class="m">{Î<sub>φ</sub>}</span> центрировано (<span class="m">Î<sub>φ₁</sub>∩…∩Î<sub>φₙ</sub> ∋ {φ₁,…,φₙ}</span>), значит вкладывается в ультрафильтр <span class="m">U</span>. По теореме Лося для каждого <span class="m">φ∈T</span> множество <span class="m">{S : M<sub>S</sub>⊨φ}⊇Î<sub>φ</sub>∈U</span>, поэтому <span class="m">∏<sub>U</sub>M<sub>S</sub> ⊨ φ</span>. Значит <span class="m">∏<sub>U</sub>M<sub>S</sub></span> — модель всего <span class="m">T</span>.
+  </div>
+  <div class="box key"><span class="lab">Следствие (нестандартные модели)</span>
+  Если стандартный ряд <span class="m">ℕ</span> — модель теории 1-го порядка <span class="m">T</span>, то у <span class="m">T</span> есть и модель, <b>неизоморфная</b> <span class="m">ℕ</span>. Добавим константу <span class="m">c</span> и аксиомы <span class="m">c≠0, c≠1, c≠2, …</span>: всякое конечное подмножество выполнимо на <span class="m">ℕ</span> (подобрав <span class="m">c</span> большим), значит по компактности выполнимо всё — но <span class="m">c</span> «бесконечно велик».
+  </div>
+</section>
+
+<!-- ================= БЛОК 4: алгоритмы ================= -->
+<div class="block-h block-alg">IV. Алгоритмы и машины Тьюринга</div>
+
+<section class="q" id="q36">
+  <h3><span class="num n-alg">36</span> Машины Тьюринга и вычислимые функции. Понятие алгоритма. Тезис Чёрча.</h3>
+  <p><b>Алгоритм</b> — жёсткое правило, выполнение всех предписаний которого приводит к решению. Чтобы доказывать <b>не</b>существование алгоритма, нужна точная формализация. Алгоритм работает со счётным <span class="m">Ω</span> и задаёт <span class="m">f:Ωⁿ→Ω∪{⊥}</span> (<span class="m">⊥</span> — «не определено»).</p>
+  <div class="box def"><span class="lab">Машина Тьюринга</span>
+  Частичное отображение <span class="m">M:{q₀,…,q<sub>n−1</sub>}×{0,1} → {q₀,…,q<sub>n−1</sub>}×{Λ,Π}×{0,1}</span>. Бесконечная лента, головка видит одну ячейку. <span class="m">M(i,ε)=(j,D,η)</span>: записать <span class="m">η</span>, перейти в <span class="m">q<sub>j</sub></span>, сдвиг <span class="m">D</span> (Λ — влево, Π — вправо). Если не определено — останов. Запись командами <span class="m">q<sub>i</sub>ε q<sub>j</sub>η D</span> — это <b>программа</b>.
+  </div>
+  <div class="box def"><span class="lab">Вычисление функции</span>
+  Число <span class="m">x</span> кодируем как <span class="m">[x]</span> из <span class="m">x+1</span> единиц; набор — <span class="m">0[x₁]0[x₂]0…0[xₙ]0</span>. <span class="m">M</span> вычисляет <span class="m">f</span>, если, стартуя в <span class="m">q₀</span> на крайней левой единице входа, останавливается ⟺ <span class="m">f</span> определена, и оставляет на ленте <span class="m">0[f(x̄)]0</span>.
+  </div>
+  <div class="box key"><span class="lab">Тезис Чёрча</span>
+  Понятие алгоритма (вычислимости механическим устройством) совпадает с вычислимостью на машинах Тьюринга (а значит, с понятием рекурсивной функции). Это <b>не теорема</b>, а естественнонаучный тезис.
+  </div>
+</section>
+
+<section class="q" id="q37">
+  <h3><span class="num n-alg">37</span> Операторы суперпозиции и примитивной рекурсии. Примитивно рекурсивные функции.</h3>
+  <div class="box def"><span class="lab">Простейшие функции</span>
+  <span class="m">O(x)=0</span>; &nbsp;<span class="m">S(x)=x+1</span>; &nbsp;проекции <span class="m">I<sup>n</sup><sub>m</sub>(x₁,…,xₙ)=x<sub>m</sub></span>.
+  </div>
+  <div class="box def"><span class="lab">Операторы</span>
+  <b>Суперпозиция:</b> <span class="m">g(x̄)=f(f₁(x̄),…,f<sub>k</sub>(x̄))</span>.
+  <br><b>Примитивная рекурсия</b> <span class="m">R(g,h)</span>:
+  <div class="fml">f(x̄, 0)=g(x̄); &nbsp; f(x̄, y+1)=h(x̄, y, f(x̄, y)).</div>
+  Эти равенства задают <span class="m">f</span> однозначно.
+  </div>
+  <div class="box def"><span class="lab">Примитивно рекурсивные функции</span>
+  Получаемые из простейших конечным числом операторов суперпозиции и примитивной рекурсии. Все <b>всюду определены</b>.
+  </div>
+  <div class="box key"><span class="lab">Примеры</span>
+  <span class="m">x+y</span>, <span class="m">x·y</span>, <span class="m">x<sup>y</sup></span>, <span class="m">x!</span>, <span class="m">x∸1</span>, усечённая разность <span class="m">x∸y</span>, <span class="m">sg</span>, <span class="m">s̄g</span> — примитивно рекурсивны. Напр. <span class="m">x+y</span>: <span class="m">a(x,0)=x</span>, <span class="m">a(x,y+1)=S(a(x,y))</span>.
+  </div>
+</section>
+
+<section class="q" id="q38">
+  <h3><span class="num n-alg">38</span> Оператор минимизации. Рекурсивные функции.</h3>
+  <div class="box def"><span class="lab">Оператор минимизации M</span>
+  Для <span class="m">f(x₁,…,xₙ,x<sub>n+1</sub>)</span>:
+  <div class="fml">g(x₁,…,xₙ,x<sub>n+1</sub>) = min{ y : f(x₁,…,xₙ, y)=x<sub>n+1</sub> }</div>
+  (наименьший <span class="m">y</span>, при котором все <span class="m">f(x̄,0),…,f(x̄,y−1)</span> определены и <span class="m">≠x<sub>n+1</sub></span>, а <span class="m">f(x̄,y)=x<sub>n+1</sub></span>). Если поиск «зависает» — <span class="m">g</span> не определена. Это обобщение взятия обратной функции.
+  </div>
+  <div class="box def"><span class="lab">Рекурсивные (частично рекурсивные) функции</span>
+  Получаемые из простейших конечным числом операторов суперпозиции, примитивной рекурсии <b>и минимизации</b>. Класс шире примитивно рекурсивных — содержит <b>не всюду определённые</b> функции.
+  </div>
+  <p><b>Пример:</b> обычная разность <span class="m">f(x,y)=x−y</span> (<span class="m">=⊥</span> при <span class="m">x&lt;y</span>) рекурсивна: <span class="m">min{z : y+z=x}</span>.</p>
+  <div class="box thm"><span class="lab">Теорема (существуют нерекурсивные функции)</span>
+  Рекурсивных функций <b>счётно</b> (записываются словами в конечном алфавите <span class="m">O,S,I,R,M,…</span>), а всех функций <span class="m">ℕ→ℕ</span> — <b>несчётно</b>. Рекурсивные = вычислимые на машинах Тьюринга.
+  </div>
+</section>
+
+<section class="q" id="q39">
+  <h3><span class="num n-alg">39</span> Разрешимые и перечислимые множества. Характеризация перечислимых множеств.</h3>
+  <div class="box def"><span class="lab">Определения</span>
+  <span class="m">X⊆ℕ</span> <b>разрешимо</b>: вычислима характеристическая функция <span class="m">χ<sub>X</sub></span> (<span class="m">=1</span> на <span class="m">X</span>, <span class="m">=0</span> вне).
+  <span class="m">X</span> <b>перечислимо</b>: вычислима полухарактеристическая функция <span class="m">χ̃<sub>X</sub></span> (<span class="m">=0</span> на <span class="m">X</span>, <span class="m">=⊥</span> вне).
+  </div>
+  <div class="box thm"><span class="lab">Характеризация перечислимых</span>
+  Эквивалентны: (1) <span class="m">X</span> перечислимо; (2) <span class="m">X</span> — область определения вычислимой функции; (3) <span class="m">X</span> — множество значений вычислимой функции.
+  </div>
+  <div class="box proof"><span class="lab">Доказательство</span>
+  (1)⇒(2) очевидно. (2)⇒(3): <span class="m">f′(x)=x·(f(x)∸f(x)+1)</span> — определена ⟺ <span class="m">f(x)</span> определена, и тогда <span class="m">=x</span> ⇒ <span class="m">X=Im f′</span>. (3)⇒(1): <span class="m">χ̃<sub>X</sub>(x)=f(x)∸f(x)</span>.
+  </div>
+  <div class="box key"><span class="lab">Главные факты</span>
+  Разрешимое ⇒ перечислимо. <span class="m">A,B</span> перечислимы ⇒ <span class="m">A∩B, A∪B</span> перечислимы. Если <span class="m">A</span> и <span class="m">ℕ∖A</span> перечислимы — <span class="m">A</span> разрешимо. <b>Итог:</b> разрешимые = перечислимые с перечислимым дополнением.
+  </div>
+</section>
+
+<section class="q" id="q40">
+  <h3><span class="num n-alg">40</span> Универсальные вычислимые функции.</h3>
+  <div class="box def"><span class="lab">Определение</span>
+  <span class="m">U(n,x)</span> <b>универсальна</b> для класса <span class="m">T⊆Calc</span>, если <span class="m">T={U<sub>n</sub> : n∈ℕ}</span>, где <span class="m">U<sub>n</sub>(x)=U(n,x)</span>.
+  </div>
+  <div class="box thm"><span class="lab">Теорема (есть универсальная для Calc)</span>
+  Существует вычислимая <span class="m">U(n,x)</span>, универсальная для класса всех вычислимых функций одного аргумента.
+  </div>
+  <div class="box proof"><span class="lab">Идея</span>
+  Всякая <span class="m">f∈Calc</span> записывается словом в конечном алфавите (<span class="m">O,S,I,R,M</span> и знаки). Есть алгоритмы: перебор слов; проверка, описывает ли слово функцию; построение машины по слову. Функция <span class="m">S(n)</span> даёт номер <span class="m">n</span>-го «осмысленного» слова. <span class="m">U(n,x)</span> запускает машину <span class="m">n</span>-й функции на <span class="m">x</span>.
+  </div>
+  <div class="box thm"><span class="lab">Нет универсальной для UCalc</span>
+  Не существует <b>всюду определённой</b> вычислимой <span class="m">U′</span>, универсальной для класса всюду определённых функций.
+  <b>Доказательство (диагональ):</b> иначе <span class="m">g(x)=U′(x,x)+1∈UCalc</span>, <span class="m">g=U′<sub>n</sub></span>, и <span class="m">U′(n,n)=g(n)=U′(n,n)+1</span> — противоречие.
+  </div>
+</section>
+
+<section class="q" id="q41">
+  <h3><span class="num n-alg">41</span> Существование перечислимого неразрешимого множества.</h3>
+  <div class="box thm"><span class="lab">Шаг 1</span>
+  Существует вычислимая <span class="m">f</span>, не имеющая <b>всюду определённого вычислимого продолжения</b>. Берём <span class="m">f(n)=U(n,n)+1</span>.
+  </div>
+  <div class="box proof"><span class="lab">Почему</span>
+  Если <span class="m">f′</span> — всюду определённое вычислимое продолжение <span class="m">f</span>, то <span class="m">f′=U<sub>k</sub></span> при некотором <span class="m">k</span>. Тогда <span class="m">f′(k)=U(k,k)=f(k)−1≠f(k)</span> — значит <span class="m">f′</span> не продолжает <span class="m">f</span>. Противоречие.
+  </div>
+  <div class="box thm"><span class="lab">Шаг 2 (теорема)</span>
+  Существует перечислимое неразрешимое множество.
+  </div>
+  <div class="box proof"><span class="lab">Доказательство</span>
+  Область определения <span class="m">D</span> функции <span class="m">f</span> из шага 1 перечислима (характеризация, билет 39). Если <span class="m">D</span> разрешимо, то функция «<span class="m">f(x)</span> на <span class="m">D</span>, <span class="m">0</span> вне <span class="m">D</span>» была бы всюду определённым вычислимым продолжением <span class="m">f</span> — противоречие. Значит <span class="m">D</span> неразрешимо.
+  </div>
+</section>
+
+<section class="q" id="q42">
+  <h3><span class="num n-alg">42</span> Алгоритмически неразрешимые задачи. Машина Тьюринга с неразрешимой проблемой остановки.</h3>
+  <div class="box def"><span class="lab">Проблема остановки</span>
+  Для <span class="m">M</span> проблема остановки (не)разрешима, если (не)разрешимо множество <span class="m">Halt(M)={n : M</span> останавливается на <span class="m">n}</span>.
+  </div>
+  <div class="box thm"><span class="lab">Теорема</span>
+  Существует машина Тьюринга <span class="m">M</span> с <b>неразрешимой</b> проблемой остановки.
+  </div>
+  <div class="box proof"><span class="lab">Доказательство</span>
+  Берём <span class="m">M</span>, вычисляющую <span class="m">f</span> из билета 41. Тогда <span class="m">Halt(M)</span> = область определения <span class="m">f</span> = неразрешимое множество. Значит проблема остановки <span class="m">M</span> неразрешима. (Расширенно: по номеру <span class="m">n</span> определить, остановится ли <span class="m">T<sub>n</sub></span> на пустой ленте — алгоритмически неразрешимо.)
+  </div>
+  <div class="box key"><span class="lab">Другие неразрешимые задачи</span>
+  <ul style="margin:3px 0">
+    <li><b>Проблема равенства слов</b> в полугруппах/группах, заданных образующими и соотношениями.</li>
+    <li><b>Проблема доказуемости</b> формулы в логике 1-го порядка: по <span class="m">Γ</span> и <span class="m">φ</span> определить, верно ли <span class="m">Γ⊨φ</span>.</li>
+    <li><b>Существование решения диофантова уравнения</b> <span class="m">P(x₁,…,xₘ)=0</span> (10-я проблема Гильберта).</li>
+  </ul>
+  </div>
+</section>
+
+</main>
+</div>
+
+<button id="top" title="Наверх">↑</button>
+
+<script>
+  // мобильное меню
+  var ntog=document.getElementById('ntog'), nav=document.getElementById('nav');
+  if(ntog) ntog.addEventListener('click',function(){nav.classList.toggle('open');});
+  nav.addEventListener('click',function(e){ if(e.target.tagName==='A' && window.innerWidth<=860) nav.classList.remove('open'); });
+
+  // кнопка наверх
+  var top=document.getElementById('top');
+  window.addEventListener('scroll',function(){
+    top.classList.toggle('show', window.scrollY>400);
+  });
+  top.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+
+  // подсветка активного пункта (scroll-spy)
+  var links=[].slice.call(nav.querySelectorAll('a'));
+  var map={}; links.forEach(function(a){ var id=a.getAttribute('href').slice(1); map[id]=a; });
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){
+        links.forEach(function(a){a.classList.remove('active');});
+        var a=map[en.target.id]; if(a){ a.classList.add('active'); }
+      }
+    });
+  },{rootMargin:'-10% 0px -80% 0px',threshold:0});
+  document.querySelectorAll('section.q').forEach(function(s){obs.observe(s);});
+</script>
+</body>
+</html>

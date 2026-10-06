@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Математическая логика — конспект</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 16px; line-height: 1.7; background: #f8f7f4; color: #2c2c2a; }
+.page { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+h1 { font-size: 26px; font-weight: 600; margin-bottom: 6px; }
+.subtitle { color: #6b6b66; margin-bottom: 40px; font-size: 15px; }
+.toc { background: #fff; border: 1px solid #e0ddd6; border-radius: 10px; padding: 20px 24px; margin-bottom: 40px; }
+.toc h2 { font-size: 15px; font-weight: 600; margin-bottom: 12px; color: #5a5a55; text-transform: uppercase; letter-spacing: .05em; }
+.toc a { display: block; color: #4a4a95; text-decoration: none; padding: 3px 0; font-size: 15px; }
+.toc a:hover { text-decoration: underline; }
+.section { background: #fff; border: 1px solid #e0ddd6; border-radius: 12px; padding: 28px 32px; margin-bottom: 28px; }
+.section h2 { font-size: 20px; font-weight: 600; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 2px solid #f0ede6; }
+.section h3 { font-size: 16px; font-weight: 600; margin: 20px 0 10px; color: #3a3a90; }
+.section p { margin-bottom: 12px; }
+.section ul, .section ol { margin: 8px 0 12px 22px; }
+.section li { margin-bottom: 6px; }
+.def { background: #f0eef8; border-left: 3px solid #7070cc; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 14px 0; }
+.def strong { color: #4040aa; }
+.example { background: #f0f7ef; border-left: 3px solid #5a9a5a; border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 14px 0; }
+.example .ex-title { font-weight: 600; color: #3a7a3a; margin-bottom: 8px; font-size: 14px; text-transform: uppercase; letter-spacing: .04em; }
+.warn { background: #fef8ec; border-left: 3px solid #d4a030; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 14px 0; }
+.warn strong { color: #a07020; }
+code { font-family: 'Consolas', 'Courier New', monospace; background: #f0ede6; padding: 1px 6px; border-radius: 4px; font-size: 14px; }
+.tree { font-family: 'Consolas', 'Courier New', monospace; background: #f8f6f0; border: 1px solid #ddd; border-radius: 8px; padding: 16px 20px; margin: 14px 0; font-size: 14px; line-height: 1.9; white-space: pre; overflow-x: auto; }
+.nd { font-family: 'Consolas', 'Courier New', monospace; background: #f0f5ff; border: 1px solid #c0d0ee; border-radius: 8px; padding: 16px 20px; margin: 14px 0; font-size: 14px; line-height: 2; white-space: pre; overflow-x: auto; }
+.badge { display: inline-block; background: #4a4a95; color: #fff; font-size: 12px; font-weight: 600; border-radius: 4px; padding: 2px 8px; margin-right: 6px; }
+.badge.green { background: #4a8a4a; }
+.badge.orange { background: #b06020; }
+table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+th { background: #f0ede6; text-align: left; padding: 8px 12px; font-weight: 600; }
+td { padding: 8px 12px; border-bottom: 1px solid #eeebe4; }
+tr:last-child td { border-bottom: none; }
+.math { font-style: italic; }
+.formula { text-align: center; margin: 14px 0; font-size: 17px; letter-spacing: .02em; }
+.divider { border: none; border-top: 1px solid #e8e5de; margin: 20px 0; }
+.check { color: #3a8a3a; font-weight: 600; }
+.cross { color: #cc3333; font-weight: 600; }
+.tag { display: inline-block; border: 1px solid #bbb; border-radius: 4px; padding: 1px 7px; font-size: 13px; margin-right: 4px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>Математическая логика и теория алгоритмов</h1>
+<p class="subtitle">Конспект к контрольной работе: все основные темы с разобранными примерами</p>
+
+<div class="toc">
+  <h2>Содержание</h2>
+  <a href="#s1">1. Деревья истинности (таблицы истинности в виде дерева)</a>
+  <a href="#s2">2. Натуральная дедукция</a>
+  <a href="#s3">3. Функции: вложения, наложения, биекции</a>
+  <a href="#s4">4. Теория множеств: мощности</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="s1">
+<h2>1. Деревья истинности</h2>
+
+<p>Метод деревьев истинности позволяет проверить, является ли секвенция <strong>ψ₁, …, ψₙ ⊢ φ</strong> тавтологией. Идея: предполагаем, что посылки <em>истинны</em>, а заключение <em>ложно</em> — и ищем противоречие. Если противоречие есть на каждой ветке, секвенция доказана.</p>
+
+<div class="def">
+  <strong>Условные обозначения:</strong><br>
+  <code>φ ✓</code> — формула истинна &nbsp;|&nbsp; <code>φ ✗</code> — формула ложна &nbsp;|&nbsp; <code>⊗</code> — ветка закрыта (противоречие)
+</div>
+
+<h3>Правила раскрытия</h3>
+<table>
+  <tr><th>Формула</th><th>Знак</th><th>Что делаем</th><th>Вид</th></tr>
+  <tr><td>A ∧ B</td><td>✓</td><td>Оба истинны — на той же ветке</td><td>A ✓, B ✓</td></tr>
+  <tr><td>A ∧ B</td><td>✗</td><td>Хоть один ложен — ветвление</td><td>A ✗ | B ✗</td></tr>
+  <tr><td>A ∨ B</td><td>✓</td><td>Хоть один истинен — ветвление</td><td>A ✓ | B ✓</td></tr>
+  <tr><td>A ∨ B</td><td>✗</td><td>Оба ложны — на той же ветке</td><td>A ✗, B ✗</td></tr>
+  <tr><td>A → B</td><td>✓</td><td>Или A ложно, или B истинно — ветвление</td><td>A ✗ | B ✓</td></tr>
+  <tr><td>A → B</td><td>✗</td><td>A истинно и B ложно — на той же ветке</td><td>A ✓, B ✗</td></tr>
+  <tr><td>¬A</td><td>✓</td><td>A ложно</td><td>A ✗</td></tr>
+  <tr><td>¬A</td><td>✗</td><td>A истинно</td><td>A ✓</td></tr>
+</table>
+
+<div class="warn"><strong>Ветка закрыта (⊗)</strong>, если на ней одновременно встречаются <code>φ ✓</code> и <code>φ ✗</code> для одной и той же атомарной формулы φ.</div>
+
+<hr class="divider">
+
+<div class="example">
+<div class="ex-title">Пример 1 — из тестового варианта</div>
+<strong>Доказать: ¬(p ∨ q) ⊢ ¬p ∨ ¬q</strong>
+
+<p style="margin-top:10px">Записываем посылку ✓ и <em>отрицание вывода</em> ✗ (хотим найти противоречие):</p>
+<div class="tree">1. ¬(p ∨ q)   ✓     (посылка)
+2. ¬p ∨ ¬q   ✗     (отрицание заключения)
+
+Раскрываем (1) по правилу ¬A ✓ → A ✗:
+3. p ∨ q     ✗
+
+Раскрываем (3) по правилу A ∨ B ✗ → оба ложны (на той же ветке):
+4. p          ✗
+5. q          ✗
+
+Раскрываем (2) по правилу A ∨ B ✗:
+6. ¬p         ✗
+7. ¬q         ✗
+
+Раскрываем (6) по ¬A ✗ → A ✓:
+8. p          ✓   ←→ противоречит (4): p ✗   ⊗
+
+Единственная ветка закрылась → секвенция доказана. ✓</div>
+</div>
+
+<hr class="divider">
+
+<div class="example">
+<div class="ex-title">Пример 2</div>
+<strong>Доказать: p → q, q → r ⊢ p → r</strong>
+<div class="tree">1. p → q     ✓   (посылка 1)
+2. q → r     ✓   (посылка 2)
+3. p → r     ✗   (отрицание заключения)
+
+Раскрываем (3) по → ✗:
+4. p          ✓
+5. r          ✗
+
+Раскрываем (1) по → ✓: ветвление
+        /          \
+6. p ✗             6. q ✓
+⊗ (против. с 4)
+                Раскрываем (2) по → ✓: ветвление
+                     /          \
+               7. q ✗           7. r ✓
+               ⊗(против. с 6)   ⊗(против. с 5)
+
+Все ветки закрыты → доказано. ✓</div>
+</div>
+
+<hr class="divider">
+<h3>Когда секвенция НЕ доказана</h3>
+<p>Если хоть одна ветка осталась открытой (не закрылась), то секвенция ложна. Открытая ветка даёт конкретный <em>контрпример</em> — значения переменных на этой ветке делают посылки истинными, а заключение ложным.</p>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="s2">
+<h2>2. Натуральная дедукция</h2>
+
+<p>Натуральная дедукция — это формальная система доказательств, где мы строим вывод шаг за шагом, применяя правила введения и удаления связок.</p>
+
+<h3>Формат записи</h3>
+<p>Каждая строка: <code>номер. формула [обоснование]</code>. Допущения открываются вертикальной чертой и закрываются правилом удаления.</p>
+
+<h3>Основные правила</h3>
+<table>
+  <tr><th>Правило</th><th>Обозначение</th><th>Смысл</th></tr>
+  <tr><td>Введение ∧</td><td>∧I</td><td>Из A и B получаем A ∧ B</td></tr>
+  <tr><td>Удаление ∧</td><td>∧E₁, ∧E₂</td><td>Из A ∧ B получаем A (или B)</td></tr>
+  <tr><td>Введение ∨ (левое)</td><td>∨I₁</td><td>Из A получаем A ∨ B (любое B)</td></tr>
+  <tr><td>Введение ∨ (правое)</td><td>∨I₂</td><td>Из B получаем A ∨ B (любое A)</td></tr>
+  <tr><td>Удаление ∨</td><td>∨E</td><td>Из A∨B, доказательств C из A и C из B → C</td></tr>
+  <tr><td>Введение →</td><td>→I</td><td>Если из допущения A вывели B, то доказан A → B</td></tr>
+  <tr><td>Удаление → (modus ponens)</td><td>→E</td><td>Из A → B и A получаем B</td></tr>
+  <tr><td>Введение ¬</td><td>¬I</td><td>Если из A получаем ⊥, то доказан ¬A</td></tr>
+  <tr><td>Удаление ¬ (¬¬)</td><td>¬¬E</td><td>Из ¬¬A получаем A</td></tr>
+  <tr><td>Введение ⊥</td><td>⊥I</td><td>Из A и ¬A получаем ⊥ (противоречие)</td></tr>
+  <tr><td>Удаление ⊥</td><td>⊥E</td><td>Из ⊥ получаем что угодно</td></tr>
+</table>
+
+<hr class="divider">
+
+<div class="example">
+<div class="ex-title">Пример 1 — из тестового варианта</div>
+<strong>Доказать: (p ∨ q) ∨ r ⊢ p ∨ (q ∨ r)</strong>
+<div class="nd">1.  (p ∨ q) ∨ r              [посылка]
+2.  | p ∨ q                  [допущение для ∨E на стр. 1, левая ветка]
+3.  | | p                    [допущение для ∨E на стр. 2, левая ветка]
+4.  | | p ∨ (q ∨ r)          [∨I₁ из 3]
+5.  | | q                    [допущение для ∨E на стр. 2, правая ветка]
+6.  | | q ∨ r                [∨I₁ из 5]
+7.  | | p ∨ (q ∨ r)          [∨I₂ из 6]
+8.  | p ∨ (q ∨ r)            [∨E из 2, 3–4, 5–7]
+9.  | r                      [допущение для ∨E на стр. 1, правая ветка]
+10. | q ∨ r                  [∨I₂ из 9]
+11. | p ∨ (q ∨ r)            [∨I₂ из 10]
+12. p ∨ (q ∨ r)              [∨E из 1, 2–8, 9–11]        ■</div>
+</div>
+
+<div class="example">
+<div class="ex-title">Пример 2</div>
+<strong>Доказать: p → q ⊢ ¬q → ¬p</strong>
+<div class="nd">1.  p → q          [посылка]
+2.  | ¬q           [допущение для →I]
+3.  | | p          [допущение для ¬I]
+4.  | | q          [→E из 1, 3]
+5.  | | ⊥          [⊥I из 2, 4: ¬q и q]
+6.  | ¬p           [¬I из 3–5: из допущения p получили ⊥]
+7.  ¬q → ¬p        [→I из 2–6]                            ■</div>
+</div>
+
+<div class="example">
+<div class="ex-title">Пример 3</div>
+<strong>Доказать: ⊢ p ∨ ¬p (закон исключённого третьего)</strong>
+<p style="margin-top:8px">Этот закон требует <em>классической</em> логики (правило ¬¬E или reductio ad absurdum):</p>
+<div class="nd">1.  | ¬(p ∨ ¬p)    [допущение для ¬I]
+2.  | | p          [допущение для ¬I]
+3.  | | p ∨ ¬p     [∨I₁ из 2]
+4.  | | ⊥          [⊥I из 1, 3]
+5.  | ¬p           [¬I из 2–4]
+6.  | p ∨ ¬p       [∨I₂ из 5]
+7.  | ⊥            [⊥I из 1, 6]
+8.  ¬¬(p ∨ ¬p)     [¬I из 1–7]
+9.  p ∨ ¬p         [¬¬E из 8]                             ■</div>
+</div>
+
+<hr class="divider">
+<div class="warn">
+  <strong>Главное правило:</strong> когда закрываете допущение через ∨E, →I или ¬I — убедитесь, что нужный вам вывод уже получен <em>внутри</em> блока допущения.
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="s3">
+<h2>3. Функции: вложения, наложения, биекции</h2>
+
+<h3>Определения</h3>
+<div class="def">
+  <strong>Функция f: A → B</strong> — правило, сопоставляющее каждому a ∈ A ровно один элемент f(a) ∈ B.<br><br>
+  <strong>Вложение (инъекция):</strong> f(x) = f(y) ⟹ x = y. («Разные входы — разные выходы»)<br>
+  Эквивалентно: x ≠ y ⟹ f(x) ≠ f(y)<br><br>
+  <strong>Наложение (сюръекция):</strong> ∀b ∈ B ∃a ∈ A: f(a) = b. («Каждый выход достигается»)<br><br>
+  <strong>Биекция:</strong> f — и вложение, и наложение одновременно.
+</div>
+
+<h3>Стандартные конструкции</h3>
+<div class="def">
+  <strong>Тождественное отображение:</strong> id<sub>A</sub>: A → A, id(x) = x. Всегда биекция.<br>
+  <strong>Декартово произведение:</strong> A × B = {(a, b) | a ∈ A, b ∈ B}<br>
+  <strong>Степенное множество:</strong> 𝒫(A) = {X | X ⊆ A}<br>
+  <strong>Композиция:</strong> (g ∘ f)(x) = g(f(x)), где f: A→B, g: B→C
+</div>
+
+<h3>Как доказывать и опровергать</h3>
+<table>
+  <tr><th>Что доказываем</th><th>Метод</th></tr>
+  <tr><td>f — вложение</td><td>Предположить f(x)=f(y), вывести x=y</td></tr>
+  <tr><td>f — НЕ вложение</td><td>Найти x≠y такие, что f(x)=f(y)</td></tr>
+  <tr><td>f — наложение</td><td>Для произвольного b∈B найти a∈A с f(a)=b</td></tr>
+  <tr><td>f — НЕ наложение</td><td>Найти b∈B, не лежащий в образе f</td></tr>
+</table>
+
+<hr class="divider">
+
+<div class="example">
+<div class="ex-title">Пример 1 — из тестового варианта</div>
+<strong>f: ℕ → ℕ, f(n) = 2n + 3</strong>
+
+<p style="margin-top:10px"><span class="badge green">а) Вложение?</span> <span class="check">ДА</span></p>
+<p>Пусть f(n) = f(m), т.е. 2n+3 = 2m+3. Вычитаем 3: 2n = 2m, делим на 2: n = m. ✓</p>
+
+<p><span class="badge orange">б) Наложение?</span> <span class="cross">НЕТ</span></p>
+<p>Контрпример: возьмём b = 1 ∈ ℕ. Если 2n+3 = 1, то n = −1 ∉ ℕ. Элемент 1 не достигается. ✗</p>
+<p>Вообще f(ℕ) = {3, 5, 7, 9, …} — только нечётные числа ≥ 3.</p>
+</div>
+
+<div class="example">
+<div class="ex-title">Пример 2</div>
+<strong>f: ℝ → ℝ, f(x) = x²</strong>
+<p style="margin-top:10px"><span class="badge orange">Вложение?</span> <span class="cross">НЕТ</span> — f(2) = f(−2) = 4, но 2 ≠ −2.</p>
+<p><span class="badge orange">Наложение?</span> <span class="cross">НЕТ</span> — f(x) ≥ 0, поэтому −1 ∈ ℝ не достигается.</p>
+</div>
+
+<div class="example">
+<div class="ex-title">Пример 3</div>
+<strong>i: A → B, i(x) = x (включение) — для каких A, B это вложение/наложение/биекция?</strong>
+<ul style="margin-top:8px">
+  <li><strong>Функция:</strong> всегда (если A ⊆ B, иначе вообще не определена)</li>
+  <li><strong>Вложение:</strong> всегда (i(x)=i(y) ⟹ x=y тривиально)</li>
+  <li><strong>Наложение:</strong> только если A = B</li>
+  <li><strong>Биекция:</strong> только если A = B</li>
+</ul>
+</div>
+
+<hr class="divider">
+
+<h3>Теоремы о композиции (задача 7 из ДЗ)</h3>
+<div class="def">
+  Пусть f: A→B, g: B→C функции. Тогда:<br>
+  • Если f и g — вложения, то g∘f — вложение.<br>
+  • Если f и g — наложения, то g∘f — наложение.<br>
+  • Если f и g — биекции, то g∘f — биекция.
+</div>
+
+<div class="example">
+<div class="ex-title">Доказательство первого пункта</div>
+<p>Пусть (g∘f)(x) = (g∘f)(y), т.е. g(f(x)) = g(f(y)).</p>
+<p>g — вложение ⟹ f(x) = f(y).</p>
+<p>f — вложение ⟹ x = y. ✓</p>
+</div>
+
+<hr class="divider">
+
+<h3>Левая и правая обратная функция (задача 10 из ДЗ)</h3>
+<div class="def">
+  g: B→A называется <strong>левой обратной</strong> к f, если g∘f = id<sub>A</sub>, т.е. ∀a∈A: g(f(a)) = a.<br>
+  g: B→A называется <strong>правой обратной</strong> к f, если f∘g = id<sub>B</sub>, т.е. ∀b∈B: f(g(b)) = b.
+</div>
+<div class="def">
+  <strong>Теорема:</strong> f имеет левую обратную ⟺ f — вложение.<br>
+  <strong>Теорема:</strong> f имеет правую обратную ⟺ f — наложение.<br>
+  (Правое ⟹ наложение доказывается конструктивно; ⟸ требует аксиомы выбора)
+</div>
+
+<hr class="divider">
+
+<h3>Биекция между 𝒫(A) и A→{0,1} (задача 9 из ДЗ)</h3>
+<div class="example">
+<div class="ex-title">Построение явной биекции</div>
+<p>Для каждого подмножества B ⊆ A определим его <em>характеристическую функцию</em>:</p>
+<p class="formula">χ<sub>B</sub>: A → {0,1}, &nbsp; χ<sub>B</sub>(x) = 1 если x ∈ B, иначе 0</p>
+<p>Отображение Φ: 𝒫(A) → (A→{0,1}), Φ(B) = χ<sub>B</sub> — это биекция.</p>
+<ul>
+  <li><strong>Вложение:</strong> если χ<sub>B</sub> = χ<sub>C</sub>, то для любого x: x∈B ⟺ χ<sub>B</sub>(x)=1 ⟺ χ<sub>C</sub>(x)=1 ⟺ x∈C, значит B = C.</li>
+  <li><strong>Наложение:</strong> для любой f: A→{0,1} положим B = f⁻¹(1) = {x∈A | f(x)=1}, тогда χ<sub>B</sub> = f.</li>
+</ul>
+</div>
+
+<hr class="divider">
+
+<h3>Упорядоченная пара по Куратовскому (задача 12 из ДЗ)</h3>
+<div class="def">
+  <strong>Определение:</strong> (a, b) := {{a}, {a, b}}<br><br>
+  <strong>Теорема:</strong> (a, b) = (c, d) ⟺ a = c и b = d.
+</div>
+<div class="example">
+<div class="ex-title">Доказательство теоремы</div>
+<p>Пусть {{a},{a,b}} = {{c},{c,d}}. Разберём случаи:</p>
+<p>Одноэлементное множество {a} ∈ {{c},{c,d}}, значит {a} = {c} или {a} = {c,d}.</p>
+<p><strong>Случай 1:</strong> {a} = {c}. Тогда a = c. Двухэлементное {a,b} = {c,d} = {a,d}, значит b = d. ✓</p>
+<p><strong>Случай 2:</strong> {a} = {c,d}. Тогда c = d = a. Тогда {{c},{c,d}} = {{a},{a,a}} = {{a},{a}} = {{a}}, а {{a},{a,b}} = {{a}} означает {a} = {a,b}, т.е. b = a. Итого a=c, b=d. ✓</p>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="s4">
+<h2>4. Теория множеств: мощности</h2>
+
+<h3>Основные понятия</h3>
+<div class="def">
+  Множества A и B <strong>равномощны</strong> (|A| = |B|), если между ними существует биекция.<br><br>
+  <strong>Счётные множества:</strong> |A| = |ℕ| = ℵ₀ (строго бесконечные счётные)<br>
+  <strong>Мощность континуума:</strong> <b>c</b> = |ℝ| = |[0,1]| = |{0,1}ᴺ|<br>
+  <strong>Теорема Кантора:</strong> |A| &lt; |𝒫(A)| для любого A (мощность степенного множества всегда строго больше)
+</div>
+
+<h3>Таблица ключевых мощностей</h3>
+<table>
+  <tr><th>Множество</th><th>Мощность</th><th>Почему</th></tr>
+  <tr><td>ℕ, ℤ, ℚ</td><td>ℵ₀</td><td>Стандартная нумерация / диагональ Кантора</td></tr>
+  <tr><td>Алгебраические числа</td><td>ℵ₀</td><td>Счётное объединение счётных множеств</td></tr>
+  <tr><td>ℝ, [0,1], (0,1)</td><td><b>c</b></td><td>Двоичные разложения / диагональ Кантора</td></tr>
+  <tr><td>Иррациональные числа</td><td><b>c</b></td><td>ℝ = ℚ ∪ иррац., |ℚ|=ℵ₀, а |ℝ|=<b>c</b></td></tr>
+  <tr><td>Прямые на плоскости</td><td><b>c</b></td><td>Биекция с ℝ² / (угол, сдвиг)</td></tr>
+  <tr><td>Непрерывные функции ℝ→ℝ</td><td><b>c</b></td><td>Задаются значениями на ℚ (плотность)</td></tr>
+  <tr><td>Многочлены с рац. коэф.</td><td>ℵ₀</td><td>Счётное объединение счётных</td></tr>
+  <tr><td>Многочлены с действ. коэф.</td><td><b>c</b></td><td>Коэффициенты из ℝ: <b>c</b>ⁿ = <b>c</b></td></tr>
+  <tr><td>Все функции ℝ→ℝ</td><td>2<sup><b>c</b></sup></td><td>|{0,1}ᴿ| = 2<sup>|ℝ|</sup> = 2<sup><b>c</b></sup></td></tr>
+  <tr><td>Строго возраст. посл. нат. чисел</td><td><b>c</b></td><td>Биекция с бесконечными подмножествами ℕ</td></tr>
+</table>
+
+<hr class="divider">
+
+<div class="example">
+<div class="ex-title">Пример 1 — из тестового варианта</div>
+<strong>Мощность множества всех многочленов с действительными коэффициентами</strong>
+
+<p style="margin-top:10px">Обозначим P<sub>n</sub> = множество всех многочленов степени ≤ n с действ. коэффициентами.</p>
+<p>Многочлен степени ≤ n — это набор (a₀, a₁, …, aₙ) ∈ ℝⁿ⁺¹, т.е. |P<sub>n</sub>| = |ℝⁿ⁺¹| = <b>c</b>ⁿ⁺¹ = <b>c</b> (т.к. <b>c²=c</b>).</p>
+<p>Всё множество многочленов = P₀ ∪ P₁ ∪ P₂ ∪ … — счётное объединение множеств мощности <b>c</b>.</p>
+<p>Счётное объединение множеств мощности <b>c</b> имеет мощность <b>c</b>. <span class="check">Ответ: c</span></p>
+</div>
+
+<div class="example">
+<div class="ex-title">Пример 2 — задача 3 из ДЗ</div>
+<strong>|отрезок| = |интервал|, оба равны c</strong>
+
+<p style="margin-top:10px">Строим явную биекцию между [0,1] и (0,1). Одна из стандартных конструкций:</p>
+<p>Выберем счётное плотное подмножество S = {0, 1, ½, ⅓, ¼, …} ⊂ [0,1].<br>
+Перенумеруем S = {s₀, s₁, s₂, …} и пусть S' = {s₁, s₂, s₃, …} ⊂ (0,1).<br>
+Определим f: [0,1] → (0,1): f(sₙ) = sₙ₊₁, f(x) = x для x ∉ S.</p>
+<p>Это биекция. Аналогично через арктангенс строится биекция (0,1) → ℝ.</p>
+</div>
+
+<div class="example">
+<div class="ex-title">Пример 3 — задача 2 из ДЗ</div>
+<strong>Алгебраические числа счётны</strong>
+
+<p style="margin-top:10px">Алгебраическое число — действительный корень ненулевого многочлена с рациональными коэффициентами.</p>
+<p><strong>Шаг 1.</strong> Многочлены с рац. коэф. счётны (задача 1): пронумеруем их m₁, m₂, m₃, …</p>
+<p><strong>Шаг 2.</strong> Каждый многочлен mₙ степени d имеет не более d корней — конечное множество.</p>
+<p><strong>Шаг 3.</strong> Множество алгебраических чисел = ⋃ₙ {корни mₙ} — счётное объединение конечных множеств. Значит, оно <span class="check">счётно</span>.</p>
+</div>
+
+<div class="example">
+<div class="ex-title">Пример 4 — задача 7 из ДЗ</div>
+<strong>Иррациональные числа имеют мощность c</strong>
+
+<p style="margin-top:10px">Обозначим I = ℝ \ ℚ (иррациональные числа). Тогда ℝ = ℚ ∪ I.</p>
+<p>Предположим |I| = ℵ₀. Тогда |ℝ| = |ℚ ∪ I| ≤ ℵ₀ + ℵ₀ = ℵ₀. Противоречие с |ℝ| = <b>c</b> &gt; ℵ₀.</p>
+<p>Предположим |I| &lt; ℵ₀ (конечно). Тогда |ℝ| = |ℚ| + конечное = ℵ₀. Снова противоречие.</p>
+<p>Значит |I| = <b>c</b>. <span class="check">Ответ: c</span></p>
+</div>
+
+<div class="example">
+<div class="ex-title">Пример 5 — задача 8 из ДЗ</div>
+<strong>Строго возрастающие бесконечные последовательности натуральных чисел — мощность c</strong>
+
+<p style="margin-top:10px">Обозначим нашу коллекцию через S.</p>
+<p><strong>Биекция S → {бесконечные подмножества ℕ}:</strong><br>
+Каждой строго возрастающей послед. (a₁ &lt; a₂ &lt; a₃ &lt; …) сопоставим подмножество {a₁, a₂, a₃, …} ⊆ ℕ. Это биекция.</p>
+<p><strong>|{бесконечные подмножества ℕ}| = c</strong>, т.к. |𝒫(ℕ)| = 2<sup>ℵ₀</sup> = <b>c</b>, и конечных подмножеств лишь ℵ₀, поэтому бесконечных — тоже <b>c</b>.</p>
+</div>
+
+<div class="example">
+<div class="ex-title">★ Задача 14 — c² = c</div>
+<strong>Доказать построением явной биекции, что |ℝ × ℝ| = |ℝ|</strong>
+
+<p style="margin-top:10px">Достаточно построить биекцию (0,1) × (0,1) → (0,1) (тогда c² = c).</p>
+<p><strong>Метод чередования цифр:</strong><br>
+Запишем x = 0.x₁x₂x₃… и y = 0.y₁y₂y₃… (в десятичной записи, без бесконечных девяток).<br>
+Определим f(x,y) = 0.x₁y₁x₂y₂x₃y₃…</p>
+<p>Это инъекция (0,1)² → (0,1). В другую сторону: проекции на чётные/нечётные позиции дают (x,y). Итого биекция. <span class="check">c² = c ✓</span></p>
+</div>
+
+<div class="example">
+<div class="ex-title">★ Задача 15 — непрерывные функции ℝ→ℝ имеют мощность c</div>
+<strong>Ключевая идея из подсказки:</strong>
+
+<p style="margin-top:10px">Если две непрерывные функции f и g совпадают на ℚ (рациональных числах), они совпадают всюду на ℝ.</p>
+<p><em>Почему:</em> ℚ плотно в ℝ. Для любого x∈ℝ найдём qₙ∈ℚ с qₙ→x. По непрерывности f(x) = lim f(qₙ) = lim g(qₙ) = g(x).</p>
+<p><strong>Следствие:</strong> непрерывная функция определяется своими значениями на ℚ, т.е. элементом ℝᴺ (т.к. |ℚ| = ℵ₀).</p>
+<p>|ℝᴺ| = <b>c</b><sup>ℵ₀</sup> = (2<sup>ℵ₀</sup>)<sup>ℵ₀</sup> = 2<sup>ℵ₀·ℵ₀</sup> = 2<sup>ℵ₀</sup> = <b>c</b>.</p>
+<p>С другой стороны, константные функции f(x)≡c уже дают <b>c</b> штук. Итого: мощность = <b>c</b>. <span class="check">✓</span></p>
+</div>
+
+<hr class="divider">
+<h3>Методы доказательства равномощности</h3>
+<ol style="margin-left:20px">
+  <li style="margin-bottom:8px"><strong>Явная биекция:</strong> строим конкретную f: A→B и доказываем, что она инъекция и сюръекция.</li>
+  <li style="margin-bottom:8px"><strong>Теорема Кантора–Бернштейна:</strong> если |A| ≤ |B| и |B| ≤ |A| (есть инъекция в обе стороны), то |A| = |B|.</li>
+  <li style="margin-bottom:8px"><strong>Счётное объединение счётных:</strong> ⋃ₙAₙ с |Aₙ|=ℵ₀ → |⋃Aₙ|=ℵ₀ (если индексов счётно).</li>
+  <li style="margin-bottom:8px"><strong>Счётное объединение мощности c:</strong> ⋃ₙAₙ с |Aₙ|=<b>c</b> → |⋃Aₙ|=<b>c</b>.</li>
+  <li style="margin-bottom:8px"><strong>Диагональный аргумент Кантора:</strong> для доказательства несчётности (например, ℝ).</li>
+</ol>
+
+</div>
+
+<p style="text-align:center; color:#999; font-size:13px; margin-top:40px">Математическая логика и теория алгоритмов — НИУ МИЭТ</p>
+
+</div>
+</body>
+</html>

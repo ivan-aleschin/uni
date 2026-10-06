@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Матлогика · Часть V — Логика предикатов и модели (27–35)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root{
+    --navy:#1e466e; --navy2:#2c5d92; --ink:#1e2a3a; --muted:#5b6e8c;
+    --line:#cbd5e1; --bg:#f5f7fb; --side:#0f2440; --side2:#16335a;
+    --gold:#f4c430; --indigo:#4f46e5;
+  }
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family:'Segoe UI','Georgia',serif; background:var(--bg); color:var(--ink);
+    line-height:1.62;
+  }
+  /* ---------- progress bar ---------- */
+  #progress{ position:fixed; top:0; left:0; height:4px; width:0;
+    background:linear-gradient(90deg,#2c5d92,#4f46e5); z-index:60; transition:width .08s linear; }
+
+  /* ---------- layout ---------- */
+  .layout{ display:grid; grid-template-columns:286px minmax(0,1fr);
+    max-width:1500px; margin:0 auto; }
+  .content{ padding:2.2rem 2.6rem 5rem; min-width:0; }
+
+  /* ---------- sidebar ---------- */
+  .sidebar{ position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto;
+    background:var(--side); color:#c7d6ea; padding:1.1rem .8rem 2rem; }
+  .sidebar::-webkit-scrollbar{ width:8px; }
+  .sidebar::-webkit-scrollbar-thumb{ background:#2c456b; border-radius:8px; }
+  .side-title{ color:#fff; font-size:1.02rem; font-weight:700; padding:.3rem .6rem .1rem; letter-spacing:.2px; }
+  .side-sub{ color:#7d9bc4; font-size:.72rem; padding:0 .6rem .8rem; }
+  .side-group{ color:#6f93c2; font-size:.7rem; text-transform:uppercase; letter-spacing:1px;
+    margin:1rem .6rem .3rem; font-weight:700; }
+  .sidebar a{ display:block; color:#bcd0ea; text-decoration:none; font-size:.83rem;
+    padding:.34rem .6rem; border-radius:7px; border-left:3px solid transparent; line-height:1.3; }
+  .sidebar a:hover{ background:rgba(255,255,255,.07); color:#fff; }
+  .sidebar a.active{ background:var(--navy2); color:#fff; border-left-color:var(--gold); font-weight:600; }
+  .sidebar a .n{ display:inline-block; min-width:1.5em; color:#7d9bc4; font-weight:700; }
+  .sidebar a.active .n{ color:#fff; }
+  .side-star{ background:#23304a; border:1px solid #3a4d72; border-radius:9px; margin:.2rem .4rem 0;
+    padding:.1rem; }
+  .side-star a{ font-weight:700; color:var(--gold); }
+  .side-star a .n{ color:var(--gold); }
+  .side-star a:hover{ background:rgba(244,196,48,.12); }
+
+  /* ---------- mobile toggle ---------- */
+  #menu-btn{ display:none; position:fixed; right:16px; bottom:16px; z-index:55;
+    background:var(--navy); color:#fff; border:none; border-radius:50%;
+    width:54px; height:54px; font-size:1.4rem; box-shadow:0 6px 18px rgba(0,0,0,.25); cursor:pointer; }
+  #overlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:50; }
+
+  /* ---------- typography ---------- */
+  h1{ font-size:1.8rem; font-weight:700; color:var(--navy);
+    border-left:6px solid var(--navy); padding-left:1rem; margin-bottom:.3rem; }
+  .subtitle{ color:var(--muted); margin-bottom:1.4rem; padding-left:1.2rem; font-size:.97rem; }
+  h2.part{ font-size:1.45rem; color:#fff; background:var(--navy);
+    padding:.65rem 1.1rem; border-radius:12px; margin:2.4rem 0 1.2rem; scroll-margin-top:14px;
+    box-shadow:0 4px 14px rgba(30,70,110,.22); }
+  h2.part span{ opacity:.7; font-weight:400; font-size:.95rem; }
+  .ticket{ background:#fff; border:1px solid #e3e9f1; border-radius:16px;
+    padding:1.2rem 1.4rem 1.4rem; margin:1.1rem 0; box-shadow:0 4px 16px rgba(20,40,70,.05);
+    scroll-margin-top:14px; }
+  .ticket-head{ display:flex; align-items:flex-start; gap:.7rem; margin-bottom:.5rem; }
+  .num{ flex:0 0 auto; background:var(--navy); color:#fff; font-weight:700;
+    min-width:2rem; height:2rem; padding:0 .45rem; border-radius:8px;
+    display:flex; align-items:center; justify-content:center; font-size:.95rem; }
+  .ticket-head h3{ font-size:1.12rem; color:var(--navy); line-height:1.35; padding-top:.15rem; }
+  h4{ font-size:1rem; color:#2c3e66; margin:1rem 0 .35rem; }
+  p{ margin:.5rem 0; }
+  ul,ol{ margin:.45rem 0 .55rem 1.5rem; }
+  li{ margin:.3rem 0; }
+  code{ font-family:'Courier New',monospace; background:#eef2f7; padding:.08rem .34rem;
+    border-radius:5px; font-size:.9em; }
+
+  /* ---------- callout boxes ---------- */
+  .box{ border-radius:11px; padding:.7rem 1.05rem; margin:.75rem 0; font-size:.95rem; }
+  .box .lab{ display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.6px;
+    font-weight:700; margin-bottom:.25rem; opacity:.85; }
+  .def{ background:#eef0ff; border-left:4px solid var(--indigo); }
+  .def .lab{ color:#3f37c9; }
+  .idea{ background:#fffdf5; border-left:4px solid #d9b441; }
+  .idea .lab{ color:#92670c; }
+  .intu{ background:#eef6fb; border-left:4px solid #2c8fd4; }
+  .intu .lab{ color:#1d6fa5; }
+  .warn{ background:#fef2f2; border-left:4px solid #ef4444; }
+  .warn .lab{ color:#b91c1c; }
+  .good{ background:#ecfdf5; border-left:4px solid #10b981; }
+  .good .lab{ color:#047857; }
+
+  .formula{ font-family:'Cambria Math','Georgia',serif; font-size:1.1rem; text-align:center;
+    background:#f8fafc; padding:.6rem .7rem; border-radius:10px; margin:.7rem 0;
+    border:1px solid #e2e8f0; overflow-x:auto; }
+  .f{ font-family:'Cambria Math','Georgia',serif; }
+
+  .proof{ background:#fcfbf3; border:1px solid #e9e5c3; border-radius:11px;
+    padding:.9rem 1.1rem; font-family:'Courier New',monospace; font-size:.86rem;
+    overflow-x:auto; margin:.8rem 0; white-space:pre-wrap; line-height:1.5; }
+
+  table{ border-collapse:collapse; margin:.8rem 0; width:100%; font-size:.9rem; }
+  th,td{ border:1px solid var(--line); padding:.42rem .6rem; text-align:left; vertical-align:top; }
+  th{ background:#e8eef6; color:var(--navy); }
+  td.c,th.c{ text-align:center; }
+
+  hr{ margin:1.3rem 0; border:none; border-top:1px dashed #d3dceb; }
+  .tag{ display:inline-block; background:#e8eef6; color:var(--navy); font-size:.74rem;
+    font-weight:600; padding:.12rem .55rem; border-radius:20px; margin-left:.4rem; vertical-align:middle; }
+  footer{ text-align:center; margin-top:3rem; padding-top:1.2rem; border-top:1px solid #dbe3ef;
+    font-size:.82rem; color:var(--muted); }
+
+  /* cheat sheet */
+  #shpora{ border:2px solid var(--gold); background:linear-gradient(180deg,#fffdf3,#fff); }
+  #shpora .ticket-head h3{ color:#8a6a00; }
+  #shpora .num{ background:var(--gold); color:#3a2c00; }
+  .mini-def{ margin:.55rem 0; padding-left:.2rem; }
+  .mini-def b{ color:var(--navy); }
+
+  @media (max-width:960px){
+    .layout{ grid-template-columns:1fr; }
+    .sidebar{ position:fixed; top:0; left:0; width:300px; max-width:84vw; z-index:51;
+      transform:translateX(-100%); transition:transform .25s ease; box-shadow:4px 0 24px rgba(0,0,0,.3); }
+    .sidebar.open{ transform:translateX(0); }
+    #menu-btn{ display:block; }
+    .content{ padding:1.4rem 1.1rem 4rem; }
+    .ticket{ padding:1rem 1rem 1.1rem; }
+  }
+
+  /* ---------- file switcher ---------- */
+  .file-nav{ display:flex; flex-wrap:wrap; gap:.3rem; margin:.2rem .4rem .6rem; }
+  .file-nav .fn{ flex:1 1 44%; display:flex; align-items:center; gap:.3rem;
+    font-size:.74rem; color:#bcd0ea; text-decoration:none; background:#16243f;
+    border:1px solid #294063; border-radius:8px; padding:.3rem .45rem; line-height:1.15; }
+  .file-nav .fn:hover{ background:#1d3252; color:#fff; }
+  .file-nav .fn.active{ background:var(--navy2); color:#fff; border-color:var(--gold); }
+  .file-nav .fk{ background:#0f2440; color:#9fc0ea; font-weight:700; border-radius:5px;
+    min-width:1.1rem; text-align:center; font-size:.72rem; padding:0 .15rem; }
+  .file-nav .fn.active .fk{ color:var(--gold); }
+  .plan-link{ display:block; }
+  .sidebar a.cross{ opacity:.82; }
+  .sidebar a.cross::after{ content:"↗"; float:right; color:#6f93c2; font-size:.7rem; padding-left:.3rem; }
+  .sidebar a.cross:hover::after{ color:#cfe0f5; }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="overlay"></div>
+<button id="menu-btn" aria-label="Оглавление">☰</button>
+
+<div class="layout">
+
+  <nav class="sidebar" id="sidebar">
+    <div class="side-title">Матлогика · экзамен</div>
+    <div class="side-sub">42 билета · 5 файлов · разбор и интуиция</div>
+    <div class="file-nav">
+      <a class="fn" href="01-ischislenie.html"><span class="fk">1</span>I · ИВ</a>
+      <a class="fn" href="02-moshchnosti.html"><span class="fk">2</span>II · Мощности</a>
+      <a class="fn" href="03-poryadki-chisla.html"><span class="fk">3</span>III–IV · Числа</a>
+      <a class="fn active" href="#"><span class="fk">4</span>V · Предикаты</a>
+      <a class="fn" href="05-algoritmy.html"><span class="fk">5</span>VI · Алгоритмы</a>
+    </div>
+    <div class="side-star"><a href="01-ischislenie.html#shpora"><span class="n">★</span>Шпаргалка-минимум (10 определений)</a></div>
+    <a class="plan-link" href="01-ischislenie.html#plan"><span class="n">⏱</span>План на 1 день</a>
+    <div class="side-group">I · Исчисление высказываний</div>
+    <a class="tlink cross" href="01-ischislenie.html#b1"><span class="n">1</span>Формулы. Единственность разбора</a>
+    <a class="tlink cross" href="01-ischislenie.html#b2"><span class="n">2</span>Правила вывода. Секвенции</a>
+    <a class="tlink cross" href="01-ischislenie.html#b3"><span class="n">3</span>Секвенции φ∧¬φ⊢, ⊢φ∨¬φ</a>
+    <a class="tlink cross" href="01-ischislenie.html#b4"><span class="n">4</span>Интерпретация. Тавтологии</a>
+    <a class="tlink cross" href="01-ischislenie.html#b5"><span class="n">5</span>Непротиворечивость ИВ</a>
+    <a class="tlink cross" href="01-ischislenie.html#b6"><span class="n">6</span>Лемма Линденбаума</a>
+    <a class="tlink cross" href="01-ischislenie.html#b7"><span class="n">7</span>Свойства макс. непрот. мн-ва</a>
+    <a class="tlink cross" href="01-ischislenie.html#b8"><span class="n">8</span>Полнота ИВ</a>
+    <a class="tlink cross" href="01-ischislenie.html#b9"><span class="n">9</span>Интуиционизм</a>
+    <a class="tlink cross" href="01-ischislenie.html#b10"><span class="n">10</span>Интуиц. ИВ. Недоказ. ИТ</a>
+    <div class="side-group">II · Мощности множеств</div>
+    <a class="tlink cross" href="02-moshchnosti.html#b11"><span class="n">11</span>Равномощность</a>
+    <a class="tlink cross" href="02-moshchnosti.html#b12"><span class="n">12</span>Кантора–Шрёдера–Бернштейна</a>
+    <a class="tlink cross" href="02-moshchnosti.html#b13"><span class="n">13</span>Счётные множества</a>
+    <a class="tlink cross" href="02-moshchnosti.html#b14"><span class="n">14</span>Континуум</a>
+    <a class="tlink cross" href="02-moshchnosti.html#b15"><span class="n">15</span>Счётное vs континуум</a>
+    <a class="tlink cross" href="02-moshchnosti.html#b16"><span class="n">16</span>Теорема Кантора (P(X))</a>
+    <a class="tlink cross" href="02-moshchnosti.html#b17"><span class="n">17</span>(X^Y)^Z ≅ X^(Y×Z)</a>
+    <div class="side-group">III · Порядки, выбор, числа</div>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b18"><span class="n">18</span>Вполне упорядоченные мн-ва</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b19"><span class="n">19</span>Аксиома выбора. Цермело</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b20"><span class="n">20</span>Лемма Цорна</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b21"><span class="n">21</span>Ординалы</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b22"><span class="n">22</span>Кардиналы</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b23"><span class="n">23</span>𝔪+𝔪=𝔪</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b24"><span class="n">24</span>Мощность A×A</a>
+    <div class="side-group">IV · Аксиоматики чисел</div>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b25"><span class="n">25</span>Аксиомы Пеано. Коммут. +</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b26"><span class="n">26</span>Аксиомы ℝ</a>
+    <div class="side-group">V · Логика предикатов и модели</div>
+    <a class="tlink" href="#b27"><span class="n">27</span>Модель. Сигнатура. Термы</a>
+    <a class="tlink" href="#b28"><span class="n">28</span>Истинность на модели</a>
+    <a class="tlink" href="#b29"><span class="n">29</span>Элиминация кванторов</a>
+    <a class="tlink" href="#b30"><span class="n">30</span>Выразимость. Автоморфизмы</a>
+    <a class="tlink" href="#b31"><span class="n">31</span>Фильтры и ультрафильтры</a>
+    <a class="tlink" href="#b32"><span class="n">32</span>Центрированные системы</a>
+    <a class="tlink" href="#b33"><span class="n">33</span>Ультрапроизведение</a>
+    <a class="tlink" href="#b34"><span class="n">34</span>Теорема Лося</a>
+    <a class="tlink" href="#b35"><span class="n">35</span>Гёделя–Мальцева (компактность)</a>
+    <div class="side-group">VI · Теория алгоритмов</div>
+    <a class="tlink cross" href="05-algoritmy.html#b36"><span class="n">36</span>Машины Тьюринга. Тезис Чёрча</a>
+    <a class="tlink cross" href="05-algoritmy.html#b37"><span class="n">37</span>Суперпозиция и прим. рекурсия</a>
+    <a class="tlink cross" href="05-algoritmy.html#b38"><span class="n">38</span>Минимизация. Рекурс. функции</a>
+    <a class="tlink cross" href="05-algoritmy.html#b39"><span class="n">39</span>Разрешимые и перечислимые</a>
+    <a class="tlink cross" href="05-algoritmy.html#b40"><span class="n">40</span>Универсальные функции</a>
+    <a class="tlink cross" href="05-algoritmy.html#b41"><span class="n">41</span>Перечисл. неразрешимое мн-во</a>
+    <a class="tlink cross" href="05-algoritmy.html#b42"><span class="n">42</span>Проблема остановки</a>
+  </nav>
+
+  <main class="content">
+
+  <h1>Матлогика · Часть V — Логика предикатов и модели (27–35)</h1>
+  <p class="subtitle">Строгое определение → идея доказательства → объяснение «на пальцах» → типичные ловушки. Слева — оглавление по всем 5 файлам: текущий файл листается мгновенно, билеты других файлов (со стрелкой&nbsp;↗) открываются в своём файле. Файлы держите в одной папке.</p>
+
+  <h2 class="part" id="part5">Часть V · Логика предикатов и модели <span>(билеты 27–35)</span></h2>
+    <!-- Б27 -->
+  <article class="ticket" id="b27">
+    <div class="ticket-head"><span class="num">27</span><h3>Логика предикатов: сигнатура, термы, формулы, модель.</h3></div>
+
+    <div class="box def"><span class="lab">сигнатура и термы</span>
+      <b>Сигнатура</b> <span class="f">σ</span> — набор символов: константы, функциональные символы (каждый со своей местностью) и предикатные символы (со местностью). <b>Термы</b> строятся индуктивно: переменные <span class="f">x,y,…</span> и константы — термы; если <span class="f">f</span> <span class="f">n</span>-местный и <span class="f">t<sub>1</sub>,…,t<sub>n</sub></span> — термы, то <span class="f">f(t<sub>1</sub>,…,t<sub>n</sub>)</span> — терм. Термы обозначают <i>элементы</i>.
+    </div>
+
+    <div class="box def"><span class="lab">формулы</span>
+      <b>Атомарные:</b> <span class="f">P(t<sub>1</sub>,…,t<sub>n</sub>)</span> и <span class="f">t<sub>1</sub>=t<sub>2</sub></span>. <b>Составные:</b> замыкание по связкам <span class="f">¬,∧,∨,→</span> и кванторам <span class="f">∀x φ</span>, <span class="f">∃x φ</span>. Переменная <b>связана</b>, если под своим квантором, иначе <b>свободна</b>; формула без свободных переменных — <b>предложение</b>.
+    </div>
+
+    <div class="box def"><span class="lab">модель (структура)</span>
+      <span class="f">M=⟨A; σ<sup>M</sup>⟩</span>: непустой <b>носитель</b> <span class="f">A</span> и интерпретация — константам элементы <span class="f">A</span>, <span class="f">n</span>-местным функц. символам отображения <span class="f">A<sup>n</sup>→A</span>, <span class="f">n</span>-местным предикатам отношения <span class="f">⊆A<sup>n</sup></span>.
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      Сигнатура — это «словарь» (какие операции и отношения вообще есть). Термы — «существительные» (указывают на объекты), формулы — «утверждения» (бывают И/Л). Модель — конкретный мир, где словарь наполнен смыслом: например <span class="f">σ={+,·,0,1,&lt;}</span> можно интерпретировать на <span class="f">ℕ</span>, <span class="f">ℤ</span>, <span class="f">ℝ</span> — это разные модели одного языка.
+    </div>
+  </article>
+
+  <!-- Б28 -->
+  <article class="ticket" id="b28">
+    <div class="ticket-head"><span class="num">28</span><h3>Истинность формулы на модели (определение Тарского).</h3></div>
+
+    <div class="box def"><span class="lab">значение терма</span>
+      Фиксируем <b>оценку</b> <span class="f">s</span> переменных (<span class="f">s(x)∈A</span>). Значение терма: <span class="f">x<sup>M</sup>[s]=s(x)</span>, <span class="f">c<sup>M</sup>[s]=c<sup>M</sup></span>, <span class="f">f(t<sub>1</sub>,…,t<sub>n</sub>)<sup>M</sup>[s] = f<sup>M</sup>(t<sub>1</sub><sup>M</sup>[s],…,t<sub>n</sub><sup>M</sup>[s])</span>.
+    </div>
+
+    <div class="box def"><span class="lab">отношение истинности M⊨φ[s]</span>
+      Индукция по формуле:
+      <ul style="margin-bottom:.2rem">
+        <li><span class="f">M⊨P(t<sub>1</sub>,…,t<sub>n</sub>)[s] ⟺ (t<sub>1</sub><sup>M</sup>[s],…,t<sub>n</sub><sup>M</sup>[s])∈P<sup>M</sup></span>; &nbsp;<span class="f">M⊨(t<sub>1</sub>=t<sub>2</sub>)[s] ⟺</span> значения равны;</li>
+        <li>связки <span class="f">¬,∧,∨,→</span> — по таблицам истинности;</li>
+        <li><span class="f">M⊨∀x φ[s] ⟺</span> для <i>всех</i> <span class="f">a∈A</span>: <span class="f">M⊨φ[s(x:=a)]</span>;</li>
+        <li><span class="f">M⊨∃x φ[s] ⟺</span> <i>существует</i> <span class="f">a∈A</span>: <span class="f">M⊨φ[s(x:=a)]</span>.</li>
+      </ul>
+      Для <b>предложения</b> истинность не зависит от <span class="f">s</span>; пишем <span class="f">M⊨φ</span>.
+    </div>
+
+    <div class="box good"><span class="lab">ключевые понятия</span>
+      <span class="f">φ</span> <b>общезначима</b> (<span class="f">⊨φ</span>), если истинна во всех моделях; <b>выполнима</b>, если истинна хоть в одной. <span class="f">Σ⊨φ</span>: <span class="f">φ</span> истинна в каждой модели, где истинны все формулы <span class="f">Σ</span>.
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      Определение Тарского — это аккуратное «раскрытие смысла слоями»: смысл сложной формулы сводится к смыслу подформул, а кванторы заставляют пробежать <i>весь носитель</i>. Тонкость кванторов: <span class="f">∀</span> и <span class="f">∃</span> «смотрят» на размер и устройство модели — одно и то же предложение может быть истинно на <span class="f">ℝ</span> и ложно на <span class="f">ℚ</span>.
+    </div>
+  </article>
+
+  <!-- Б29 -->
+  <article class="ticket" id="b29">
+    <div class="ticket-head"><span class="num">29</span><h3>Элиминация кванторов. Пример: плотный линейный порядок.</h3></div>
+
+    <div class="box def"><span class="lab">определение</span>
+      Теория <span class="f">T</span> <b>допускает элиминацию кванторов (QE)</b>, если для каждой формулы <span class="f">φ(x)</span> найдётся <i>бескванторная</i> <span class="f">ψ(x)</span> с <span class="f">T⊨φ↔ψ</span>. Достаточно уметь убирать один <span class="f">∃x</span> из конъюнкции литералов.
+    </div>
+
+    <div class="box idea"><span class="lab">пример: DLO (плотный линейный порядок без концов)</span>
+      Аксиомы: линейный порядок, плотность <span class="f">∀x∀y(x&lt;y→∃z\,x&lt;z&lt;y)</span>, нет наименьшего и наибольшего. Ключевой шаг элиминации:
+      <div class="formula">∃x (a<sub>1</sub>&lt;x ∧ … ∧ x&lt;b<sub>1</sub> ∧ …) ⟺ (все a<sub>i</sub> &lt; все b<sub>j</sub>)</div>
+      частный случай <span class="f">∃x(a&lt;x&lt;b) ⟺ a&lt;b</span>. Так любой <span class="f">∃</span> сводится к сравнениям параметров без <span class="f">x</span> ⟹ QE.
+    </div>
+
+    <div class="box good"><span class="lab">следствия QE</span>
+      DLO <b>полна</b> и <b>разрешима</b>; <span class="f">(ℚ,&lt;)</span> и <span class="f">(ℝ,&lt;)</span> элементарно эквивалентны. Определимые (с параметрами) подмножества <span class="f">ℚ</span> — это в точности конечные объединения точек и интервалов с концами среди параметров.
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      «Кванторы можно вычистить» — значит теория <i>прозрачна</i>: любое сложное свойство переписывается через простые сравнения. Если параметров между <span class="f">a</span> и <span class="f">b</span> «есть место», точка вставляется (плотность), поэтому <span class="f">∃x</span> эквивалентен простому условию на концы.
+    </div>
+  </article>
+
+  <!-- Б30 -->
+  <article class="ticket" id="b30">
+    <div class="ticket-head"><span class="num">30</span><h3>Выразимость (определимость). Метод автоморфизмов.</h3></div>
+
+    <div class="box def"><span class="lab">определимость</span>
+      Множество <span class="f">D⊆A<sup>n</sup></span> <b>определимо</b> (формулой <span class="f">φ(x)</span>, возможно с параметрами <span class="f">p</span>), если <span class="f">D={a: M⊨φ[a,p]}</span>. Так же определимы элементы (как <span class="f">D</span> из одной точки) и функции (через графики).
+    </div>
+
+    <div class="box idea"><span class="lab">метод автоморфизмов</span>
+      <b>Ключевой факт:</b> любой <b>автоморфизм</b> <span class="f">π</span> модели <span class="f">M</span> сохраняет всякое определимое <i>без параметров</i> множество; если есть параметры <span class="f">p</span>, то — всякий автоморфизм, неподвижный на <span class="f">p</span>. <b>Доказательство неопределимости:</b> предъявить автоморфизм, который двигает точку, обязанную лежать в <span class="f">D</span> (или меняет местами элементы, которые формула «не имеет права» различать).
+    </div>
+
+    <div class="box good"><span class="lab">образцы</span>
+      В <span class="f">(ℝ,&lt;)</span> ни одна константа не определима (порядковые автоморфизмы действуют транзитивно). В <span class="f">(ℂ,+,·)</span> число <span class="f">i</span> неопределимо: комплексное сопряжение — автоморфизм, меняющий <span class="f">i↔−i</span>. В <span class="f">(ℚ,&lt;)</span> определимы только интервалы/точки с концами-параметрами (б.29).
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      Автоморфизм — это <b>симметрия</b> модели. То, что симметрия может перемешать, формула различить <i>не способна</i>: «симметрии — слепые зоны языка». Хочешь доказать, что свойство невыразимо — найди симметрию, нарушающую его.
+    </div>
+  </article>
+
+  <!-- Б31 -->
+  <article class="ticket" id="b31">
+    <div class="ticket-head"><span class="num">31</span><h3>Фильтры и ультрафильтры. Вложение фильтра в ультрафильтр.</h3></div>
+
+    <div class="box def"><span class="lab">определения</span>
+      <b>Фильтр</b> на множестве <span class="f">I</span> — семейство <span class="f">F⊆P(I)</span> с: <span class="f">I∈F</span>, <span class="f">∅∉F</span>, замкнутость вверх (<span class="f">X∈F, X⊆Y ⟹ Y∈F</span>) и по конечным пересечениям (<span class="f">X,Y∈F ⟹ X∩Y∈F</span>).<br>
+      <b>Ультрафильтр</b> — максимальный фильтр; эквивалентно: для каждого <span class="f">X⊆I</span> ровно одно из <span class="f">X∈F</span>, <span class="f">I∖X∈F</span>.
+    </div>
+
+    <div class="box good"><span class="lab">примеры и характеризация</span>
+      <b>Главный</b> ультрафильтр: <span class="f">{X: i<sub>0</sub>∈X}</span>. <b>Фильтр Фреше</b> (дополнения конечных множеств) на бесконечном <span class="f">I</span> — не ультрафильтр; любой содержащий его ультрафильтр <b>неглавный</b>. Эквивалентная характеризация ультрафильтра: «решает» про каждое <span class="f">X</span> — большое оно (<span class="f">∈F</span>) или малое.
+    </div>
+
+    <div class="box idea"><span class="lab">теорема (вложение)</span>
+      Всякий фильтр содержится в некотором ультрафильтре. <b>Доказательство (Цорн):</b> множество всех фильтров, содержащих данный, упорядочено включением; объединение цепи фильтров — снова фильтр (верхняя грань); по лемме Цорна есть максимальный — он и есть ультрафильтр. Существование неглавных ультрафильтров — отсюда же (через фильтр Фреше). ∎
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      Фильтр формализует «большие / пренебрежимо малые» множества (как «почти все»). Ультрафильтр — <b>бескомпромиссный судья</b>: про любое множество выносит вердикт «большое или малое», и согласованно. Неглавный ультрафильтр — это «исчезающе тонкое голосование на бесконечности», существующее лишь благодаря AC.
+    </div>
+  </article>
+
+  <!-- Б32 -->
+  <article class="ticket" id="b32">
+    <div class="ticket-head"><span class="num">32</span><h3>Центрированные системы множеств и вложение в фильтр.</h3></div>
+
+    <div class="box def"><span class="lab">определение (FIP)</span>
+      Система <span class="f">S⊆P(I)</span> <b>центрирована</b> (обладает свойством конечных пересечений, FIP), если любое конечное пересечение её членов непусто: <span class="f">S<sub>1</sub>∩…∩S<sub>k</sub>≠∅</span>.
+    </div>
+
+    <div class="box idea"><span class="lab">теорема</span>
+      Всякая центрированная система порождает фильтр, а значит вкладывается в ультрафильтр. <b>Построение:</b> берём
+      <div class="formula">F = { X⊆I : X ⊇ S<sub>1</sub>∩…∩S<sub>k</sub> для некоторых S<sub>i</sub>∈S }.</div>
+      Это фильтр: <span class="f">∅∉F</span> ровно из-за FIP (конечные пересечения непусты), замкнутость вверх и по пересечениям очевидна. Дальше — вложение в ультрафильтр (б.31). ∎
+    </div>
+
+    <div class="box good"><span class="lab">зачем это нужно</span>
+      Это «рабочий инструмент» для теоремы компактности (б.35): из набора попарно/конечно совместимых условий собираем единый ультрафильтр-свидетель. Родственно топологической характеризации компактности через центрированные системы замкнутых множеств.
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      «Если куски <i>конечно</i> не противоречат друг другу (любая горстка имеет общую точку), то существует общий фильтр, делающий их все большими». Локальная совместимость поднимается до глобального согласия.
+    </div>
+  </article>
+
+  <!-- Б33 -->
+  <article class="ticket" id="b33">
+    <div class="ticket-head"><span class="num">33</span><h3>Ультрапроизведение моделей.</h3></div>
+
+    <div class="box def"><span class="lab">конструкция</span>
+      Дан набор моделей <span class="f">{M<sub>i</sub>}<sub>i∈I</sub></span> одной сигнатуры и ультрафильтр <span class="f">U</span> на <span class="f">I</span>. На декартовом произведении <span class="f">∏A<sub>i</sub></span> вводим отношение
+      <div class="formula">f ∼<sub>U</sub> g ⟺ { i : f(i)=g(i) } ∈ U.</div>
+      <b>Ультрапроизведение</b> <span class="f">∏M<sub>i</sub>/U</span> — фактор-множество <span class="f">∏A<sub>i</sub> /∼<sub>U</sub></span>; операции и предикаты определяются <b>покомпонентно «почти всюду»</b>: <span class="f">P([f<sub>1</sub>],…,[f<sub>n</sub>]) ⟺ { i : M<sub>i</sub>⊨P(f<sub>1</sub>(i),…,f<sub>n</sub>(i)) }∈U</span>. Если все <span class="f">M<sub>i</sub>=M</span> — это <b>ультрастепень</b> <span class="f">M<sup>I</sup>/U</span>.
+    </div>
+
+    <div class="box idea"><span class="lab">корректность</span>
+      <span class="f">∼<sub>U</sub></span> — отношение эквивалентности (рефлексивность: <span class="f">I∈U</span>; транзитивность: пересечение двух <span class="f">U</span>-множеств в <span class="f">U</span>). Операции и предикаты не зависят от представителей классов — снова потому, что согласие «на <span class="f">U</span>-большом множестве» устойчиво к пересечениям.
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      Ультрапроизведение — это «<b>голосование по ультрафильтру</b>»: элемент — это последовательность <span class="f">(f(i))<sub>i</sub></span>, а две последовательности считаются равными, если совпадают на «большом» (по <span class="f">U</span>) множестве индексов. Значение любого утверждения определяется тем, что выполнено у <i>почти всех</i> сомножителей.
+    </div>
+  </article>
+
+  <!-- Б34 -->
+  <article class="ticket" id="b34">
+    <div class="ticket-head"><span class="num">34</span><h3>Теорема Лося (Łoś).</h3></div>
+
+    <div class="box def"><span class="lab">формулировка</span>
+      Пусть <span class="f">M=∏M<sub>i</sub>/U</span>. Тогда для любой формулы <span class="f">φ</span> и элементов <span class="f">[f<sub>1</sub>],…,[f<sub>n</sub>]</span>:
+      <div class="formula">M ⊨ φ([f<sub>1</sub>],…,[f<sub>n</sub>]) &nbsp;⟺&nbsp; { i : M<sub>i</sub> ⊨ φ(f<sub>1</sub>(i),…,f<sub>n</sub>(i)) } ∈ U.</div>
+      «Истина в ультрапроизведении = истина почти всюду (по <span class="f">U</span>)».
+    </div>
+
+    <div class="box idea"><span class="lab">идея доказательства (индукция по φ)</span>
+      <i>Атомарные</i> — по определению конструкции. <i><span class="f">∧</span></i>: пересечение двух <span class="f">U</span>-множеств снова в <span class="f">U</span>. <i><span class="f">¬</span></i>: тут нужна <b>ультра</b>-свойство — ровно одно из <span class="f">X</span>, <span class="f">I∖X</span> лежит в <span class="f">U</span> (для произвольного фильтра не прошло бы). <i><span class="f">∃</span></i>: если на <span class="f">U</span>-большом множестве индексов свидетель есть, <b>аксиомой выбора</b> собираем функцию-свидетеля <span class="f">g</span>; обратно очевидно.
+    </div>
+
+    <div class="box good"><span class="lab">следствие</span>
+      Диагональное вложение <span class="f">a↦[const<sub>a</sub>]</span> модели в свою ультрастепень — <b>элементарно</b>: <span class="f">M ≡ M<sup>I</sup>/U</span> (элементарно эквивалентны). Это даёт нестандартные модели (напр. с бесконечно большими/малыми элементами).
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      Теорема Лося — «мотор» всей теории: она переносит истинность с сомножителей на произведение по правилу большинства (по <span class="f">U</span>). Именно роль <span class="f">¬</span> объясняет, почему нужен <i>ультра</i>фильтр, а не просто фильтр: судья обязан выносить ровно один вердикт.
+    </div>
+  </article>
+
+  <!-- Б35 -->
+  <article class="ticket" id="b35">
+    <div class="ticket-head"><span class="num">35</span><h3>Теорема Гёделя–Мальцева (компактность) через ультрапроизведения.</h3></div>
+
+    <div class="box def"><span class="lab">формулировка (компактность)</span>
+      Множество предложений <span class="f">Σ</span> имеет модель <b>тогда и только тогда, когда</b> модель есть у каждого его конечного подмножества.
+    </div>
+
+    <div class="box idea"><span class="lab">идея в одной фразе</span>
+      Сторона «⟸» нетривиальна. У каждого конечного куска <span class="f">Σ</span> модель есть — нужно «склеить» все эти частичные модели в одну модель всего <span class="f">Σ</span>. Склейку делает ультрапроизведение.
+    </div>
+
+    <div class="box idea"><span class="lab">доказательство «⟸» по шагам</span>
+      Пусть каждое конечное подмножество <span class="f">Σ</span> выполнимо.
+      <ol style="margin:.3rem 0 .2rem">
+        <li>Обозначим через <span class="f">I</span> набор всех конечных подмножеств <span class="f">Σ</span>. Для каждого <span class="f">i∈I</span> возьмём модель <span class="f">M<sub>i</sub></span>, в которой истинны все предложения из <span class="f">i</span> (она есть по условию).</li>
+        <li>Для каждого предложения <span class="f">φ∈Σ</span> соберём те куски, что содержат <span class="f">φ</span>: &nbsp;<span class="f">J<sub>φ</sub> = { i∈I : φ∈i }</span>. Любое конечное пересечение <span class="f">J<sub>φ₁</sub>∩…∩J<sub>φₙ</sub></span> непусто — в нём лежит сам кусок <span class="f">{φ₁,…,φₙ}</span>. Значит семейство всех <span class="f">J<sub>φ</sub></span> центрировано и вкладывается в некоторый ультрафильтр <span class="f">U</span> на <span class="f">I</span> (б.31–32).</li>
+        <li>Возьмём ультрапроизведение <span class="f">M* = ∏ M<sub>i</sub> / U</span>. По теореме Лося (б.34) предложение истинно в <span class="f">M*</span> в точности тогда, когда оно истинно «почти во всех» <span class="f">M<sub>i</sub></span> — то есть на множестве индексов из <span class="f">U</span>.</li>
+        <li>Берём любое <span class="f">φ∈Σ</span>. Оно истинно во всех <span class="f">M<sub>i</sub></span>, у которых <span class="f">φ∈i</span>, поэтому множество «где <span class="f">φ</span> истинно» содержит <span class="f">J<sub>φ</sub></span>, а <span class="f">J<sub>φ</sub>∈U</span>. Значит <span class="f">M*</span> делает <span class="f">φ</span> истинным.</li>
+      </ol>
+      Это верно для каждого <span class="f">φ∈Σ</span>, поэтому <span class="f">M*</span> — модель всего <span class="f">Σ</span>. ∎
+    </div>
+
+    <div class="box good"><span class="lab">следствия</span>
+      Если <span class="f">Σ⊨φ</span>, то уже какое-то конечное <span class="f">Σ₀⊆Σ</span> даёт <span class="f">Σ₀⊨φ</span> (следование «финитно»). Отсюда же — существование нестандартных моделей арифметики и анализа, а также теоремы Лёвенгейма–Сколема.
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      «<b>Локально совместимо ⟹ совместимо целиком</b>»: если ни один конечный кусок теории не противоречив (у каждого есть модель), то модель есть и у всей теории. Ультрафильтр <span class="f">U</span> — это способ честно «проголосовать» среди бесконечного числа частичных моделей и собрать из них одну общую.
+    </div>
+  </article>
+
+  <footer>Подготовка к экзамену по математической логике · 42 билета + шпаргалка · материал разбит на 5 связанных файлов для удобной навигации и заучивания за один день.</footer>
+  </main>
+</div>
+
+<script>
+(function(){
+  var prog=document.getElementById('progress');
+  var sidebar=document.getElementById('sidebar');
+  var btn=document.getElementById('menu-btn');
+  var overlay=document.getElementById('overlay');
+  // progress bar
+  function onScroll(){
+    var h=document.documentElement;
+    var max=(h.scrollHeight-h.clientHeight)||1;
+    prog.style.width=(100*h.scrollTop/max)+'%';
+  }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+  // mobile menu
+  function close(){ sidebar.classList.remove('open'); overlay.style.display='none'; }
+  if(btn){ btn.addEventListener('click',function(){
+      var open=sidebar.classList.toggle('open');
+      overlay.style.display=open?'block':'none'; }); }
+  if(overlay){ overlay.addEventListener('click',close); }
+  sidebar.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click',function(){ if(window.innerWidth<=960) close(); });
+  });
+  // scroll-spy (only same-file anchors: href starts with '#')
+  var map={};
+  sidebar.querySelectorAll('a[href^="#"]').forEach(function(a){
+    var id=a.getAttribute('href').slice(1); if(id) map[id]=a;
+  });
+  var targets=[];
+  Object.keys(map).forEach(function(id){
+    var el=document.getElementById(id); if(el) targets.push(el);
+  });
+  var current=null;
+  function spy(){
+    var best=null, bestTop=-1e9, line=120;
+    targets.forEach(function(el){
+      var t=el.getBoundingClientRect().top;
+      if(t-line<=0 && t>bestTop){ bestTop=t; best=el; }
+    });
+    if(best && best.id!==current){
+      if(current && map[current]) map[current].classList.remove('active');
+      current=best.id; map[current].classList.add('active');
+      var link=map[current];
+      var r=link.getBoundingClientRect(), sr=sidebar.getBoundingClientRect();
+      if(r.top<sr.top||r.bottom>sr.bottom) link.scrollIntoView({block:'center'});
+    }
+  }
+  window.addEventListener('scroll',spy,{passive:true});
+  window.addEventListener('resize',spy); spy();
+})();
+</script>
+</body>
+</html>

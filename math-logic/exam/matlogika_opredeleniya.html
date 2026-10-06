@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Матлогика — основные определения простым языком</title>
+<style>
+  :root{
+    --bg:#f0f2f5; --card:#ffffff; --ink:#1d2127; --muted:#5c6470; --line:#e0e4ea;
+    --accent:#2f6f4f; --simple:#1f7a4d; --formal:#3a4cae; --ex:#9a5a00;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
+    font-size:17px;line-height:1.62;}
+  .wrap{max-width:780px;margin:0 auto;padding:0 18px 120px;}
+  header.top{padding:30px 0 10px;}
+  header.top h1{font-size:26px;margin:0 0 6px;letter-spacing:-.01em;}
+  header.top p{margin:2px 0;color:var(--muted);font-size:15px;}
+  .howto{background:#fff;border:1px solid var(--line);border-radius:10px;
+    padding:13px 17px;margin:16px 0 8px;font-size:15px;}
+  .howto b{color:var(--ink)}
+  .leg{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .chip{font-size:13px;padding:3px 10px;border-radius:20px;font-weight:600}
+  .c-s{background:#e4f5ec;color:var(--simple)}
+  .c-f{background:#eaedfb;color:var(--formal)}
+  .c-e{background:#fbf1de;color:var(--ex)}
+  /* мини-навигация */
+  .toc{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 17px;margin:14px 0 30px;font-size:15px;}
+  .toc a{color:var(--accent);text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+  .toc ol{margin:6px 0 0;padding-left:22px;}
+  .toc li{margin:3px 0;}
+  /* секции */
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px 22px 20px;margin:0 0 18px;scroll-margin-top:14px;}
+  section > h2{font-size:20px;margin:0 0 4px;display:flex;gap:11px;align-items:baseline;}
+  section > h2 .n{flex:0 0 auto;background:var(--accent);color:#fff;border-radius:8px;
+    min-width:30px;height:28px;padding:0 8px;display:inline-flex;align-items:center;
+    justify-content:center;font-size:15px;transform:translateY(2px);}
+  .block{border-radius:9px;padding:11px 15px;margin:11px 0;border-left:4px solid;}
+  .block .lab{display:block;font-size:12px;font-weight:700;text-transform:uppercase;
+    letter-spacing:.05em;margin-bottom:4px;}
+  .simple{background:#edf8f1;border-color:var(--simple);}
+  .simple .lab{color:var(--simple);}
+  .formal{background:#eef0fb;border-color:var(--formal);}
+  .formal .lab{color:var(--formal);}
+  .ex{background:#fdf6e8;border-color:var(--ex);}
+  .ex .lab{color:var(--ex);}
+  p{margin:8px 0;}
+  ul{margin:7px 0;padding-left:22px;} li{margin:4px 0;}
+  .sym{font-family:Georgia,serif;font-style:italic;}
+  .read{color:var(--muted);font-size:.93em;}
+  b{font-weight:650}
+  hr{border:none;border-top:1px solid var(--line);margin:26px 0;}
+  #top{position:fixed;right:18px;bottom:18px;background:var(--ink);color:#fff;border:none;
+    border-radius:50%;width:44px;height:44px;font-size:18px;cursor:pointer;opacity:0;
+    pointer-events:none;transition:.2s;box-shadow:0 4px 14px rgba(0,0,0,.25);}
+  #top.show{opacity:.9;pointer-events:auto;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>Основные определения — простым языком</h1>
+  <p>Шпаргалка-минимум для сдачи теории. Сначала интуиция, потом точное определение, потом пример.</p>
+</header>
+
+<div class="howto">
+  <b>Как устроен каждый пункт.</b> Три цветных блока:
+  <div class="leg">
+    <span class="chip c-s">По-простому</span> — что это «на пальцах»
+    <span class="chip c-f">Точно</span> — корректное определение
+    <span class="chip c-e">Пример</span> — конкретный случай
+  </div>
+  <p style="margin:10px 0 0;font-size:14px;color:var(--muted)">Значки читаются словами прямо в тексте, запоминать их не обязательно.</p>
+</div>
+
+<div class="toc">
+  <b>Содержание</b>
+  <ol>
+    <li><a href="#s1">Формулы и их значения</a></li>
+    <li><a href="#s2">Предикаты, кванторы</a></li>
+    <li><a href="#s3">Сигнатуры</a></li>
+    <li><a href="#s4">Модели</a></li>
+    <li><a href="#s5">Множества: ∪, ∩, ×</a></li>
+    <li><a href="#s6">Функции: вложения, наложения, биекции</a></li>
+    <li><a href="#s7">Мощности и их сравнение</a></li>
+    <li><a href="#s8">Счётные множества</a></li>
+    <li><a href="#s9">Вполне упорядоченные множества и ординалы (омега)</a></li>
+    <li><a href="#s10">Алгоритмы и машины Тьюринга</a></li>
+    <li><a href="#s11">Вычислимые функции и разрешимые множества</a></li>
+  </ol>
+</div>
+
+<!-- 1 -->
+<section id="s1">
+  <h2><span class="n">1</span> Формулы и их значения</h2>
+
+  <p><b>Формула логики высказываний (ИВ).</b></p>
+  <div class="block simple"><span class="lab">По-простому</span>
+  Это «логическое предложение», собранное из простых высказываний (которые либо истинны, либо ложны) с помощью слов-связок: <b>не</b>, <b>и</b>, <b>или</b>, <b>если…то</b>.
+  </div>
+  <div class="block formal"><span class="lab">Точно</span>
+  Берём пропозициональные переменные <span class="sym">p, q, r, …</span> (каждая обозначает высказывание со значением «истина» или «ложь») и связки:
+  <span class="sym">¬</span> <span class="read">(не)</span>, <span class="sym">∧</span> <span class="read">(и)</span>, <span class="sym">∨</span> <span class="read">(или)</span>, <span class="sym">→</span> <span class="read">(если…то)</span>.
+  Формула — это всё, что можно из них правильно собрать (с расстановкой скобок).
+  </div>
+  <div class="block ex"><span class="lab">Пример</span>
+  <span class="sym">p → (q ∨ ¬r)</span> — формула: «если <span class="sym">p</span>, то <span class="sym">q</span> или не <span class="sym">r</span>». А «<span class="sym">p q ∧</span>» — не формула (бессмысленный набор).
+  </div>
+
+  <p style="margin-top:16px"><b>Значение формулы (интерпретация).</b></p>
+  <div class="block simple"><span class="lab">По-простому</span>
+  Чтобы узнать, истинна формула или ложна, надо подставить каждой переменной 0 (ложь) или 1 (истина) и «посчитать» формулу по таблицам связок.
+  </div>
+  <div class="block formal"><span class="lab">Точно</span>
+  <b>Оценка</b> — это присвоение каждой переменной значения 0 или 1. По оценке формула получает значение 0 или 1 по правилам:
+  <span class="sym">¬</span> меняет 1↔0; <span class="sym">∧</span> = 1, только если оба 1; <span class="sym">∨</span> = 1, если хотя бы один 1; <span class="sym">→</span> = 0 только в случае «из истины ложь».
+  Формула <b>тождественно истинна (общезначима)</b>, если истинна при <b>любой</b> оценке; <b>выполнима</b> — если истинна хотя бы при одной.
+  </div>
+  <div class="block ex"><span class="lab">Пример</span>
+  <span class="sym">p ∨ ¬p</span> истинна всегда (тождественно истинна). <span class="sym">p ∧ ¬p</span> ложна всегда.
+  </div>
+</section>
+
+<!-- 2 -->
+<section id="s2">
+  <h2><span class="n">2</span> Предикаты и кванторы <span class="read" style="font-size:14px">(основа логики предикатов)</span></h2>
+  <div class="block simple"><span class="lab">По-простому</span>
+  <b>Предикат</b> — это свойство объекта или отношение между объектами, которое для конкретных объектов либо <b>верно</b>, либо <b>нет</b>.
+  Одноместный предикат — <i>свойство</i> («<span class="sym">x</span> чётное»), двухместный — <i>отношение</i> («<span class="sym">x</span> меньше <span class="sym">y</span>»).
+  </div>
+  <div class="block formal"><span class="lab">Точно</span>
+  Предикат на множестве — это функция, которая каждому набору объектов <span class="sym">(x₁,…,xₙ)</span> сопоставляет «истину» или «ложь» (1 или 0).
+  Знаки <span class="sym">=, ≤, ⊂</span> и т.п. — это двухместные предикаты (отношения).
+  <br>В формулах предикатов добавляются <b>кванторы</b>:
+  <span class="sym">∀</span> <span class="read">(«для всех»)</span> и <span class="sym">∃</span> <span class="read">(«существует»)</span>.
+  </div>
+  <div class="block ex"><span class="lab">Пример</span>
+  «<span class="sym">x</span> простое» — одноместный предикат. «<span class="sym">x &lt; y</span>» — двухместный.
+  Формула <span class="sym">∀x ∃y (x &lt; y)</span> читается: «для всякого <span class="sym">x</span> найдётся <span class="sym">y</span>, который больше». В натуральных числах она истинна.
+  </div>
+  <p class="read" style="margin-top:10px">Переменная под квантором называется <b>связанной</b>, остальные — <b>свободными</b>. Формула без свободных переменных (всё под кванторами) называется <b>замкнутой</b> — она просто истинна или ложна.</p>
+</section>
+
+<!-- 3 -->
+<section id="s3">
+  <h2><span class="n">3</span> Сигнатуры</h2>
+  <div class="block simple"><span class="lab">По-простому</span>
+  Сигнатура — это <b>список разрешённых «строительных блоков»</b> для теории: какими операциями, отношениями и константами нам можно пользоваться. Это словарь <i>до</i> того, как мы начали писать предложения. Важно: это <b>только символы</b>, без их смысла.
+  </div>
+  <div class="block formal"><span class="lab">Точно</span>
+  Сигнатура — это набор символов:
+  <ul>
+    <li>символы <b>отношений (предикатов)</b> — каждый с числом аргументов;</li>
+    <li>символы <b>операций (функций)</b> — каждый с числом аргументов;</li>
+    <li>символы <b>констант</b>.</li>
+  </ul>
+  </div>
+  <div class="block ex"><span class="lab">Пример</span>
+  Сигнатура групп: <span class="sym">⟨ · ⟩</span> (одна бинарная операция).
+  Сигнатура упорядоченного множества: <span class="sym">⟨ ≤ ⟩</span> (одно отношение).
+  Сигнатура арифметики: <span class="sym">⟨ +, ·, 0, 1, ≤ ⟩</span>.
+  </div>
+</section>
+
+<!-- 4 -->
+<section id="s4">
+  <h2><span class="n">4</span> Модели</h2>
+  <div class="block simple"><span class="lab">По-простому</span>
+  Сигнатура — это алфавит и грамматика. <b>Модель</b> — это <b>конкретный мир</b>, где все символы сигнатуры получают настоящий смысл: дано множество объектов и сказано, что означает каждый знак. Истинность формулы проверяется <i>внутри</i> модели.
+  </div>
+  <div class="block formal"><span class="lab">Точно</span>
+  Модель (структура) сигнатуры — это:
+  <ul>
+    <li><b>носитель</b> — множество объектов;</li>
+    <li>для каждого символа отношения — конкретное отношение на носителе;</li>
+    <li>для каждого символа операции — конкретная операция;</li>
+    <li>для каждого символа константы — конкретный элемент.</li>
+  </ul>
+  </div>
+  <div class="block ex"><span class="lab">Пример</span>
+  Для сигнатуры <span class="sym">⟨ +, ·, 0, 1 ⟩</span> моделью может быть множество действительных чисел <span class="sym">ℝ</span> с обычными «плюс» и «умножить», а может — целые числа <span class="sym">ℤ</span>, или <span class="sym">ℤ₂ = {0,1}</span>. Одна сигнатура — много моделей.
+  </div>
+</section>
+
+<!-- 5 -->
+<section id="s5">
+  <h2><span class="n">5</span> Множества: объединение, пересечение, декартово произведение</h2>
+  <div class="block simple"><span class="lab">По-простому</span>
+  <b>Множество</b> — это просто набор объектов («элементов»). Запись <span class="sym">x ∈ A</span> читается «<span class="sym">x</span> принадлежит <span class="sym">A</span>».
+  </div>
+  <div class="block formal"><span class="lab">Точно</span>
+  <ul>
+    <li><b>Объединение</b> <span class="sym">A ∪ B</span> — всё, что лежит в <span class="sym">A</span> <b>или</b> в <span class="sym">B</span>.</li>
+    <li><b>Пересечение</b> <span class="sym">A ∩ B</span> — то, что лежит <b>и</b> в <span class="sym">A</span>, <b>и</b> в <span class="sym">B</span>.</li>
+    <li><b>Разность</b> <span class="sym">A ∖ B</span> — то, что в <span class="sym">A</span>, но не в <span class="sym">B</span>.</li>
+    <li><b>Декартово произведение</b> <span class="sym">A × B</span> — множество всех <b>упорядоченных пар</b> <span class="sym">(a, b)</span>, где <span class="sym">a</span> из <span class="sym">A</span>, <span class="sym">b</span> из <span class="sym">B</span>.</li>
+  </ul>
+  </div>
+  <div class="block ex"><span class="lab">Пример</span>
+  <span class="sym">{1,2} ∪ {2,3} = {1,2,3}</span>; &nbsp; <span class="sym">{1,2} ∩ {2,3} = {2}</span>.
+  <br><span class="sym">{1,2} × {a,b} = {(1,a), (1,b), (2,a), (2,b)}</span>.
+  Геометрически <span class="sym">ℝ × ℝ</span> — это плоскость (пары координат).
+  </div>
+</section>
+
+<!-- 6 -->
+<section id="s6">
+  <h2><span class="n">6</span> Функции: вложения, наложения, взаимно однозначные</h2>
+  <div class="block simple"><span class="lab">По-простому</span>
+  <b>Функция</b> <span class="sym">f: A → B</span> — это правило, которое <b>каждому</b> элементу из <span class="sym">A</span> даёт ровно один элемент из <span class="sym">B</span>. <span class="sym">A</span> — область определения.
+  </div>
+  <div class="block formal"><span class="lab">Точно</span>
+  <ul>
+    <li><b>Вложение (инъекция)</b> — разные элементы идут в разные: если <span class="sym">f(a) = f(a′)</span>, то <span class="sym">a = a′</span>. «Ничего не склеивается».</li>
+    <li><b>Наложение (сюръекция)</b> — <b>каждый</b> элемент <span class="sym">B</span> кем-то достигается. «Покрывает весь <span class="sym">B</span>».</li>
+    <li><b>Взаимно однозначное (биекция)</b> — одновременно вложение <b>и</b> наложение: идеальное соответствие «один к одному». Тогда есть обратная функция <span class="sym">f⁻¹</span>.</li>
+  </ul>
+  </div>
+  <div class="block ex"><span class="lab">Пример</span>
+  <span class="sym">f(x) = 2x</span> из <span class="sym">ℕ</span> в <span class="sym">ℕ</span> — вложение (разные дают разные), но не наложение (нечётные числа не получаются).
+  <span class="sym">f(x) = x + 1</span> из <span class="sym">ℤ</span> в <span class="sym">ℤ</span> — биекция.
+  </div>
+</section>
+
+<!-- 7 -->
+<section id="s7">
+  <h2><span class="n">7</span> Мощности и их сравнение</h2>
+  <div class="block simple"><span class="lab">По-простому</span>
+  <b>Мощность</b> множества — это «сколько в нём элементов». Для бесконечных множеств «сколько» определяют так: два множества считаются <b>равными по размеру</b>, если их элементы можно разбить на пары один к одному (есть биекция).
+  </div>
+  <div class="block formal"><span class="lab">Точно</span>
+  <ul>
+    <li><span class="sym">A ~ B</span> (равномощны, <span class="sym">|A| = |B|</span>) — между ними есть <b>биекция</b>.</li>
+    <li><span class="sym">|A| ≤ |B|</span> — есть <b>вложение</b> <span class="sym">A → B</span> («<span class="sym">A</span> помещается внутрь <span class="sym">B</span>»).</li>
+    <li><span class="sym">|A| &lt; |B|</span> — вложение есть, а биекции нет (строго меньше).</li>
+  </ul>
+  <b>Теорема Кантора–Шрёдера–Бернштейна:</b> если <span class="sym">A</span> помещается в <span class="sym">B</span> и <span class="sym">B</span> помещается в <span class="sym">A</span>, то они равномощны. (Удобно: чтобы доказать равенство размеров, достаточно двух вложений.)
+  </div>
+  <div class="block ex"><span class="lab">Пример</span>
+  Неожиданно: <span class="sym">ℕ, ℤ, ℚ</span> — <b>одного</b> размера. А <span class="sym">ℝ</span> — строго больше (теорема Кантора). То есть «бесконечности бывают разные».
+  </div>
+</section>
+
+<!-- 8 -->
+<section id="s8">
+  <h2><span class="n">8</span> Счётные множества</h2>
+  <div class="block simple"><span class="lab">По-простому</span>
+  Множество <b>счётно</b>, если все его элементы можно выписать в один список <span class="sym">a₁, a₂, a₃, …</span> — то есть пронумеровать натуральными числами, ничего не пропустив. Иначе говоря, оно «такого же размера, как <span class="sym">ℕ</span>».
+  </div>
+  <div class="block formal"><span class="lab">Точно</span>
+  <span class="sym">A</span> счётно, если <span class="sym">A ~ ℕ</span> (есть биекция с натуральными числами). Размер <span class="sym">ℕ</span> обозначают <span class="sym">ℵ₀</span> <span class="read">(«алеф-нуль»)</span> — это самая маленькая бесконечность.
+  </div>
+  <div class="block ex"><span class="lab">Пример</span>
+  Счётны: целые числа <span class="sym">ℤ</span>, рациональные <span class="sym">ℚ</span>, любое объединение счётного числа счётных множеств.
+  <b>Несчётно</b> (больше, чем счётно): множество действительных чисел <span class="sym">ℝ</span> — его размер называют <b>континуум</b> <span class="sym">c</span>, и <span class="sym">c &gt; ℵ₀</span>.
+  </div>
+</section>
+
+<!-- 9 -->
+<section id="s9">
+  <h2><span class="n">9</span> Вполне упорядоченные множества и ординалы <span class="read" style="font-size:14px">(что такое омега)</span></h2>
+  <div class="block simple"><span class="lab">По-простому: порядок</b></span>
+  <b>Линейно упорядоченное</b> множество — любые два элемента можно сравнить (<span class="sym">≤</span>).
+  <b>Вполне упорядоченное (ВУМ)</b> — это линейный порядок, в котором у <b>любого</b> непустого куска есть <b>самый маленький</b> элемент.
+  </div>
+  <div class="block formal"><span class="lab">Точно</span>
+  Множество вполне упорядочено, если оно линейно упорядочено и каждое его непустое подмножество имеет наименьший элемент. Равносильно: в нём <b>нет бесконечных убывающих цепочек</b> <span class="sym">x₁ &gt; x₂ &gt; x₃ &gt; …</span>
+  </div>
+  <div class="block ex"><span class="lab">Пример</span>
+  <span class="sym">ℕ = {0,1,2,…}</span> — вполне упорядочено (у любого набора есть минимум).
+  А <span class="sym">ℤ</span> — нет (у всего множества нет наименьшего элемента), и <span class="sym">[0,1]</span> тоже нет (у <span class="sym">(0,1]</span> нет минимума).
+  </div>
+
+  <hr>
+
+  <div class="block simple"><span class="lab">По-простому: ординалы и ω</span>
+  <b>Ординал</b> — это «номер позиции», но продолженный <b>за бесконечность</b>. Сначала обычные: <span class="sym">0, 1, 2, 3, …</span> А что идёт <i>сразу после всех</i> натуральных чисел? Это и есть <b>омега <span class="sym">ω</span></b> — первый бесконечный ординал. Дальше можно считать снова: <span class="sym">ω, ω+1, ω+2, …</span>, потом <span class="sym">ω·2</span>, и так далее.
+  </div>
+  <div class="block formal"><span class="lab">Точно</span>
+  <b>Ординал (порядковый тип)</b> — это «форма» вполне упорядоченного множества: два ВУМ дают один и тот же ординал, если они одинаково упорядочены (изоморфны).
+  <span class="sym">ω</span> — порядковый тип <span class="sym">ℕ</span>. Как <i>размер</i> (мощность) <span class="sym">ω</span> совпадает с <span class="sym">ℵ₀</span>.
+  </div>
+  <div class="block ex"><span class="lab">Пример / тонкость</span>
+  <span class="sym">ω + 1</span> — это «все натуральные числа, а после них ещё один элемент». Это <b>не</b> то же самое, что <span class="sym">1 + ω</span> (один элемент впереди, потом все натуральные — а это просто снова <span class="sym">ω</span>). Поэтому сложение ординалов <b>не коммутативно</b>: <span class="sym">1 + ω = ω ≠ ω + 1</span>.
+  </div>
+  <p class="read" style="margin-top:10px"><b>Кардинал</b> — это ординал, который задаёт «новый размер» (наименьший ординал своей мощности). Натуральные числа и <span class="sym">ω = ℵ₀</span> — кардиналы, а <span class="sym">ω+1</span> — уже нет (тот же размер, что у <span class="sym">ω</span>).</p>
+</section>
+
+<!-- 10 -->
+<section id="s10">
+  <h2><span class="n">10</span> Алгоритмы и машины Тьюринга</h2>
+  <div class="block simple"><span class="lab">По-простому</span>
+  <b>Алгоритм</b> — это точный конечный набор правил, который, если тупо ему следовать, решает задачу. Чтобы можно было что-то <i>доказывать</i> про алгоритмы (например, что задача <b>не</b> решается ни одним алгоритмом), нужна точная модель — <b>машина Тьюринга</b>.
+  </div>
+  <div class="block formal"><span class="lab">Точно</span>
+  Машина Тьюринга — это идеализированный компьютер:
+  <ul>
+    <li>бесконечная <b>лента</b> из ячеек, в каждой записан символ (0 или 1);</li>
+    <li><b>головка</b>, которая видит одну ячейку;</li>
+    <li>конечный набор <b>состояний</b>.</li>
+  </ul>
+  На каждом шаге по паре «(состояние, видимый символ)» машина: записывает новый символ, сдвигается влево или вправо, меняет состояние. На одних входах она в конце концов <b>останавливается</b> (это ответ), на других — работает вечно.
+  </div>
+  <div class="block ex"><span class="lab">Тезис Чёрча</span>
+  Всё, что вообще можно вычислить каким-либо алгоритмом, можно вычислить на машине Тьюринга (и наоборот). Это не теорема, а общепринятое соглашение о том, что такое «алгоритм».
+  </div>
+</section>
+
+<!-- 11 -->
+<section id="s11">
+  <h2><span class="n">11</span> Вычислимые функции и разрешимые множества</h2>
+  <div class="block simple"><span class="lab">По-простому</span>
+  <b>Вычислимая функция</b> — та, которую может посчитать машина Тьюринга (то же самое, что «рекурсивная функция»). На некоторых входах она может быть <b>не определена</b> — машина просто работает вечно.
+  </div>
+  <div class="block formal"><span class="lab">Точно</span>
+  <ul>
+    <li><b>Разрешимое множество</b> <span class="sym">X</span>: есть алгоритм, который по каждому <span class="sym">n</span> отвечает <b>«да/нет»</b> — лежит ли <span class="sym">n</span> в <span class="sym">X</span>. (Вычислима характеристическая функция: 1 на элементах <span class="sym">X</span>, 0 вне.)</li>
+    <li><b>Перечислимое множество</b> <span class="sym">X</span>: есть алгоритм, который умеет <b>перечислить</b> все его элементы (равносильно: машина останавливается ровно на элементах <span class="sym">X</span>).</li>
+  </ul>
+  </div>
+  <div class="block ex"><span class="lab">Главное соотношение</b></span>
+  Разрешимое ⇒ перечислимое. И наоборот: <b>множество разрешимо ⟺ и оно, и его дополнение перечислимы.</b>
+  Бывают перечислимые, но <b>не</b>разрешимые множества — отсюда же знаменитая <b>неразрешимость проблемы остановки</b> (нельзя алгоритмом по программе и входу всегда узнать, остановится ли она).
+  </div>
+</section>
+
+</div>
+<button id="top" title="Наверх">↑</button>
+<script>
+  var top=document.getElementById('top');
+  window.addEventListener('scroll',function(){top.classList.toggle('show',window.scrollY>400);});
+  top.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+</script>
+</body>
+</html>

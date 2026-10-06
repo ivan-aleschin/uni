@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Деревья истинности — полный разбор</title>
+<style>
+  :root {
+    --bg: #faf9f6;
+    --surface: #ffffff;
+    --text: #1a1a1a;
+    --muted: #666;
+    --accent: #2a5298;
+    --accent2: #c0392b;
+    --green: #1a6b3a;
+    --red: #c0392b;
+    --border: #ddd;
+    --alpha-bg: #eef4ff;
+    --beta-bg: #fff4ee;
+    --close-bg: #ffe0e0;
+    --open-bg: #e0ffe8;
+    --code-bg: #f3f3ee;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Georgia', serif; background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.75; }
+  
+  .page { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.3rem; color: var(--accent); border-bottom: 3px solid var(--accent); padding-bottom: 0.5rem; }
+  h2 { font-size: 1.4rem; font-weight: 700; margin: 2.5rem 0 0.8rem; color: var(--accent); }
+  h3 { font-size: 1.15rem; font-weight: 700; margin: 1.8rem 0 0.5rem; color: #333; }
+  p { margin-bottom: 0.9rem; }
+  
+  .subtitle { color: var(--muted); font-size: 0.95rem; margin-bottom: 2rem; }
+
+  .toc { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem 1.5rem; margin-bottom: 2.5rem; }
+  .toc h3 { margin-top: 0; margin-bottom: 0.7rem; }
+  .toc ol { padding-left: 1.4rem; }
+  .toc li { margin-bottom: 0.3rem; }
+  .toc a { color: var(--accent); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  .rule-table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: 0.95rem; }
+  .rule-table th { background: #e8eef8; text-align: left; padding: 8px 12px; border: 1px solid #c8d4e8; font-weight: 700; }
+  .rule-table td { padding: 8px 12px; border: 1px solid var(--border); vertical-align: top; }
+  .rule-table tr:nth-child(even) td { background: #fafafa; }
+  .alpha-row td { background: #eef4ff !important; }
+  .beta-row td { background: #fff4ee !important; }
+
+  .badge { display: inline-block; font-size: 0.78rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; vertical-align: middle; margin-left: 6px; }
+  .alpha { background: #d0e4ff; color: #1a3a7a; }
+  .beta { background: #ffd8c0; color: #7a2a00; }
+
+  .problem-box { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 6px; padding: 1.2rem 1.5rem; margin: 2rem 0 1rem; }
+  .problem-box .label { font-size: 0.8rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+  .problem-box .formula { font-size: 1.2rem; font-family: 'Georgia', serif; }
+
+  .verdict { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 1rem; padding: 6px 14px; border-radius: 20px; margin: 0.5rem 0 1rem; }
+  .tautology { background: #d4edda; color: #155724; }
+  .not-tautology { background: #f8d7da; color: #721c24; }
+  .valid { background: #d4edda; color: #155724; }
+  .invalid { background: #f8d7da; color: #721c24; }
+
+  .tree { font-family: 'Courier New', monospace; background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1.2rem 1.5rem; font-size: 0.9rem; line-height: 1.9; margin: 1rem 0; overflow-x: auto; white-space: pre; }
+
+  .tree .num { color: var(--muted); }
+  .tree .close { color: var(--red); font-weight: 700; }
+  .tree .open { color: var(--green); font-weight: 700; }
+  .tree .derive { color: #555; font-style: italic; }
+  .tree .header { color: var(--accent); font-weight: 700; }
+
+  .explanation { background: #f0f8f0; border-left: 3px solid #2e7d32; padding: 0.9rem 1.2rem; border-radius: 0 6px 6px 0; margin: 1rem 0; font-size: 0.95rem; }
+  .counterex { background: #fff3e0; border-left: 3px solid #e65100; padding: 0.9rem 1.2rem; border-radius: 0 6px 6px 0; margin: 1rem 0; font-size: 0.95rem; }
+  .note { background: #e8eaf6; border-left: 3px solid #3949ab; padding: 0.9rem 1.2rem; border-radius: 0 6px 6px 0; margin: 1rem 0; font-size: 0.95rem; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  .branch-box { background: #fafafa; border: 1px solid var(--border); border-radius: 6px; padding: 1rem; }
+  .branch-box .branch-label { font-weight: 700; color: var(--accent); font-size: 0.9rem; margin-bottom: 0.5rem; }
+
+  .sym { font-weight: 700; font-size: 1.05em; color: #2a5298; }
+
+  code { background: var(--code-bg); padding: 1px 5px; border-radius: 3px; font-size: 0.9em; }
+
+  .step { margin: 0.4rem 0; padding-left: 1.5rem; position: relative; }
+  .step::before { content: attr(data-n); position: absolute; left: 0; color: var(--muted); font-family: monospace; font-size: 0.85em; }
+
+  .divider { border: none; border-top: 2px solid var(--border); margin: 2.5rem 0; }
+
+  @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>Деревья истинности для логики высказываний</h1>
+<p class="subtitle">Полный разбор всех 11 задач с нуля — синтаксис, правила и пошаговые доказательства</p>
+
+<div class="toc">
+  <h3>Содержание</h3>
+  <ol>
+    <li><a href="#syntax">Синтаксис — что означают все значки</a></li>
+    <li><a href="#method">Метод деревьев истинности</a></li>
+    <li><a href="#rules">Правила разложения (α и β)</a></li>
+    <li><a href="#p1">Задача 1 — Закон Пирса</a></li>
+    <li><a href="#p2">Задача 2 — Конъюнкция из посылок</a></li>
+    <li><a href="#p3">Задача 3 — Дизъюнкция (НЕ выводится!)</a></li>
+    <li><a href="#p4">Задача 4 — p→q ≡ ¬p∨q</a></li>
+    <li><a href="#p5">Задача 5 — ¬(p→q) ≡ ¬p→¬q (НЕ тавтология!)</a></li>
+    <li><a href="#p6">Задача 6 — Закон де Моргана</a></li>
+    <li><a href="#p7">Задача 7 — Полная дизъюнктивная форма</a></li>
+    <li><a href="#p8">Задача 8 — p∧q→r ≡ (p→r)∨(q→r)</a></li>
+    <li><a href="#p9">Задача 9 — p∧q→r ≡ (p→r)∧(q→r) (НЕ тавтология!)</a></li>
+    <li><a href="#p10">Задача 10 — Новые операции (↓, |, ↔, ⊕)</a></li>
+    <li><a href="#p11">Задача 11 — Ассоциативность ↔</a></li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════════ СИНТАКСИС -->
+<h2 id="syntax">1. Синтаксис — что означает каждый символ</h2>
+
+<p>Пропозициональная логика (логика высказываний) работает с <strong>атомарными переменными</strong> <em>p, q, r, ...</em> — это простые высказывания, принимающие значения <strong>Истина (1, T)</strong> или <strong>Ложь (0, F)</strong>. Из них строятся сложные формулы с помощью связок:</p>
+
+<table class="rule-table">
+  <tr><th>Символ</th><th>Название</th><th>Читается</th><th>Истинно когда</th><th>Ложно когда</th></tr>
+  <tr><td><span class="sym">¬A</span></td><td>Отрицание (NOT)</td><td>«не A»</td><td>A = 0</td><td>A = 1</td></tr>
+  <tr><td><span class="sym">A ∧ B</span></td><td>Конъюнкция (AND)</td><td>«A и B»</td><td>оба A=1 и B=1</td><td>хотя бы одно ложно</td></tr>
+  <tr><td><span class="sym">A ∨ B</span></td><td>Дизъюнкция (OR)</td><td>«A или B»</td><td>хотя бы одно из них = 1</td><td>оба ложны</td></tr>
+  <tr><td><span class="sym">A → B</span></td><td>Импликация (IF-THEN)</td><td>«если A, то B»</td><td>A=0 ИЛИ B=1 (кроме A=1,B=0)</td><td>только при A=1, B=0</td></tr>
+  <tr><td><span class="sym">A ↔ B</span></td><td>Эквивалентность (IFF)</td><td>«A тогда и только тогда, когда B»</td><td>A и B одновременно 0 или оба 1</td><td>A и B разные</td></tr>
+  <tr><td><span class="sym">A ≡ B</span></td><td>Логическое равенство</td><td>«A равносильно B»</td><td colspan="2">Используется для утверждения, что A↔B — тавтология</td></tr>
+  <tr><td><span class="sym">Γ ⊢ φ</span></td><td>Логическое следование</td><td>«из посылок Γ выводится φ»</td><td colspan="2">При любых значениях: если все посылки истинны, то истинно и заключение</td></tr>
+</table>
+
+<div class="note">
+  <strong>Ключевые понятия:</strong><br>
+  • <strong>Тавтология</strong> — формула, истинная при любых значениях переменных (например, <em>p ∨ ¬p</em>).<br>
+  • <strong>Противоречие</strong> — формула, ложная при любых значениях (например, <em>p ∧ ¬p</em>).<br>
+  • <strong>Выполнимая формула</strong> — истинна хотя бы при одном наборе значений.
+</div>
+
+<!-- ═══════════════════════════════════════════════ МЕТОД -->
+<h2 id="method">2. Метод деревьев истинности (семантических таблиц)</h2>
+
+<p>Дерево истинности — это алгоритм, позволяющий <strong>автоматически</strong> доказать или опровергнуть тавтологию/выводимость, не перебирая все строки таблицы истинности.</p>
+
+<h3>Основная идея</h3>
+<p><strong>Чтобы доказать, что φ — тавтология:</strong> предположим, что φ <em>ложно</em> (запишем ¬φ в корень дерева), и попробуем вывести противоречие. Если <em>все ветви дерева закрываются</em>, то ¬φ невозможно сделать истинным — значит, φ всегда истинно.</p>
+
+<p><strong>Чтобы доказать Γ ⊢ φ:</strong> запишем в корень все посылки из Γ <em>и</em> отрицание заключения ¬φ. Если все ветви закрываются — вывод верен.</p>
+
+<h3>Правила закрытия/открытия ветви</h3>
+<ul style="padding-left:1.5rem; margin-bottom:1rem;">
+  <li><strong>Ветвь закрывается (×)</strong> — если на ней содержатся одновременно формула A и её отрицание ¬A. Это противоречие — такая ситуация невозможна.</li>
+  <li><strong>Ветвь открыта (◯)</strong> — если ни одного противоречия нет, и все формулы полностью разложены. Открытая ветвь даёт <strong>контрпример</strong>: набор значений переменных, при которых исходная формула ложна.</li>
+</ul>
+
+<!-- ═══════════════════════════════════════════════ ПРАВИЛА -->
+<h2 id="rules">3. Правила разложения: α-правила и β-правила</h2>
+
+<p>Каждая сложная формула разлагается по одному из двух типов правил. Это главное, что нужно знать:</p>
+
+<table class="rule-table">
+  <tr>
+    <th colspan="3">α-правила <span class="badge alpha">α</span> — НЕ ветвятся: обе формулы добавляются на ту же ветвь</th>
+  </tr>
+  <tr><th>Формула</th><th>Результат</th><th>Почему</th></tr>
+  <tr class="alpha-row"><td><code>A ∧ B</code></td><td>Добавить A и B</td><td>Если конъюнкция истинна, то оба конъюнкта истинны</td></tr>
+  <tr class="alpha-row"><td><code>¬(A ∨ B)</code></td><td>Добавить ¬A и ¬B</td><td>Если дизъюнкция ложна, то оба слагаемых ложны</td></tr>
+  <tr class="alpha-row"><td><code>¬(A → B)</code></td><td>Добавить A и ¬B</td><td>Импликация ложна только когда A=1 и B=0</td></tr>
+  <tr class="alpha-row"><td><code>¬¬A</code></td><td>Добавить A</td><td>Двойное отрицание снимается</td></tr>
+  <tr>
+    <th colspan="3">β-правила <span class="badge beta">β</span> — ветвятся: ветвь РАЗБИВАЕТСЯ на две</th>
+  </tr>
+  <tr><th>Формула</th><th>Левая ветвь</th><th>Правая ветвь</th></tr>
+  <tr class="beta-row"><td><code>A ∨ B</code></td><td>A</td><td>B</td></tr>
+  <tr class="beta-row"><td><code>A → B</code></td><td>¬A</td><td>B</td></tr>
+  <tr class="beta-row"><td><code>¬(A ∧ B)</code></td><td>¬A</td><td>¬B</td></tr>
+  <tr class="beta-row"><td><code>A ↔ B</code></td><td>A, B (оба истинны)</td><td>¬A, ¬B (оба ложны)</td></tr>
+  <tr class="beta-row"><td><code>¬(A ↔ B)</code></td><td>A, ¬B</td><td>¬A, B</td></tr>
+</table>
+
+<div class="note">
+  <strong>Запомните интуицию:</strong><br>
+  — α-правило — это <em>«и то, и другое обязательно»</em> (нет выбора, нет ветвления).<br>
+  — β-правило — это <em>«одно из двух — мы не знаем точно какое»</em> (поэтому рассматриваем оба варианта отдельно).
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ ЗАДАЧА 1 -->
+<h2 id="p1">Задача 1: ((p → q) → p) → p</h2>
+
+<div class="problem-box">
+  <div class="label">Доказать или опровергнуть</div>
+  <div class="formula">((p → q) → p) → p</div>
+</div>
+
+<p>Это знаменитый <strong>Закон Пирса</strong>. Утверждение: формула является тавтологией. Доказываем, предполагая её <strong>отрицание</strong> и строя дерево.</p>
+
+<div class="verdict tautology">✓ Тавтология</div>
+
+<div class="tree"><span class="header">Начало: предполагаем ¬(((p→q)→p)→p) — пытаемся сделать формулу ЛОЖНОЙ</span>
+
+(1) ¬(((p→q)→p)→p)          <span class="derive">← стартовая формула</span>
+
+<span class="derive">Применяем α-правило к ¬(A→B): A=(p→q)→p, B=p. Добавляем A и ¬B:</span>
+
+(2) (p→q)→p                  <span class="derive">← из (1): первая часть</span>
+(3) ¬p                        <span class="derive">← из (1): отрицание второй части</span>
+
+<span class="derive">Теперь разлагаем (2) по β-правилу (A→B → {¬A | B}):
+  Левая ветвь: ¬(p→q)
+  Правая ветвь: p</span>
+
+         ┌──────────────┴──────────────┐
+         │                             │
+   ¬(p→q)                             p
+<span class="derive">  α-правило →                    уже есть ¬p (3)</span>
+   p  [из ¬(p→q)]               <span class="close">× противоречие: p и ¬p</span>
+   ¬q [из ¬(p→q)]
+<span class="derive">  уже есть ¬p (3)</span>
+<span class="close">  × противоречие: p и ¬p</span>
+
+<span class="header">Обе ветви закрылись → тавтология ✓</span></div>
+
+<div class="explanation">
+  <strong>Вывод:</strong> Мы предположили, что формула может быть ложной, и пришли к противоречию в обоих случаях. Значит, она истинна при любых значениях p и q.<br><br>
+  <strong>Интуиция:</strong> «Если из (p→q) следует p, то p истинно» — это правдиво, потому что: если бы p было ложным, то (p→q) было бы истинным (из лжи следует что угодно), что означало бы (p→q)→p = Истина→Ложь = Ложь. Противоречие.
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ ЗАДАЧА 2 -->
+<h2 id="p2">Задача 2: p∧q, q∧r ⊢ p∧r</h2>
+
+<div class="problem-box">
+  <div class="label">Доказать или опровергнуть</div>
+  <div class="formula">p∧q, q∧r ⊢ p∧r</div>
+</div>
+
+<p>Здесь посылки — <em>p∧q</em> и <em>q∧r</em>, заключение — <em>p∧r</em>. Добавляем все посылки и <strong>¬(p∧r)</strong>, строим дерево.</p>
+
+<div class="verdict valid">✓ Выводимо (корректно)</div>
+
+<div class="tree"><span class="header">Начало: посылки + отрицание заключения</span>
+
+(1) p ∧ q                     <span class="derive">← посылка</span>
+(2) q ∧ r                     <span class="derive">← посылка</span>
+(3) ¬(p ∧ r)                  <span class="derive">← отрицание заключения</span>
+
+<span class="derive">α-правило к (1):</span>
+(4) p                         <span class="derive">← из (1)</span>
+(5) q                         <span class="derive">← из (1)</span>
+
+<span class="derive">α-правило к (2):</span>
+(6) q                         <span class="derive">← из (2)</span>
+(7) r                         <span class="derive">← из (2)</span>
+
+<span class="derive">β-правило к (3) ¬(A∧B) → {¬p | ¬r}:</span>
+
+         ┌──────────────┴──────────────┐
+        ¬p                            ¬r
+   <span class="close">× проти-                     × проти-</span>
+   <span class="close">речие с (4)</span>                  <span class="close">речие с (7)</span>
+
+<span class="header">Обе ветви закрылись → вывод корректен ✓</span></div>
+
+<div class="explanation">
+  <strong>Вывод:</strong> Из «p и q» следует p, из «q и r» следует r. Поэтому p и r — оба истинны, то есть p∧r истинно. Простое и интуитивно понятное рассуждение подтвердилось формально.
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ ЗАДАЧА 3 -->
+<h2 id="p3">Задача 3: p∨q, q∨r ⊢ p∨r</h2>
+
+<div class="problem-box">
+  <div class="label">Доказать или опровергнуть</div>
+  <div class="formula">p∨q, q∨r ⊢ p∨r</div>
+</div>
+
+<p>Это ловушка! На первый взгляд похоже на задачу 2, но с дизъюнкцией. Давайте проверим.</p>
+
+<div class="verdict invalid">× НЕ выводимо — есть контрпример</div>
+
+<div class="tree"><span class="header">Начало: посылки + отрицание заключения</span>
+
+(1) p ∨ q                     <span class="derive">← посылка</span>
+(2) q ∨ r                     <span class="derive">← посылка</span>
+(3) ¬(p ∨ r)                  <span class="derive">← отрицание заключения</span>
+
+<span class="derive">α-правило к (3):</span>
+(4) ¬p                        <span class="derive">← из (3)</span>
+(5) ¬r                        <span class="derive">← из (3)</span>
+
+<span class="derive">β-правило к (1) p∨q → {p | q}:</span>
+
+         ┌──────────────┴──────────────┐
+         p                             q
+    <span class="close">× проти-</span>              <span class="derive">β-правило к (2): q∨r → {q | r}</span>
+    <span class="close">речие с (4)</span>        ┌──────────────┴──────────────┐
+                          q                            r
+                     <span class="open">◯ ОТКРЫТАЯ!</span>            <span class="close">× проти-</span>
+                     <span class="open">нет противоречий</span>        <span class="close">речие с (5)</span>
+
+<span class="header">Ветвь {¬p, ¬r, q} открыта → вывод НЕ корректен ×</span></div>
+
+<div class="counterex">
+  <strong>Контрпример из открытой ветви:</strong><br>
+  <code>p = Ложь, q = Истина, r = Ложь</code><br><br>
+  Проверка: p∨q = Л∨И = Истина ✓ &nbsp;&nbsp; q∨r = И∨Л = Истина ✓ &nbsp;&nbsp; p∨r = Л∨Л = <strong>Ложь ✗</strong><br><br>
+  Обе посылки истинны, но заключение ложно. Вывод не работает.
+</div>
+
+<div class="explanation">
+  <strong>Интуиция:</strong> Из «p или q» и «q или r» нельзя гарантировать «p или r» — оба раза «виновником» могла быть q, не давая нам ничего знать об истинности p или r.
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ ЗАДАЧА 4 -->
+<h2 id="p4">Задача 4: p → q ≡ ¬p ∨ q</h2>
+
+<div class="problem-box">
+  <div class="label">Доказать или опровергнуть</div>
+  <div class="formula">(p → q) ↔ (¬p ∨ q)</div>
+</div>
+
+<p>Это <strong>определение импликации через дизъюнкцию</strong> — одно из базовых тождеств. Доказываем тавтологичность.</p>
+
+<div class="verdict tautology">✓ Тавтология</div>
+
+<div class="tree"><span class="header">Предполагаем ¬((p→q)↔(¬p∨q))</span>
+
+<span class="derive">β-правило для ¬(A↔B) → {(A,¬B) | (¬A,B)}:</span>
+
+      ┌──────────────────────┴──────────────────────┐
+  ВЕТВЬ 1:                                      ВЕТВЬ 2:
+  (p→q)  и  ¬(¬p∨q)                           ¬(p→q)  и  (¬p∨q)
+  
+  α-правило к ¬(¬p∨q):                         α-правило к ¬(p→q):
+  (a) p   (т.к. ¬(¬p)=p)                       (c) p
+  (b) ¬q                                        (d) ¬q
+  
+  β-правило к (p→q) → {¬p | q}:                β-правило к (¬p∨q) → {¬p | q}:
+  ┌─────┴─────┐                                 ┌─────┴─────┐
+  ¬p          q                                ¬p           q
+  <span class="close">× с (a)</span>        <span class="close">× с (b)</span>                   <span class="close">× с (c)</span>       <span class="close">× с (d)</span>
+
+<span class="header">Все 4 ветви закрылись → тавтология ✓</span></div>
+
+<div class="explanation">
+  <strong>Алгебраически:</strong> p→q по определению означает «¬p ∨ q». Это не просто совпадение — это <em>определение</em> импликации в классической логике. Импликация ложна только когда p=1 и q=0 (из истины следует ложь). Формула ¬p∨q тоже ложна только при p=1, q=0 (¬1∨0 = 0∨0 = 0). Полное совпадение.
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ ЗАДАЧА 5 -->
+<h2 id="p5">Задача 5: ¬(p → q) ≡ ¬p → ¬q</h2>
+
+<div class="problem-box">
+  <div class="label">Доказать или опровергнуть</div>
+  <div class="formula">¬(p → q) ↔ (¬p → ¬q)</div>
+</div>
+
+<p>Ещё одна ловушка. Интуитивно кажется, что «отрицание импликации — это импликация отрицаний». Это <strong>ложно</strong>.</p>
+
+<div class="verdict not-tautology">× НЕ тавтология — есть контрпример</div>
+
+<p>Сначала упростим обе части алгебрически:</p>
+<ul style="padding-left:1.5rem; margin-bottom:1rem;">
+  <li><strong>Левая часть:</strong> ¬(p→q) = ¬(¬p∨q) = p∧¬q — импликация ложна только когда p=1 и q=0</li>
+  <li><strong>Правая часть:</strong> ¬p→¬q = ¬(¬p)∨¬q = p∨¬q — совсем другая формула!</li>
+</ul>
+
+<div class="tree"><span class="header">Ищем контрпример: предполагаем ¬(¬(p→q) ↔ (¬p→¬q))</span>
+
+<span class="derive">β-правило ¬(A↔B) → {(A,¬B) | (¬A,B)}:</span>
+
+      ┌──────────────────────┴──────────────────────┐
+  ВЕТВЬ 1:                                      ВЕТВЬ 2:
+  ¬(p→q)  и  ¬(¬p→¬q)                          ¬(¬(p→q))  и  (¬p→¬q)
+  
+  α-правило к ¬(p→q): p, ¬q                    ¬(¬(p→q)) = (p→q)
+  α-правило к ¬(¬p→¬q): ¬p, q
+  
+  Имеем: p, ¬q, ¬p, q                          β-правило к (p→q): {¬p | q}
+  <span class="close">× p и ¬p (противоречие)</span>                     β-правило к (¬p→¬q): {p | ¬q}
+                                                
+                                                ┌───────┴───────┐
+                                               ¬p              q
+                                            ┌──┴──┐         ┌──┴──┐
+                                            p    ¬q         p    ¬q
+                                           <span class="close">× ¬p,p</span>  <span class="open">◯ {¬p,¬q}</span>    <span class="open">◯ {q,p}</span>  <span class="close">× q,¬q</span>
+
+<span class="header">Открытые ветви: {p=Л, q=Л} и {p=И, q=И} → НЕ тавтология ×</span></div>
+
+<div class="counterex">
+  <strong>Контрпример 1:</strong> p = Ложь, q = Ложь<br>
+  ¬(Л→Л) = ¬И = Ложь &nbsp;&nbsp; (¬Л→¬Л) = (И→И) = Истина &nbsp;&nbsp; Л↔И = <strong>Ложь ✗</strong><br><br>
+  <strong>Контрпример 2:</strong> p = Истина, q = Истина<br>
+  ¬(И→И) = ¬И = Ложь &nbsp;&nbsp; (¬И→¬И) = (Л→Л) = Истина &nbsp;&nbsp; Л↔И = <strong>Ложь ✗</strong>
+</div>
+
+<div class="explanation">
+  <strong>А как правильно?</strong> Правильно: ¬(p→q) ≡ p∧¬q (отрицание импликации — это «и то, и не то другое»).
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ ЗАДАЧА 6 -->
+<h2 id="p6">Задача 6: ¬(p ∨ q) ≡ ¬p ∧ ¬q</h2>
+
+<div class="problem-box">
+  <div class="label">Доказать или опровергнуть</div>
+  <div class="formula">¬(p ∨ q) ↔ (¬p ∧ ¬q)</div>
+</div>
+
+<p>Это <strong>первый закон де Моргана</strong>. «Отрицание дизъюнкции равно конъюнкции отрицаний».</p>
+
+<div class="verdict tautology">✓ Тавтология</div>
+
+<div class="tree"><span class="header">Предполагаем ¬(¬(p∨q) ↔ (¬p∧¬q))</span>
+
+<span class="derive">β-правило ¬(A↔B) → {(A,¬B) | (¬A,B)}:</span>
+
+      ┌──────────────────────┴──────────────────────┐
+  ВЕТВЬ 1:                                      ВЕТВЬ 2:
+  ¬(p∨q)  и  ¬(¬p∧¬q)                          ¬(¬(p∨q))  и  (¬p∧¬q)
+  
+  α-правило к ¬(p∨q):                           ¬(¬(p∨q)) = (p∨q)
+  (a) ¬p и (b) ¬q                               
+                                                α-правило к (¬p∧¬q):
+  β-правило к ¬(¬p∧¬q) → {¬(¬p) | ¬(¬q)}:    (c) ¬p и (d) ¬q
+  → {p | q}
+                                                β-правило к (p∨q) → {p | q}:
+  ┌─────┴─────┐                                 ┌─────┴─────┐
+  p           q                                 p           q
+  <span class="close">× с (a)</span>       <span class="close">× с (b)</span>                  <span class="close">× с (c)</span>       <span class="close">× с (d)</span>
+
+<span class="header">Все 4 ветви закрылись → тавтология ✓</span></div>
+
+<div class="explanation">
+  <strong>Законы де Моргана (оба для памяти):</strong><br>
+  • ¬(A ∨ B) ≡ ¬A ∧ ¬B — «отрицание «или» = «и» отрицаний»<br>
+  • ¬(A ∧ B) ≡ ¬A ∨ ¬B — «отрицание «и» = «или» отрицаний»<br><br>
+  Интуиция: «Неверно, что пришёл хотя бы Петя или Вася» = «Ни Петя не пришёл, ни Васа».
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ ЗАДАЧА 7 -->
+<h2 id="p7">Задача 7: (p∧q) ∨ (p∧¬q) ∨ (¬p∧q) ∨ (¬p∧¬q)</h2>
+
+<div class="problem-box">
+  <div class="label">Доказать или опровергнуть</div>
+  <div class="formula">(p∧q) ∨ (p∧¬q) ∨ (¬p∧q) ∨ (¬p∧¬q)</div>
+</div>
+
+<p>Это <strong>полная дизъюнктивная нормальная форма</strong> для двух переменных — перечислены все 4 возможных сочетания.</p>
+
+<div class="verdict tautology">✓ Тавтология</div>
+
+<p>Сначала упростим алгебрически, чтобы понять <em>почему</em>:</p>
+<p>
+  (p∧q) ∨ (p∧¬q) = p∧(q∨¬q) = p∧1 = <strong>p</strong><br>
+  (¬p∧q) ∨ (¬p∧¬q) = ¬p∧(q∨¬q) = ¬p∧1 = <strong>¬p</strong><br>
+  Итого: p ∨ ¬p = 1 — <strong>закон исключённого третьего</strong>.
+</p>
+
+<div class="tree"><span class="header">Предполагаем отрицание, применяем α-правило к ¬(A∨B∨C∨D) = ¬A∧¬B∧¬C∧¬D:</span>
+
+(1) ¬(p∧q)                    <span class="derive">← α-правило (ложна 1-я альтернатива)</span>
+(2) ¬(p∧¬q)                   <span class="derive">← α-правило (ложна 2-я альтернатива)</span>
+(3) ¬(¬p∧q)                   <span class="derive">← α-правило (ложна 3-я альтернатива)</span>
+(4) ¬(¬p∧¬q)                  <span class="derive">← α-правило (ложна 4-я альтернатива)</span>
+
+<span class="derive">β к (1): ¬p | ¬q</span>
+
+      ┌────────┴────────┐
+     ¬p                ¬q
+     
+  <span class="derive">β к (3) ¬(¬p∧q)→{p|¬q}:</span>       <span class="derive">β к (2) ¬(p∧¬q)→{¬p|q}:</span>
+  ┌────┴────┐           ┌──────┴──────┐
+  p        ¬q          ¬p             q
+  <span class="derive">β к (4)→{p|q}:  уже</span>
+  ┌────┴────┐  <span class="close">×</span>         <span class="close">× ¬p,p</span>        <span class="derive">β к (4)→{p|q}:</span>
+  p         q                        ┌────┴────┐
+  <span class="close">× ¬p,p  × ¬q,q</span>                    p         q
+                                     <span class="close">× ¬q,q  × ¬q,q</span>
+
+<span class="header">Все ветви закрылись → тавтология ✓</span></div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ ЗАДАЧА 8 -->
+<h2 id="p8">Задача 8: p∧q → r ≡ (p → r) ∨ (q → r)</h2>
+
+<div class="problem-box">
+  <div class="label">Доказать или опровергнуть</div>
+  <div class="formula">(p∧q → r) ↔ ((p → r) ∨ (q → r))</div>
+</div>
+
+<p>Сначала сделаем алгебраическое упрощение, чтобы убедиться в ответе:</p>
+<p>
+  <strong>ЛЧ:</strong> p∧q→r = ¬(p∧q)∨r = ¬p∨¬q∨r<br>
+  <strong>ПЧ:</strong> (p→r)∨(q→r) = (¬p∨r)∨(¬q∨r) = ¬p∨¬q∨r∨r = <strong>¬p∨¬q∨r</strong>
+</p>
+<p>Они <strong>алгебраически равны</strong> — значит это тавтология.</p>
+
+<div class="verdict tautology">✓ Тавтология</div>
+
+<div class="tree"><span class="header">Предполагаем ¬(ЛЧ↔ПЧ), β-правило ¬(A↔B):</span>
+
+      ┌──────────────────────┴──────────────────────┐
+  ВЕТВЬ 1: ЛЧ ∧ ¬ПЧ                            ВЕТВЬ 2: ¬ЛЧ ∧ ПЧ
+
+  ¬ПЧ = ¬((p→r)∨(q→r))                         ¬ЛЧ = ¬(p∧q→r)
+  α-правило: ¬(p→r) и ¬(q→r)                   α-правило: p, q, ¬r
+
+  α к ¬(p→r): p, ¬r                             ПЧ = (p→r)∨(q→r)
+  α к ¬(q→r): q, ¬r                             β-правило: {(p→r) | (q→r)}
+
+  Имеем: p, q, ¬r                               ┌──────┴──────┐
+  ЛЧ = (p∧q→r):                               (p→r)         (q→r)
+  β-правило → {¬(p∧q) | r}                   β → {¬p|r}  β → {¬q|r}
+  ┌─────────┴─────────┐                       ┌──┴──┐       ┌──┴──┐
+  ¬(p∧q)              r                      ¬p    r       ¬q    r
+  β → {¬p | ¬q}     <span class="close">× ¬r,r</span>              <span class="close">×p,¬p  ×¬r,r</span>    <span class="close">×q,¬q  ×¬r,r</span>
+  ┌─────┴─────┐
+  ¬p          ¬q
+  <span class="close">× p,¬p</span>      <span class="close">× q,¬q</span>
+
+<span class="header">Все ветви закрылись → тавтология ✓</span></div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ ЗАДАЧА 9 -->
+<h2 id="p9">Задача 9: p∧q → r ≡ (p → r) ∧ (q → r)</h2>
+
+<div class="problem-box">
+  <div class="label">Доказать или опровергнуть</div>
+  <div class="formula">(p∧q → r) ↔ ((p → r) ∧ (q → r))</div>
+</div>
+
+<p>Задача 9 отличается от задачи 8 лишь знаком «∧» вместо «∨» в правой части. Но это делает <strong>огромную разницу</strong>:</p>
+
+<p>
+  <strong>ЛЧ:</strong> ¬p∨¬q∨r<br>
+  <strong>ПЧ:</strong> (¬p∨r)∧(¬q∨r) = (¬p∧¬q)∨r &nbsp;&nbsp;<span style="color:#c0392b;">(после дистрибутивности)</span>
+</p>
+<p>Они <strong>НЕ равны</strong>! ЛЧ слабее — допускает «хотя бы одно из ¬p, ¬q». ПЧ сильнее — требует «оба ¬p и ¬q или r».</p>
+
+<div class="verdict not-tautology">× НЕ тавтология — есть контрпример</div>
+
+<div class="tree"><span class="header">Ищем контрпример: предполагаем ¬(ЛЧ↔ПЧ), β-правило:</span>
+
+      ┌──────────────────────┴──────────────────────┐
+  ВЕТВЬ 1: ЛЧ ∧ ¬ПЧ                            ВЕТВЬ 2: ¬ЛЧ ∧ ПЧ
+                                                
+  ¬ПЧ = ¬((p→r)∧(q→r))                         ¬ЛЧ: p, q, ¬r
+  β-правило: {¬(p→r) | ¬(q→r)}                 ПЧ: (p→r) и (q→r) (α)
+                                                β к (p→r): {¬p | r} → ¬p закр. (p), r закр. (¬r)
+  ┌────────────────┴────────────────┐           <span class="close">× все закрылось</span>
+  ¬(p→r)                           ¬(q→r)
+  α: p, ¬r                         α: q, ¬r
+  
+  ЛЧ = (p∧q→r):                   ЛЧ = (p∧q→r):
+  β → {¬(p∧q) | r}                β → {¬(p∧q) | r}
+  ┌──────┴──────┐                  ┌──────┴──────┐
+  ¬(p∧q)        r                  ¬(p∧q)         r
+  β → {¬p|¬q}  <span class="close">×¬r,r</span>            β → {¬p|¬q}  <span class="close">×¬r,r</span>
+  ┌───┴───┐                        ┌───┴───┐
+  ¬p      ¬q                       ¬p      ¬q
+  <span class="close">×p,¬p</span>    <span class="open">◯ {p,¬r,¬q}</span>              <span class="close">×q,¬q</span>  <span class="open">◯ {q,¬r,¬q}</span>→нет!
+  
+  <span class="open">Открытая ветвь: {p=И, q=Л, r=Л}</span>
+
+<span class="header">Найден контрпример → НЕ тавтология ×</span></div>
+
+<div class="counterex">
+  <strong>Контрпример:</strong> p = Истина, q = Ложь, r = Ложь<br><br>
+  ЛЧ: p∧q→r = (И∧Л)→Л = Л→Л = <strong>Истина</strong><br>
+  ПЧ: (p→r)∧(q→r) = (И→Л)∧(Л→Л) = Л∧И = <strong>Ложь</strong><br><br>
+  Итог: И ↔ Л = <strong>Ложь</strong> — формула не является тавтологией.
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ ЗАДАЧА 10 -->
+<h2 id="p10">Задача 10: Правила для стрелки Пирса ↓, штриха Шеффера |, равносильности ↔, XOR ⊕</h2>
+
+<div class="problem-box">
+  <div class="label">Вопрос</div>
+  <div class="formula" style="font-size:1rem;">Как разбирать уравнения вида A op B = 1 и A op B = 0 в деревьях истинности?</div>
+</div>
+
+<p>Для каждой операции нужно знать <strong>два правила</strong>: что значит «операция истинна» и «операция ложна». Тип правила (α или β) определяется структурой.</p>
+
+<h3>Стрелка Пирса ↓ (NOR — «ни то, ни другое»)</h3>
+<p>A ↓ B = ¬(A ∨ B) — истинна только когда оба ложны.</p>
+
+<table class="rule-table">
+  <tr><th>Случай</th><th>Тип</th><th>Результат</th><th>Обоснование</th></tr>
+  <tr class="alpha-row"><td><code>A ↓ B = 1</code></td><td><span class="badge alpha">α</span></td><td>Добавить ¬A и ¬B (на ту же ветвь)</td><td>¬(A∨B)=1 ⟹ A=0 и B=0</td></tr>
+  <tr class="beta-row"><td><code>A ↓ B = 0</code></td><td><span class="badge beta">β</span></td><td>Ветвь: {A} | {B}</td><td>¬(A∨B)=0 ⟹ A∨B=1, т.е. хотя бы одно истинно</td></tr>
+</table>
+
+<h3>Штрих Шеффера | (NAND — «не оба»)</h3>
+<p>A | B = ¬(A ∧ B) — ложна только когда оба истинны.</p>
+
+<table class="rule-table">
+  <tr><th>Случай</th><th>Тип</th><th>Результат</th><th>Обоснование</th></tr>
+  <tr class="beta-row"><td><code>A | B = 1</code></td><td><span class="badge beta">β</span></td><td>Ветвь: {¬A} | {¬B}</td><td>¬(A∧B)=1 ⟹ хотя бы одно ложно</td></tr>
+  <tr class="alpha-row"><td><code>A | B = 0</code></td><td><span class="badge alpha">α</span></td><td>Добавить A и B (на ту же ветвь)</td><td>¬(A∧B)=0 ⟹ A∧B=1 ⟹ оба истинны</td></tr>
+</table>
+
+<h3>Равносильность ↔ (IFF — «тогда и только тогда»)</h3>
+<p>A ↔ B — истинна когда A и B <em>одновременно</em> одинаковы.</p>
+
+<table class="rule-table">
+  <tr><th>Случай</th><th>Тип</th><th>Результат</th><th>Обоснование</th></tr>
+  <tr class="beta-row"><td><code>A ↔ B = 1</code></td><td><span class="badge beta">β</span></td><td>Ветвь: {A, B} | {¬A, ¬B}</td><td>Оба истинны ИЛИ оба ложны</td></tr>
+  <tr class="beta-row"><td><code>A ↔ B = 0</code></td><td><span class="badge beta">β</span></td><td>Ветвь: {A, ¬B} | {¬A, B}</td><td>Значения разные: один истинен, другой ложен</td></tr>
+</table>
+
+<h3>Исключающее ИЛИ ⊕ (XOR — «ровно одно из двух»)</h3>
+<p>A ⊕ B = ¬(A ↔ B) — истинна когда значения разные.</p>
+
+<table class="rule-table">
+  <tr><th>Случай</th><th>Тип</th><th>Результат</th><th>Обоснование</th></tr>
+  <tr class="beta-row"><td><code>A ⊕ B = 1</code></td><td><span class="badge beta">β</span></td><td>Ветвь: {A, ¬B} | {¬A, B}</td><td>Значения разные (один из двух вариантов)</td></tr>
+  <tr class="beta-row"><td><code>A ⊕ B = 0</code></td><td><span class="badge beta">β</span></td><td>Ветвь: {A, B} | {¬A, ¬B}</td><td>Значения одинаковые</td></tr>
+</table>
+
+<div class="note">
+  <strong>Замечание:</strong> Видите закономерность? «A ↔ B = 1» и «A ⊕ B = 0» дают одинаковые правила (оба одинаковы), а «A ↔ B = 0» и «A ⊕ B = 1» — одинаковые (оба разные). Это потому что ⊕ = ¬↔.
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ ЗАДАЧА 11 -->
+<h2 id="p11">Задача 11: (p ↔ q) ↔ r ≡ p ↔ (q ↔ r)</h2>
+
+<div class="problem-box">
+  <div class="label">Доказать или опровергнуть (используя правила из задачи 10)</div>
+  <div class="formula">((p ↔ q) ↔ r) ↔ (p ↔ (q ↔ r))</div>
+</div>
+
+<p>Это <strong>ассоциативность эквивалентности</strong>. Используем правила ↔ из задачи 10.</p>
+
+<div class="verdict tautology">✓ Тавтология</div>
+
+<p>Сначала проверим по таблице истинности (8 строк для трёх переменных):</p>
+
+<table class="rule-table" style="font-size:0.88rem;">
+  <tr><th>p</th><th>q</th><th>r</th><th>p↔q</th><th>(p↔q)↔r</th><th>q↔r</th><th>p↔(q↔r)</th><th>Равны?</th></tr>
+  <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td style="color:green;font-weight:700;">✓</td></tr>
+  <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td style="color:green;font-weight:700;">✓</td></tr>
+  <tr><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td style="color:green;font-weight:700;">✓</td></tr>
+  <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td style="color:green;font-weight:700;">✓</td></tr>
+  <tr><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td style="color:green;font-weight:700;">✓</td></tr>
+  <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td style="color:green;font-weight:700;">✓</td></tr>
+  <tr><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td style="color:green;font-weight:700;">✓</td></tr>
+  <tr><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td style="color:green;font-weight:700;">✓</td></tr>
+</table>
+
+<p>Все 8 строк дают совпадение — <strong>тавтология</strong>.</p>
+
+<h3>Доказательство через дерево истинности</h3>
+
+<p>Обозначим для краткости: L = (p↔q)↔r, P = p↔(q↔r). Предполагаем ¬(L↔P).</p>
+
+<div class="tree"><span class="header">Шаг 1: β-правило для ¬(L↔P) → {(L,¬P) | (¬L,P)}</span>
+
+    ┌─────────────────────────────┴─────────────────────────────┐
+ВЕТВЬ А: L=1 и P=0                                    ВЕТВЬ Б: L=0 и P=1
+
+<span class="derive">ВЕТВЬ А:</span>
+L=1: (p↔q)↔r = 1 → β-правило: {(p↔q)=1, r=1} | {(p↔q)=0, r=0}
+P=0: p↔(q↔r) = 0 → β-правило: {p=1,(q↔r)=0} | {p=0,(q↔r)=1}
+
+В каждом подслучае используем правила задачи 10:
+• (p↔q)=1 → {p=1,q=1} | {p=0,q=0}
+• (p↔q)=0 → {p=1,q=0} | {p=0,q=1}
+• (q↔r)=0 → {q=1,r=0} | {q=0,r=1}
+• (q↔r)=1 → {q=1,r=1} | {q=0,r=0}
+
+<span class="derive">Разберём все 8 листовых ветвей ветви А (все закрываются):</span>
+
+А1: p=1,q=1,r=1 и p=1,(q↔r)=0 → (q↔r)=(1↔1)=1, а нужно 0 <span class="close">×</span>
+А2: p=1,q=1,r=1 и p=0           → p=1 и p=0 <span class="close">×</span>
+А3: p=0,q=0,r=1 и p=1           → p=0 и p=1 <span class="close">×</span>
+А4: p=0,q=0,r=1 и p=0,(q↔r)=1 → (q↔r)=(0↔1)=0≠1 <span class="close">×</span>
+А5: p=1,q=0,r=0 и p=1,(q↔r)=0 → (q↔r)=(0↔0)=1≠0 <span class="close">×</span>
+А6: p=1,q=0,r=0 и p=0           → p=1 и p=0 <span class="close">×</span>
+А7: p=0,q=1,r=0 и p=1           → p=0 и p=1 <span class="close">×</span>
+А8: p=0,q=1,r=0 и p=0,(q↔r)=1 → (q↔r)=(1↔0)=0≠1 <span class="close">×</span>
+
+<span class="derive">ВЕТВЬ Б симметрична — аналогично все 8 ветвей закрываются.</span>
+
+<span class="header">Все ветви закрылись → тавтология ✓</span></div>
+
+<div class="explanation">
+  <strong>Алгебраический смысл:</strong> Эквивалентность ↔ является <strong>ассоциативной операцией</strong>. Это похоже на то, как умножение +/-1 (знаков) ассоциативно: a×(b×c) = (a×b)×c. Формула (p↔q)↔r считает «чётность» количества истинных переменных: она истинна тогда и только тогда, когда нечётное число переменных истинны. Порядок применения ↔ не важен.
+</div>
+
+<hr class="divider">
+
+<h2>Итоговая таблица ответов</h2>
+
+<table class="rule-table">
+  <tr><th>#</th><th>Формула</th><th>Результат</th></tr>
+  <tr><td>1</td><td>((p→q)→p)→p</td><td style="color:#155724; font-weight:700;">✓ Тавтология (Закон Пирса)</td></tr>
+  <tr><td>2</td><td>p∧q, q∧r ⊢ p∧r</td><td style="color:#155724; font-weight:700;">✓ Выводимо</td></tr>
+  <tr><td>3</td><td>p∨q, q∨r ⊢ p∨r</td><td style="color:#721c24; font-weight:700;">× НЕ выводимо (контрпример: p=Л, q=И, r=Л)</td></tr>
+  <tr><td>4</td><td>p→q ≡ ¬p∨q</td><td style="color:#155724; font-weight:700;">✓ Тавтология (определение импликации)</td></tr>
+  <tr><td>5</td><td>¬(p→q) ≡ ¬p→¬q</td><td style="color:#721c24; font-weight:700;">× НЕ тавтология (контрпример: p=Л, q=Л)</td></tr>
+  <tr><td>6</td><td>¬(p∨q) ≡ ¬p∧¬q</td><td style="color:#155724; font-weight:700;">✓ Тавтология (Закон де Моргана)</td></tr>
+  <tr><td>7</td><td>(p∧q)∨(p∧¬q)∨(¬p∧q)∨(¬p∧¬q)</td><td style="color:#155724; font-weight:700;">✓ Тавтология (полная СДНФ)</td></tr>
+  <tr><td>8</td><td>p∧q→r ≡ (p→r)∨(q→r)</td><td style="color:#155724; font-weight:700;">✓ Тавтология</td></tr>
+  <tr><td>9</td><td>p∧q→r ≡ (p→r)∧(q→r)</td><td style="color:#721c24; font-weight:700;">× НЕ тавтология (контрпример: p=И, q=Л, r=Л)</td></tr>
+  <tr><td>10</td><td>Правила для ↓, |, ↔, ⊕</td><td>— (см. таблицы выше)</td></tr>
+  <tr><td>11</td><td>(p↔q)↔r ≡ p↔(q↔r)</td><td style="color:#155724; font-weight:700;">✓ Тавтология (ассоциативность ↔)</td></tr>
+</table>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тренажёр ко 2-й КР по матлогике — задачи с решениями</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'Georgia', serif;
+    background: #f5f7fb;
+    color: #1e2a3a;
+    line-height: 1.65;
+    padding: 2rem 1rem;
+  }
+  .container {
+    max-width: 1120px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    padding: 2rem 2.2rem 3rem;
+  }
+  h1 {
+    font-size: 1.9rem; font-weight: 700; color: #1e466e;
+    border-left: 6px solid #1e466e; padding-left: 1rem; margin-bottom: 0.4rem;
+  }
+  .subtitle { color: #5b6e8c; margin-bottom: 1rem; padding-left: 1.2rem; }
+  h2 {
+    font-size: 1.5rem; margin: 2.2rem 0 0.8rem; color: #1e466e;
+    border-bottom: 2px solid #cbd5e1; padding-bottom: 0.3rem;
+  }
+  h3 { font-size: 1.15rem; margin: 1.3rem 0 0.5rem; color: #2c3e66; }
+  p { margin: 0.5rem 0; }
+  ul, ol { margin: 0.5rem 0 0.5rem 1.6rem; }
+  li { margin: 0.3rem 0; }
+  code {
+    font-family: 'Courier New', monospace; background: #eef2f7;
+    padding: 0.1rem 0.35rem; border-radius: 5px; font-size: 0.92em;
+  }
+  .nav { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1rem 0 1.5rem; }
+  .nav a {
+    background: #1e466e; color: white; text-decoration: none;
+    padding: 0.45rem 0.9rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;
+  }
+  .nav a:hover { background: #2c5d92; }
+  .task {
+    background: #eff6ff; border-radius: 14px; padding: 1.1rem 1.4rem;
+    margin: 1.2rem 0; border: 1px solid #bfdbfe;
+  }
+  .task-q { font-weight: 700; color: #1e466e; margin-bottom: 0.3rem; }
+  .formula {
+    font-family: 'Cambria Math','Georgia',serif; font-size: 1.08rem; text-align: center;
+    background: #f8fafc; padding: 0.6rem; border-radius: 10px; margin: 0.7rem 0;
+    border: 1px solid #e2e8f0;
+  }
+  details {
+    background: #fffdf5; border: 1px solid #e9e5c3; border-radius: 12px;
+    padding: 0.6rem 1rem; margin-top: 0.7rem;
+  }
+  details summary {
+    cursor: pointer; font-weight: 600; color: #92670c; user-select: none;
+    padding: 0.2rem 0;
+  }
+  details[open] summary { margin-bottom: 0.5rem; border-bottom: 1px dashed #e0d9b8; }
+  .sol { font-size: 0.95rem; }
+  .step { margin: 0.4rem 0; }
+  .verdict {
+    display: inline-block; padding: 0.18rem 0.9rem; border-radius: 18px;
+    font-size: 0.8rem; font-weight: 600; margin-top: 0.4rem;
+  }
+  .v-yes { background: #d1fae5; color: #065f46; }
+  .v-no  { background: #fee2e2; color: #991b1b; }
+  .v-ans { background: #dbeafe; color: #1e466e; }
+  table { border-collapse: collapse; margin: 0.8rem 0; width: 100%; font-size: 0.9rem; }
+  th, td { border: 1px solid #cbd5e1; padding: 0.4rem 0.6rem; text-align: center; }
+  th { background: #e8eef6; color: #1e466e; }
+  .row-false { background: #fee2e2; }
+  .row-true { background: #ecfdf5; }
+  .tree {
+    font-family: 'Courier New', monospace; background: #fafafa; border: 1px solid #ddd;
+    border-radius: 10px; padding: 1rem; font-size: 0.85rem; line-height: 1.5;
+    overflow-x: auto; white-space: pre; margin: 0.7rem 0;
+  }
+  .note {
+    background: #f1f5f9; border-left: 4px solid #3b82f6; padding: 0.6rem 1rem;
+    border-radius: 8px; margin: 0.6rem 0; font-size: 0.92rem;
+  }
+  .warn {
+    background: #fef2f2; border-left: 4px solid #ef4444; padding: 0.6rem 1rem;
+    border-radius: 8px; margin: 0.6rem 0; font-size: 0.92rem;
+  }
+  .closed { color: #991b1b; font-weight: 700; }
+  .open { color: #065f46; font-weight: 700; }
+  hr { margin: 2.2rem 0; border: none; border-top: 2px dotted #cbd5e1; }
+  footer { text-align: center; margin-top: 2.5rem; font-size: 0.82rem; color: #5b6e8c; }
+  .legend { font-size: 0.85rem; color: #475569; background:#f8fafc; border-radius:8px; padding:0.4rem 0.8rem; margin:0.5rem 0; }
+  @media (max-width: 640px) {
+    .container { padding: 1.3rem; }
+    .tree { font-size: 0.74rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Тренажёр ко второй КР по математической логике</h1>
+<p class="subtitle">Задачи с полными решениями под спойлерами. Структура и сложность — по демоверсии: ординалы · запись формулой · значение в модели · дерево истинности. Сначала прорешай сам, потом раскрой решение.</p>
+
+<div class="nav">
+  <a href="#b1">Блок 1 · Ординалы (8)</a>
+  <a href="#b2">Блок 2 · Запись формулой (10)</a>
+  <a href="#b3">Блок 3 · Значение в модели (7)</a>
+  <a href="#b4">Блок 4 · Дерево истинности (7)</a>
+  <a href="#cheat">Шпаргалка</a>
+</div>
+
+<div class="note">
+<strong>Как пользоваться:</strong> каждая задача — это «нажми «Решение», только когда сам попробовал». Спойлеры (<code>▸ Решение</code>) раскрываются кликом. Уровень сложности нарастает внутри каждого блока.
+</div>
+
+<!-- ========================================================= -->
+<!-- БЛОК 1: ОРДИНАЛЫ -->
+<!-- ========================================================= -->
+<h2 id="b1">Блок 1 · Ординалы и нормальная форма Кантора</h2>
+
+<div class="note">
+<strong>Опорные правила:</strong>
+<ul>
+  <li>Поглощение в сумме: при <code>a &lt; b</code> &nbsp;<code>ω<sup>a</sup>·m + ω<sup>b</sup>·n = ω<sup>b</sup>·n</code> (младшее слева гибнет).</li>
+  <li>Сбор подобных: <code>ω<sup>a</sup>·m + ω<sup>a</sup>·n = ω<sup>a</sup>·(m+n)</code>.</li>
+  <li>Левая дистрибутивность: <code>α·(β+γ) = α·β + α·γ</code>. <strong>Правая — нет:</strong> <code>(ω+1)·2 ≠ ω·2+1·2</code>.</li>
+  <li><code>(конечное)·ω = ω</code>, &nbsp;<code>(ω+k)·ω = ω²</code>, &nbsp;вообще <code>α·ω = ω<sup>(старшая степень α)+1</sup></code> для α с конечным старшим коэффициентом.</li>
+  <li><code>1+ω = ω</code>, &nbsp;<code>ω+1 ≠ ω</code>; &nbsp;<code>(ω+1)^ω = ω^ω</code>.</li>
+</ul>
+</div>
+
+<div class="task">
+  <div class="task-q">1.1. Привести к НФК: ω·3 + ω·2</div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step">Одинаковая степень ω¹, складываем коэффициенты: <code>ω·3 + ω·2 = ω·(3+2) = ω·5</code>.</div>
+    <div class="warn">Не путать с умножением: коэффициенты складываются только при <em>сложении</em> подобных. И порядок важен — <code>3·ω + 2·ω</code> это уже <code>ω+ω = ω·... </code> нет: <code>3·ω = ω</code>, <code>2·ω=ω</code>, сумма <code>ω+ω = ω·2</code>. Совсем другой результат!</div>
+    <span class="verdict v-ans">Ответ: ω·5</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">1.2. Привести к НФК: 5 + ω + 3 + ω²</div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step">Идём слева направо, применяя поглощение.</div>
+    <div class="step"><code>5 + ω = ω</code> (конечное слева от ω гибнет).</div>
+    <div class="step"><code>ω + 3 = ω+3</code> (конечное справа НЕ гибнет — остаётся).</div>
+    <div class="step"><code>(ω+3) + ω² = ω²</code> (всё, что слева от ω² и меньше его, поглощается).</div>
+    <span class="verdict v-ans">Ответ: ω²</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">1.3. Привести к НФК: ω·2 + 2·ω²</div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step"><code>2·ω² = (2·ω)·ω = ω·ω = ω²</code> (двойка слева от ω поглощается).</div>
+    <div class="step">Теперь <code>ω·2 + ω²</code>: степень 1 слева от степени 2 → поглощается.</div>
+    <span class="verdict v-ans">Ответ: ω²</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">1.4. Привести к НФК: (ω + 2)·(ω + 1)·ω &nbsp;<span style="font-weight:400;color:#64748b">(задача из демоверсии)</span></div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step">Умножение левоассоциативно: считаем <code>((ω+2)·(ω+1))·ω</code>.</div>
+    <div class="step"><strong>Шаг 1.</strong> <code>(ω+2)·(ω+1)</code> по левой дистрибутивности (раскрываем правый множитель <code>ω+1</code>):</div>
+    <div class="formula">(ω+2)·(ω+1) = (ω+2)·ω + (ω+2)·1</div>
+    <div class="step"><code>(ω+2)·ω = ω²</code> &nbsp;(на пределе старший член даёт ω·ω). &nbsp;<code>(ω+2)·1 = ω+2</code>.</div>
+    <div class="step">Итого: <code>ω² + ω + 2</code>.</div>
+    <div class="step"><strong>Шаг 2.</strong> <code>(ω²+ω+2)·ω</code>: при умножении на ω справа берётся предел, поднимающий старший член: <code>ω²·ω = ω³</code>, остальное поглощается.</div>
+    <span class="verdict v-ans">Ответ: ω³</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">1.5. Привести к НФК: (ω + 1)·3</div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step">Это <em>правый</em> множитель — конечный, дистрибутивность тут не работает, раскрываем как повтор:</div>
+    <div class="formula">(ω+1)·3 = (ω+1)+(ω+1)+(ω+1)</div>
+    <div class="step"><code>= ω+1+ω+1+ω+1</code>. Каждое <code>1+ω = ω</code>, поэтому внутренние единицы перед ω гибнут:</div>
+    <div class="step"><code>= ω + ω + ω + 1 = ω·3 + 1</code>.</div>
+    <span class="verdict v-ans">Ответ: ω·3 + 1</span>
+    <div class="note">Сравни: <code>(ω+1)·3 = ω·3+1</code>, а вот <code>3·(ω+1) = 3·ω+3·1 = ω+3</code>. Разные результаты — некоммутативность.</div>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">1.6. Привести к НФК: (ω + 2)<sup>2</sup></div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step"><code>(ω+2)² = (ω+2)·(ω+2)</code>, раскрываем правый множитель:</div>
+    <div class="formula">= (ω+2)·ω + (ω+2)·2</div>
+    <div class="step"><code>(ω+2)·ω = ω²</code>.</div>
+    <div class="step"><code>(ω+2)·2 = (ω+2)+(ω+2) = ω+2+ω+2 = ω+ω+2 = ω·2+2</code> (двойка перед ω гибнет).</div>
+    <span class="verdict v-ans">Ответ: ω² + ω·2 + 2</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">1.7. Привести к НФК: (ω + 2)<sup>3</sup> &nbsp;<span style="font-weight:400;color:#64748b">(из доп. листа)</span></div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step">Используем результат 1.6: <code>(ω+2)² = ω²+ω·2+2</code>. Умножаем ещё раз на <code>(ω+2)</code>:</div>
+    <div class="formula">(ω²+ω·2+2)·(ω+2) = (ω²+ω·2+2)·ω + (ω²+ω·2+2)·2</div>
+    <div class="step"><strong>Первый член:</strong> <code>(ω²+ω·2+2)·ω = ω³</code> (старший ω² поднимается до ω³, хвост поглощается).</div>
+    <div class="step"><strong>Второй член:</strong> <code>(ω²+ω·2+2)·2 = (ω²+ω·2+2)+(ω²+ω·2+2)</code>. Склеиваем: хвост первого <code>…+ω·2+2</code> стоит слева от <code>ω²</code> второго и поглощается → <code>ω²+ω²+ω·2+2 = ω²·2 + ω·2 + 2</code>.</div>
+    <div class="step">Складываем оба: <code>ω³ + (ω²·2 + ω·2 + 2)</code> — степени уже убывают.</div>
+    <span class="verdict v-ans">Ответ: ω³ + ω²·2 + ω·2 + 2</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">1.8. Привести к НФК: (ω + 1)<sup>ω+1</sup> &nbsp;<span style="font-weight:400;color:#64748b">(из доп. листа, со звёздочкой)</span></div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step">Ключевой факт: <code>(ω+1)<sup>ω</sup> = ω<sup>ω</sup></code> (предел <code>(ω+1)<sup>n</sup></code> не «обгоняет» ω<sup>ω</sup>, младшие добавки гибнут на пределе).</div>
+    <div class="step">Разбиваем показатель: <code>(ω+1)<sup>ω+1</sup> = (ω+1)<sup>ω</sup>·(ω+1) = ω<sup>ω</sup>·(ω+1)</code>.</div>
+    <div class="step">Левая дистрибутивность: <code>ω<sup>ω</sup>·(ω+1) = ω<sup>ω</sup>·ω + ω<sup>ω</sup>·1 = ω<sup>ω+1</sup> + ω<sup>ω</sup></code>.</div>
+    <span class="verdict v-ans">Ответ: ω<sup>ω+1</sup> + ω<sup>ω</sup></span>
+    <div class="note">Степени в показателях тоже подчиняются НФК: <code>ω+1 &gt; ω</code>, поэтому члены записаны по убыванию.</div>
+  </div></details>
+</div>
+
+<hr>
+
+<!-- ========================================================= -->
+<!-- БЛОК 2: ЗАПИСЬ ФОРМУЛОЙ -->
+<!-- ========================================================= -->
+<h2 id="b2">Блок 2 · Формализация на языке логики предикатов</h2>
+
+<div class="note">
+Используй только указанную сигнатуру. Если предиката <code>≤</code> нет — выражай через <code>(&lt; ∨ =)</code>; если <code>&gt;</code> нет — меняй аргументы местами. «Ровно один» = существование + единственность.
+</div>
+
+<div class="task">
+  <div class="task-q">2.1. «Ивану скучно.» <span style="color:#64748b;font-weight:400">(одноместный предикат Скучно, константа Иван)</span></div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step">Простое атомарное высказывание, кванторы не нужны.</div>
+    <div class="formula">Скучно(Иван)</div>
+    <span class="verdict v-ans">Ответ: B(i), где B(x) — «x скучно», i — Иван</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">2.2. «Иванов и Петров играют в шахматы (друг с другом).»</div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step">Двухместный предикат «играют в шахматы»: <code>Ш(x,y)</code>.</div>
+    <div class="formula">Ш(Иванов, Петров)</div>
+    <div class="note">Если имеется в виду «оба играют в шахматы (вообще)», то одноместный предикат: <code>Ш(Иванов) ∧ Ш(Петров)</code>. Смысл «друг с другом» требует двухместного — уточни по лекции.</div>
+    <span class="verdict v-ans">Ответ: Ш(Иванов, Петров)</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">2.3. «Каждый, кто упорно работает, добивается успеха.» <span style="color:#64748b;font-weight:400">(универсум — люди)</span></div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step">«Каждый, кто P, тот Q» — классический шаблон <code>∀x (P(x) → Q(x))</code>.</div>
+    <div class="formula">∀x (Работает(x) → Успех(x))</div>
+    <div class="warn">Частая ошибка — поставить <code>∧</code> вместо <code>→</code>: <code>∀x (Работает(x) ∧ Успех(x))</code> означало бы «все работают И все успешны», что неверно.</div>
+    <span class="verdict v-ans">Ответ: ∀x (W(x) → S(x))</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">2.4. «Слон Бимбо больше собаки Ланды.» <span style="color:#64748b;font-weight:400">(предикат «больше» B(x,y), константы)</span></div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="formula">Больше(Бимбо, Ланды)</div>
+    <span class="verdict v-ans">Ответ: B(b, l)</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">2.5. «Кошки бывают только белые и серые.» <span style="color:#64748b;font-weight:400">(универсум — кошки)</span></div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step">«Любая кошка либо белая, либо серая»:</div>
+    <div class="formula">∀x (Белый(x) ∨ Серый(x))</div>
+    <div class="note">Если универсум — все животные, добавляем посылку: <code>∀x (Кошка(x) → (Белый(x) ∨ Серый(x)))</code>.</div>
+    <span class="verdict v-ans">Ответ: ∀x (W(x) ∨ G(x))</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">2.6. «Уравнение x² − 3x + 2 = 0 не имеет решений.» <span style="color:#64748b;font-weight:400">(универсум — числа, есть = и арифметика)</span></div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step">«Нет такого x, что …» = <code>¬∃x</code> (или эквивалентно <code>∀x ¬</code>).</div>
+    <div class="formula">¬∃x (x·x − 3·x + 2 = 0)</div>
+    <div class="step">Эквивалентно: <code>∀x (x·x − 3·x + 2 ≠ 0)</code>, где <code>≠</code> — это <code>¬(…=…)</code>.</div>
+    <span class="verdict v-ans">Ответ: ¬∃x (x²−3x+2 = 0)</span>
+    <div class="note">Высказывание по факту ложно (корни 1 и 2), но формализация от истинности не зависит — переводим как есть.</div>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">2.7. «Есть максимальное число.» <span style="color:#64748b;font-weight:400">(универсум — целые, предикаты &lt; и =; задача из демоверсии)</span></div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step">Максимум = ничто не больше него = «для любого y неверно x &lt; y».</div>
+    <div class="formula">∃x ∀y ¬(x &lt; y)</div>
+    <div class="step">Эквивалент через «≤»: <code>∃x ∀y (y &lt; x ∨ y = x)</code>.</div>
+    <div class="warn">Порядок кванторов критичен: <code>∀y ∃x</code> дало бы другое (ложное для ℤ) утверждение.</div>
+    <span class="verdict v-ans">Ответ: ∃x ∀y ¬(x &lt; y)</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">2.8. «Есть сколь угодно большие простые числа» (простых бесконечно много). <span style="color:#64748b;font-weight:400">(предикаты Prime(x), &lt;)</span></div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step">«Для любого числа найдётся простое, которое больше него»:</div>
+    <div class="formula">∀x ∃y (x &lt; y ∧ Prime(y))</div>
+    <span class="verdict v-ans">Ответ: ∀x ∃y (x &lt; y ∧ Prime(y))</span>
+    <div class="note">Сравни с «есть максимальное простое» (было бы ложью): <code>∃y (Prime(y) ∧ ∀z (Prime(z) → ¬(y &lt; z)))</code>.</div>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">2.9. «У каждого положительного действительного числа есть ровно один положительный квадратный корень.» <span style="color:#64748b;font-weight:400">(Pos(x), предикат «y² = x» через умножение, =)</span></div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step">«Ровно один» = существует И единствен. Шаблон <code>∃y (φ(y) ∧ ∀z (φ(z) → z = y))</code>.</div>
+    <div class="formula">∀x ( Pos(x) → ∃y ( Pos(y) ∧ y·y = x ∧ ∀z ((Pos(z) ∧ z·z = x) → z = y) ) )</div>
+    <div class="step">Читается: для каждого положительного x существует положительный y с <code>y²=x</code>, и любой другой положительный корень z совпадает с y.</div>
+    <span class="verdict v-ans">Ответ: см. формулу выше (существование + единственность)</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">2.10. «Последовательность a₀, a₁, … имеет более одной предельной точки.» <span style="color:#64748b;font-weight:400">(предикат LP(x) — «x является предельной точкой», =)</span></div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step">«Более одной» = существуют две <em>различные</em> предельные точки:</div>
+    <div class="formula">∃x ∃y ( LP(x) ∧ LP(y) ∧ x ≠ y )</div>
+    <div class="step">где <code>x ≠ y</code> — сокращение для <code>¬(x = y)</code>.</div>
+    <div class="warn">Без условия <code>x ≠ y</code> формула <code>∃x∃y(LP(x)∧LP(y))</code> выполнялась бы и при одной точке (взяв x=y). Различие обязательно.</div>
+    <span class="verdict v-ans">Ответ: ∃x ∃y (LP(x) ∧ LP(y) ∧ ¬(x=y))</span>
+  </div></details>
+</div>
+
+<hr>
+
+<!-- ========================================================= -->
+<!-- БЛОК 3: ЗНАЧЕНИЕ В МОДЕЛИ -->
+<!-- ========================================================= -->
+<h2 id="b3">Блок 3 · Значение формулы в конечной модели</h2>
+
+<div class="note">
+В модели из k элементов: <code>∀x φ</code> = конъюнкция <code>φ</code> по всем элементам (все должны быть И); <code>∃x φ</code> = дизъюнкция (хоть один И). Сворачивай кванторы изнутри наружу. Для n кванторов — kⁿ наборов.
+</div>
+
+<div class="task">
+  <div class="task-q">3.1. M = {a,b}, P(a)=0, P(b)=1. Найти ∀x∀y (P(x) ∨ P(y)). <span style="color:#64748b;font-weight:400">(демоверсия)</span></div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <table>
+      <tr><th>x</th><th>y</th><th>P(x)</th><th>P(y)</th><th>P(x)∨P(y)</th></tr>
+      <tr class="row-false"><td>a</td><td>a</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr class="row-true"><td>a</td><td>b</td><td>0</td><td>1</td><td>1</td></tr>
+      <tr class="row-true"><td>b</td><td>a</td><td>1</td><td>0</td><td>1</td></tr>
+      <tr class="row-true"><td>b</td><td>b</td><td>1</td><td>1</td><td>1</td></tr>
+    </table>
+    <div class="step"><code>∀x∀y</code> требует И во всех строках. Строка (a,a) даёт 0.</div>
+    <span class="verdict v-no">Ответ: 0 (ложь)</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">3.2. Та же модель. Найти ∃x∃y (P(x) ∧ P(y)).</div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step"><code>∃∃</code> = «хоть одна пара даёт И». Берём x=b, y=b: <code>P(b)∧P(b) = 1∧1 = 1</code>.</div>
+    <span class="verdict v-yes">Ответ: 1 (истина)</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">3.3. Та же модель. Найти ∀x ∃y (P(x) → P(y)).</div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step">Внешний <code>∀x</code>: проверяем для x=a и x=b, что <code>∃y (P(x)→P(y))</code> истинно.</div>
+    <div class="step"><strong>x=a:</strong> P(a)=0, тогда <code>P(a)→P(y) = 0→… = 1</code> при любом y. <code>∃y</code> истинно. ✓</div>
+    <div class="step"><strong>x=b:</strong> P(b)=1, нужно <code>∃y P(b)→P(y) = 1→P(y)</code> истинно. Берём y=b: <code>1→1=1</code>. ✓</div>
+    <div class="step">Оба значения x дали истину → <code>∀x</code> истинно.</div>
+    <span class="verdict v-yes">Ответ: 1 (истина)</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">3.4. M = {a,b}, P(a)=1, P(b)=0. Найти ∃x ∀y (P(x) → P(y)).</div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step"><code>∃x</code>: достаточно найти один x, при котором <code>∀y (P(x)→P(y))</code> истинно.</div>
+    <div class="step"><strong>x=a:</strong> P(a)=1. Нужно <code>∀y 1→P(y)</code>, т.е. <code>P(y)</code> для всех y. Но P(b)=0 → <code>1→0=0</code>. Не годится.</div>
+    <div class="step"><strong>x=b:</strong> P(b)=0. <code>0→P(y) = 1</code> для всех y. <code>∀y</code> истинно. ✓</div>
+    <div class="step">Нашли x=b → <code>∃x</code> истинно.</div>
+    <span class="verdict v-yes">Ответ: 1 (истина)</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">3.5. M = {1,2,3}, Q(x,y) истинно ⟺ x ≤ y. Найти ∀x ∃y Q(x,y).</div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step">Для каждого x ищем y с <code>x ≤ y</code>.</div>
+    <div class="step">x=1 → y=1,2,3 подходят ✓; &nbsp; x=2 → y=2,3 ✓; &nbsp; x=3 → y=3 ✓.</div>
+    <div class="step">Для каждого x нашёлся y → <code>∀x∃y</code> истинно.</div>
+    <span class="verdict v-yes">Ответ: 1 (истина)</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">3.6. Та же модель {1,2,3}, Q(x,y) ⟺ x ≤ y. Найти ∃y ∀x Q(x,y).</div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="step">Меняется порядок кванторов: ищем <em>один</em> y, который ≥ всех x.</div>
+    <div class="step">y=3: нужно <code>∀x (x ≤ 3)</code> — верно для x=1,2,3. ✓</div>
+    <span class="verdict v-yes">Ответ: 1 (истина — это y=3, наибольший элемент)</span>
+    <div class="warn">Здесь <code>∃y∀x</code> и <code>∀x∃y</code> оба истинны, но это совпадение из-за наличия максимума. В модели без максимума (как ℕ) <code>∀x∃y</code> истинно, а <code>∃y∀x</code> ложно — порядок кванторов меняет смысл!</div>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">3.7. M = {a,b}, R(a,a)=1, R(a,b)=1, R(b,a)=0, R(b,b)=1. Найти ∀x∀y (R(x,y) → R(y,x)) (симметричность).</div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <table>
+      <tr><th>x</th><th>y</th><th>R(x,y)</th><th>R(y,x)</th><th>R(x,y)→R(y,x)</th></tr>
+      <tr class="row-true"><td>a</td><td>a</td><td>1</td><td>1</td><td>1</td></tr>
+      <tr class="row-false"><td>a</td><td>b</td><td>1</td><td>0</td><td>0</td></tr>
+      <tr class="row-true"><td>b</td><td>a</td><td>0</td><td>1</td><td>1</td></tr>
+      <tr class="row-true"><td>b</td><td>b</td><td>1</td><td>1</td><td>1</td></tr>
+    </table>
+    <div class="step">Пара (a,b): <code>R(a,b)=1</code>, но <code>R(b,a)=0</code>, импликация <code>1→0=0</code>.</div>
+    <div class="step"><code>∀x∀y</code> ложно из-за этой строки → отношение не симметрично.</div>
+    <span class="verdict v-no">Ответ: 0 (ложь)</span>
+  </div></details>
+</div>
+
+<hr>
+
+<!-- ========================================================= -->
+<!-- БЛОК 4: ДЕРЕВО ИСТИННОСТИ -->
+<!-- ========================================================= -->
+<h2 id="b4">Блок 4 · Дерево истинности (семантические таблицы)</h2>
+
+<div class="note">
+<strong>Метод:</strong> посылки — истинны, заключение — ложно (приписываем ¬). Разворачиваем. Все ветви замкнулись (есть A и ¬A) → <span class="open">теорема</span>. Осталась открытая ветвь → <span class="closed">не теорема</span>, из ветви читаем контрпример.
+<br><br>
+<strong>Кванторы:</strong> <code>δ</code> (∃-истинно / ∀-ложно) вводит <em>свежую</em> константу, один раз. <code>γ</code> (∀-истинно / ∃-ложно) подставляет <em>любую существующую</em> константу, можно много раз. Порядок: сначала δ, потом γ.
+</div>
+
+<div class="legend">
+В деревьях: <span class="closed">✗</span> — замкнутая ветвь, <span class="open">○</span> — открытая; <code>c, d</code> — введённые константы.
+</div>
+
+<div class="task">
+  <div class="task-q">4.1. p → q, p ⊢ q &nbsp;<span style="color:#64748b;font-weight:400">(modus ponens, чисто пропозиционально — разминка)</span></div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="tree">1.  p → q   = И   [посылка]
+2.  p       = И   [посылка]
+3.  ¬q          [отрицание заключения]
+
+4.  β из 1 (правило →):
+        ┌──────────┬──────────┐
+      ¬p          q
+       │           │
+   p и ¬p      q и ¬q
+   против. ✗   против. ✗
+       ✗           ✗</div>
+    <div class="step">Обе ветви замкнулись.</div>
+    <span class="verdict v-yes">Выводимо (теорема)</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">4.2. ⊢ ∀x P(x) → P(c) &nbsp;<span style="color:#64748b;font-weight:400">(конкретизация)</span></div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="tree">1.  ¬(∀x P(x) → P(c))   = И   [отрицаем заключение]
+2.  ∀x P(x)                  [из 1, правило ¬→]
+3.  ¬P(c)                    [из 1, правило ¬→]
+4.  γ из 2: подставляем c → P(c)
+5.  P(c) и ¬P(c) — противоречие ✗</div>
+    <div class="step">Единственная ветвь замкнулась.</div>
+    <span class="verdict v-yes">Выводимо (теорема)</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">4.3. ∃x (P(x) ∧ Q(x)) ⊢ ∃x P(x)</div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="tree">1.  ∃x (P(x) ∧ Q(x))   = И   [посылка]
+2.  ¬∃x P(x)  (= ∀x ¬P(x)) = И  [отрицание заключения]
+
+3.  δ из 1: свежая c → P(c) ∧ Q(c)
+4.  α из 3 → P(c)
+5.  α из 3 → Q(c)
+6.  γ из 2: подставляем c → ¬P(c)
+7.  P(c) и ¬P(c) — противоречие ✗</div>
+    <div class="step">Важен порядок: δ ввела c, затем γ подставила <em>ту же</em> c.</div>
+    <span class="verdict v-yes">Выводимо (теорема)</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">4.4. ∀x (P(x) → Q(x)), ∀x P(x) ⊢ ∀x Q(x)</div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="tree">1.  ∀x (P(x) → Q(x))   = И   [посылка]
+2.  ∀x P(x)            = И   [посылка]
+3.  ¬∀x Q(x)           = И   [отрицание заключения]
+
+4.  δ из 3: свежая c → ¬Q(c)
+5.  γ из 2: → P(c)
+6.  γ из 1: → P(c) → Q(c)
+7.  β из 6:
+        ┌──────────┬──────────┐
+      ¬P(c)        Q(c)
+       │            │
+   P(c)&¬P(c)   Q(c)&¬Q(c)
+   против. ✗    против. ✗
+       ✗            ✗</div>
+    <span class="verdict v-yes">Выводимо (теорема)</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">4.5. (∀x P(x)) → (∀x Q(x)) ⊢ ∀x (P(x) → Q(x)) &nbsp;<span style="color:#64748b;font-weight:400">(демоверсия)</span></div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="tree">1.  (∀x P(x)) → (∀x Q(x))   = И   [посылка]
+2.  ¬∀x (P(x) → Q(x))       = И   [отрицание заключения]
+
+3.  δ из 2: свежая c → ¬(P(c) → Q(c))
+4.  α из 3 → P(c)
+5.  α из 3 → ¬Q(c)
+
+6.  β из 1:
+        ┌────────────────────┬────────────────────┐
+   ¬∀x P(x)                ∀x Q(x)
+       │                        │
+   δ: свежая d → ¬P(d)      γ: подставляем c → Q(c)
+       │                        │
+   на ветви: P(c),¬Q(c),    Q(c) и ¬Q(c)
+             ¬P(d)          противоречие ✗
+   пары A/¬A для одной           ✗
+   константы НЕТ → ОТКРЫТА
+       ○</div>
+    <div class="step">Левая ветвь открыта → не теорема. Контрпример из ветви:</div>
+    <table>
+      <tr><th>элемент</th><th>P</th><th>Q</th></tr>
+      <tr><td>c</td><td>1</td><td>0</td></tr>
+      <tr><td>d</td><td>0</td><td>0</td></tr>
+    </table>
+    <div class="step">Проверка: <code>∀x P(x)=0</code> (из-за d) → посылка <code>0→…=1</code> ✓. Заключение: <code>P(c)→Q(c)=1→0=0</code> → <code>∀x(…)=0</code> ✓. Посылка И, заключение Л.</div>
+    <span class="verdict v-no">НЕ выводимо (контрпример найден)</span>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">4.6. ∃x P(x), ∃x Q(x) ⊢ ∃x (P(x) ∧ Q(x))</div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="tree">1.  ∃x P(x)              = И   [посылка]
+2.  ∃x Q(x)              = И   [посылка]
+3.  ¬∃x (P(x) ∧ Q(x))    = И   [= ∀x ¬(P(x)∧Q(x))]
+
+4.  δ из 1: свежая c → P(c)
+5.  δ из 2: свежая d → Q(d)   (ДРУГАЯ константа — c уже занята!)
+6.  γ из 3 для c → ¬(P(c)∧Q(c)) → β: ¬P(c) | ¬Q(c)
+        ┌──────────┬──────────┐
+      ¬P(c)        ¬Q(c)
+       │            │
+   P(c)&¬P(c) ✗   на ветви: P(c),Q(d),¬Q(c)
+       ✗            нет противоречия пока
+                    γ из 3 для d → ¬(P(d)∧Q(d)) → β: ¬P(d) | ¬Q(d)
+                        ┌──────────┬──────────┐
+                      ¬P(d)        ¬Q(d)
+                       │            │
+                  P(c),Q(d),    Q(d)&¬Q(d) ✗
+                  ¬Q(c),¬P(d)       ✗
+                  нет пары → ОТКРЫТА
+                       ○</div>
+    <div class="step">Открытая ветвь: <code>P(c)=1, Q(c)=0, P(d)=0, Q(d)=1</code> — контрпример.</div>
+    <table>
+      <tr><th>элемент</th><th>P</th><th>Q</th></tr>
+      <tr><td>c</td><td>1</td><td>0</td></tr>
+      <tr><td>d</td><td>0</td><td>1</td></tr>
+    </table>
+    <div class="step">Кто-то имеет P, кто-то имеет Q, но никто — оба сразу.</div>
+    <span class="verdict v-no">НЕ выводимо (контрпример)</span>
+    <div class="warn">Ключевой момент: δ из посылки 2 обязана ввести <strong>новую</strong> константу d, а не переиспользовать c. Иначе ошибочно «докажешь» ложное.</div>
+  </div></details>
+</div>
+
+<div class="task">
+  <div class="task-q">4.7. ∀x (P(x) ∧ Q(x)) ⊢ (∀x P(x)) ∧ (∀x Q(x))</div>
+  <details><summary>▸ Решение</summary>
+  <div class="sol">
+    <div class="tree">1.  ∀x (P(x) ∧ Q(x))         = И   [посылка]
+2.  ¬((∀x P(x)) ∧ (∀x Q(x))) = И   [отрицание заключения]
+
+3.  β из 2 (¬∧):
+        ┌────────────────┬────────────────┐
+   ¬∀x P(x)            ¬∀x Q(x)
+       │                    │
+   δ: свежая c → ¬P(c)   δ: свежая d → ¬Q(d)
+       │                    │
+   γ из 1 для c →        γ из 1 для d →
+   P(c) ∧ Q(c)           P(d) ∧ Q(d)
+       │                    │
+   α → P(c), Q(c)        α → P(d), Q(d)
+       │                    │
+   P(c) и ¬P(c) ✗        Q(d) и ¬Q(d) ✗
+       ✗                    ✗</div>
+    <div class="step">Обе ветви замкнулись.</div>
+    <span class="verdict v-yes">Выводимо (теорема)</span>
+  </div></details>
+</div>
+
+<hr>
+
+<!-- ========================================================= -->
+<!-- ШПАРГАЛКА -->
+<!-- ========================================================= -->
+<h2 id="cheat">📎 Финальная шпаргалка</h2>
+
+<h3>Ординалы</h3>
+<ul>
+  <li><code>1+ω=ω</code>, <code>ω+1≠ω</code>; <code>2·ω=ω</code>, <code>ω·2≠ω</code>.</li>
+  <li>Поглощение: меньшая степень <em>слева</em> от большей исчезает.</li>
+  <li>Левая дистрибутивность работает, правая — нет.</li>
+  <li><code>(ω+k)·ω = ω²</code>; <code>α·ω</code> поднимает старшую степень α на +1.</li>
+  <li>НФК: степени ω убывают слева направо.</li>
+</ul>
+
+<h3>Запись формулой</h3>
+<ul>
+  <li>«каждый P есть Q» → <code>∀x(P→Q)</code> (импликация, не конъюнкция!).</li>
+  <li>«есть P, который Q» → <code>∃x(P∧Q)</code> (конъюнкция, не импликация!).</li>
+  <li>«ровно один» → <code>∃x(φ(x) ∧ ∀y(φ(y)→y=x))</code>.</li>
+  <li>«больше» при наличии только <code>&lt;</code> → меняй аргументы; <code>≤</code> → <code>(&lt;∨=)</code>.</li>
+  <li>Порядок кванторов меняет смысл: <code>∀∃ ≠ ∃∀</code>.</li>
+</ul>
+
+<h3>Значение в модели</h3>
+<ul>
+  <li><code>∀</code> = И по всем (один ноль рушит); <code>∃</code> = ИЛИ по всем (одна единица спасает).</li>
+  <li>Сворачивай изнутри наружу, строй таблицу всех наборов.</li>
+</ul>
+
+<h3>Дерево истинности</h3>
+<ul>
+  <li>Посылки = И, заключение = Л.</li>
+  <li>α (не ветвит): <code>∧И, ¬∨, ¬→, ¬¬</code>. β (ветвит): <code>∨И, →И, ¬∧</code>.</li>
+  <li>δ свежая константа (<code>∃И, ∀Л</code>); γ любая существующая (<code>∀И, ∃Л</code>). Сначала δ!</li>
+  <li>Все ветви ✗ → теорема. Открыта ○ → контрпример (выпиши модель).</li>
+</ul>
+
+<footer>
+  Тренажёр по второй половине курса. Ординальные вычисления сверены с правилами Кантора;
+  деревья проверены на замыкание/открытость ветвей.<br>
+  Решай с закрытыми спойлерами — так это работает.
+</footer>
+
+</div>
+</body>
+</html>

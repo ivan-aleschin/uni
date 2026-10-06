@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Матлогика · Часть VI — Теория алгоритмов (36–42)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root{
+    --navy:#1e466e; --navy2:#2c5d92; --ink:#1e2a3a; --muted:#5b6e8c;
+    --line:#cbd5e1; --bg:#f5f7fb; --side:#0f2440; --side2:#16335a;
+    --gold:#f4c430; --indigo:#4f46e5;
+  }
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family:'Segoe UI','Georgia',serif; background:var(--bg); color:var(--ink);
+    line-height:1.62;
+  }
+  /* ---------- progress bar ---------- */
+  #progress{ position:fixed; top:0; left:0; height:4px; width:0;
+    background:linear-gradient(90deg,#2c5d92,#4f46e5); z-index:60; transition:width .08s linear; }
+
+  /* ---------- layout ---------- */
+  .layout{ display:grid; grid-template-columns:286px minmax(0,1fr);
+    max-width:1500px; margin:0 auto; }
+  .content{ padding:2.2rem 2.6rem 5rem; min-width:0; }
+
+  /* ---------- sidebar ---------- */
+  .sidebar{ position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto;
+    background:var(--side); color:#c7d6ea; padding:1.1rem .8rem 2rem; }
+  .sidebar::-webkit-scrollbar{ width:8px; }
+  .sidebar::-webkit-scrollbar-thumb{ background:#2c456b; border-radius:8px; }
+  .side-title{ color:#fff; font-size:1.02rem; font-weight:700; padding:.3rem .6rem .1rem; letter-spacing:.2px; }
+  .side-sub{ color:#7d9bc4; font-size:.72rem; padding:0 .6rem .8rem; }
+  .side-group{ color:#6f93c2; font-size:.7rem; text-transform:uppercase; letter-spacing:1px;
+    margin:1rem .6rem .3rem; font-weight:700; }
+  .sidebar a{ display:block; color:#bcd0ea; text-decoration:none; font-size:.83rem;
+    padding:.34rem .6rem; border-radius:7px; border-left:3px solid transparent; line-height:1.3; }
+  .sidebar a:hover{ background:rgba(255,255,255,.07); color:#fff; }
+  .sidebar a.active{ background:var(--navy2); color:#fff; border-left-color:var(--gold); font-weight:600; }
+  .sidebar a .n{ display:inline-block; min-width:1.5em; color:#7d9bc4; font-weight:700; }
+  .sidebar a.active .n{ color:#fff; }
+  .side-star{ background:#23304a; border:1px solid #3a4d72; border-radius:9px; margin:.2rem .4rem 0;
+    padding:.1rem; }
+  .side-star a{ font-weight:700; color:var(--gold); }
+  .side-star a .n{ color:var(--gold); }
+  .side-star a:hover{ background:rgba(244,196,48,.12); }
+
+  /* ---------- mobile toggle ---------- */
+  #menu-btn{ display:none; position:fixed; right:16px; bottom:16px; z-index:55;
+    background:var(--navy); color:#fff; border:none; border-radius:50%;
+    width:54px; height:54px; font-size:1.4rem; box-shadow:0 6px 18px rgba(0,0,0,.25); cursor:pointer; }
+  #overlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:50; }
+
+  /* ---------- typography ---------- */
+  h1{ font-size:1.8rem; font-weight:700; color:var(--navy);
+    border-left:6px solid var(--navy); padding-left:1rem; margin-bottom:.3rem; }
+  .subtitle{ color:var(--muted); margin-bottom:1.4rem; padding-left:1.2rem; font-size:.97rem; }
+  h2.part{ font-size:1.45rem; color:#fff; background:var(--navy);
+    padding:.65rem 1.1rem; border-radius:12px; margin:2.4rem 0 1.2rem; scroll-margin-top:14px;
+    box-shadow:0 4px 14px rgba(30,70,110,.22); }
+  h2.part span{ opacity:.7; font-weight:400; font-size:.95rem; }
+  .ticket{ background:#fff; border:1px solid #e3e9f1; border-radius:16px;
+    padding:1.2rem 1.4rem 1.4rem; margin:1.1rem 0; box-shadow:0 4px 16px rgba(20,40,70,.05);
+    scroll-margin-top:14px; }
+  .ticket-head{ display:flex; align-items:flex-start; gap:.7rem; margin-bottom:.5rem; }
+  .num{ flex:0 0 auto; background:var(--navy); color:#fff; font-weight:700;
+    min-width:2rem; height:2rem; padding:0 .45rem; border-radius:8px;
+    display:flex; align-items:center; justify-content:center; font-size:.95rem; }
+  .ticket-head h3{ font-size:1.12rem; color:var(--navy); line-height:1.35; padding-top:.15rem; }
+  h4{ font-size:1rem; color:#2c3e66; margin:1rem 0 .35rem; }
+  p{ margin:.5rem 0; }
+  ul,ol{ margin:.45rem 0 .55rem 1.5rem; }
+  li{ margin:.3rem 0; }
+  code{ font-family:'Courier New',monospace; background:#eef2f7; padding:.08rem .34rem;
+    border-radius:5px; font-size:.9em; }
+
+  /* ---------- callout boxes ---------- */
+  .box{ border-radius:11px; padding:.7rem 1.05rem; margin:.75rem 0; font-size:.95rem; }
+  .box .lab{ display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.6px;
+    font-weight:700; margin-bottom:.25rem; opacity:.85; }
+  .def{ background:#eef0ff; border-left:4px solid var(--indigo); }
+  .def .lab{ color:#3f37c9; }
+  .idea{ background:#fffdf5; border-left:4px solid #d9b441; }
+  .idea .lab{ color:#92670c; }
+  .intu{ background:#eef6fb; border-left:4px solid #2c8fd4; }
+  .intu .lab{ color:#1d6fa5; }
+  .warn{ background:#fef2f2; border-left:4px solid #ef4444; }
+  .warn .lab{ color:#b91c1c; }
+  .good{ background:#ecfdf5; border-left:4px solid #10b981; }
+  .good .lab{ color:#047857; }
+
+  .formula{ font-family:'Cambria Math','Georgia',serif; font-size:1.1rem; text-align:center;
+    background:#f8fafc; padding:.6rem .7rem; border-radius:10px; margin:.7rem 0;
+    border:1px solid #e2e8f0; overflow-x:auto; }
+  .f{ font-family:'Cambria Math','Georgia',serif; }
+
+  .proof{ background:#fcfbf3; border:1px solid #e9e5c3; border-radius:11px;
+    padding:.9rem 1.1rem; font-family:'Courier New',monospace; font-size:.86rem;
+    overflow-x:auto; margin:.8rem 0; white-space:pre-wrap; line-height:1.5; }
+
+  table{ border-collapse:collapse; margin:.8rem 0; width:100%; font-size:.9rem; }
+  th,td{ border:1px solid var(--line); padding:.42rem .6rem; text-align:left; vertical-align:top; }
+  th{ background:#e8eef6; color:var(--navy); }
+  td.c,th.c{ text-align:center; }
+
+  hr{ margin:1.3rem 0; border:none; border-top:1px dashed #d3dceb; }
+  .tag{ display:inline-block; background:#e8eef6; color:var(--navy); font-size:.74rem;
+    font-weight:600; padding:.12rem .55rem; border-radius:20px; margin-left:.4rem; vertical-align:middle; }
+  footer{ text-align:center; margin-top:3rem; padding-top:1.2rem; border-top:1px solid #dbe3ef;
+    font-size:.82rem; color:var(--muted); }
+
+  /* cheat sheet */
+  #shpora{ border:2px solid var(--gold); background:linear-gradient(180deg,#fffdf3,#fff); }
+  #shpora .ticket-head h3{ color:#8a6a00; }
+  #shpora .num{ background:var(--gold); color:#3a2c00; }
+  .mini-def{ margin:.55rem 0; padding-left:.2rem; }
+  .mini-def b{ color:var(--navy); }
+
+  @media (max-width:960px){
+    .layout{ grid-template-columns:1fr; }
+    .sidebar{ position:fixed; top:0; left:0; width:300px; max-width:84vw; z-index:51;
+      transform:translateX(-100%); transition:transform .25s ease; box-shadow:4px 0 24px rgba(0,0,0,.3); }
+    .sidebar.open{ transform:translateX(0); }
+    #menu-btn{ display:block; }
+    .content{ padding:1.4rem 1.1rem 4rem; }
+    .ticket{ padding:1rem 1rem 1.1rem; }
+  }
+
+  /* ---------- file switcher ---------- */
+  .file-nav{ display:flex; flex-wrap:wrap; gap:.3rem; margin:.2rem .4rem .6rem; }
+  .file-nav .fn{ flex:1 1 44%; display:flex; align-items:center; gap:.3rem;
+    font-size:.74rem; color:#bcd0ea; text-decoration:none; background:#16243f;
+    border:1px solid #294063; border-radius:8px; padding:.3rem .45rem; line-height:1.15; }
+  .file-nav .fn:hover{ background:#1d3252; color:#fff; }
+  .file-nav .fn.active{ background:var(--navy2); color:#fff; border-color:var(--gold); }
+  .file-nav .fk{ background:#0f2440; color:#9fc0ea; font-weight:700; border-radius:5px;
+    min-width:1.1rem; text-align:center; font-size:.72rem; padding:0 .15rem; }
+  .file-nav .fn.active .fk{ color:var(--gold); }
+  .plan-link{ display:block; }
+  .sidebar a.cross{ opacity:.82; }
+  .sidebar a.cross::after{ content:"↗"; float:right; color:#6f93c2; font-size:.7rem; padding-left:.3rem; }
+  .sidebar a.cross:hover::after{ color:#cfe0f5; }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="overlay"></div>
+<button id="menu-btn" aria-label="Оглавление">☰</button>
+
+<div class="layout">
+
+  <nav class="sidebar" id="sidebar">
+    <div class="side-title">Матлогика · экзамен</div>
+    <div class="side-sub">42 билета · 5 файлов · разбор и интуиция</div>
+    <div class="file-nav">
+      <a class="fn" href="01-ischislenie.html"><span class="fk">1</span>I · ИВ</a>
+      <a class="fn" href="02-moshchnosti.html"><span class="fk">2</span>II · Мощности</a>
+      <a class="fn" href="03-poryadki-chisla.html"><span class="fk">3</span>III–IV · Числа</a>
+      <a class="fn" href="04-predikaty-modeli.html"><span class="fk">4</span>V · Предикаты</a>
+      <a class="fn active" href="#"><span class="fk">5</span>VI · Алгоритмы</a>
+    </div>
+    <div class="side-star"><a href="01-ischislenie.html#shpora"><span class="n">★</span>Шпаргалка-минимум (10 определений)</a></div>
+    <a class="plan-link" href="01-ischislenie.html#plan"><span class="n">⏱</span>План на 1 день</a>
+    <div class="side-group">I · Исчисление высказываний</div>
+    <a class="tlink cross" href="01-ischislenie.html#b1"><span class="n">1</span>Формулы. Единственность разбора</a>
+    <a class="tlink cross" href="01-ischislenie.html#b2"><span class="n">2</span>Правила вывода. Секвенции</a>
+    <a class="tlink cross" href="01-ischislenie.html#b3"><span class="n">3</span>Секвенции φ∧¬φ⊢, ⊢φ∨¬φ</a>
+    <a class="tlink cross" href="01-ischislenie.html#b4"><span class="n">4</span>Интерпретация. Тавтологии</a>
+    <a class="tlink cross" href="01-ischislenie.html#b5"><span class="n">5</span>Непротиворечивость ИВ</a>
+    <a class="tlink cross" href="01-ischislenie.html#b6"><span class="n">6</span>Лемма Линденбаума</a>
+    <a class="tlink cross" href="01-ischislenie.html#b7"><span class="n">7</span>Свойства макс. непрот. мн-ва</a>
+    <a class="tlink cross" href="01-ischislenie.html#b8"><span class="n">8</span>Полнота ИВ</a>
+    <a class="tlink cross" href="01-ischislenie.html#b9"><span class="n">9</span>Интуиционизм</a>
+    <a class="tlink cross" href="01-ischislenie.html#b10"><span class="n">10</span>Интуиц. ИВ. Недоказ. ИТ</a>
+    <div class="side-group">II · Мощности множеств</div>
+    <a class="tlink cross" href="02-moshchnosti.html#b11"><span class="n">11</span>Равномощность</a>
+    <a class="tlink cross" href="02-moshchnosti.html#b12"><span class="n">12</span>Кантора–Шрёдера–Бернштейна</a>
+    <a class="tlink cross" href="02-moshchnosti.html#b13"><span class="n">13</span>Счётные множества</a>
+    <a class="tlink cross" href="02-moshchnosti.html#b14"><span class="n">14</span>Континуум</a>
+    <a class="tlink cross" href="02-moshchnosti.html#b15"><span class="n">15</span>Счётное vs континуум</a>
+    <a class="tlink cross" href="02-moshchnosti.html#b16"><span class="n">16</span>Теорема Кантора (P(X))</a>
+    <a class="tlink cross" href="02-moshchnosti.html#b17"><span class="n">17</span>(X^Y)^Z ≅ X^(Y×Z)</a>
+    <div class="side-group">III · Порядки, выбор, числа</div>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b18"><span class="n">18</span>Вполне упорядоченные мн-ва</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b19"><span class="n">19</span>Аксиома выбора. Цермело</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b20"><span class="n">20</span>Лемма Цорна</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b21"><span class="n">21</span>Ординалы</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b22"><span class="n">22</span>Кардиналы</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b23"><span class="n">23</span>𝔪+𝔪=𝔪</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b24"><span class="n">24</span>Мощность A×A</a>
+    <div class="side-group">IV · Аксиоматики чисел</div>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b25"><span class="n">25</span>Аксиомы Пеано. Коммут. +</a>
+    <a class="tlink cross" href="03-poryadki-chisla.html#b26"><span class="n">26</span>Аксиомы ℝ</a>
+    <div class="side-group">V · Логика предикатов и модели</div>
+    <a class="tlink cross" href="04-predikaty-modeli.html#b27"><span class="n">27</span>Модель. Сигнатура. Термы</a>
+    <a class="tlink cross" href="04-predikaty-modeli.html#b28"><span class="n">28</span>Истинность на модели</a>
+    <a class="tlink cross" href="04-predikaty-modeli.html#b29"><span class="n">29</span>Элиминация кванторов</a>
+    <a class="tlink cross" href="04-predikaty-modeli.html#b30"><span class="n">30</span>Выразимость. Автоморфизмы</a>
+    <a class="tlink cross" href="04-predikaty-modeli.html#b31"><span class="n">31</span>Фильтры и ультрафильтры</a>
+    <a class="tlink cross" href="04-predikaty-modeli.html#b32"><span class="n">32</span>Центрированные системы</a>
+    <a class="tlink cross" href="04-predikaty-modeli.html#b33"><span class="n">33</span>Ультрапроизведение</a>
+    <a class="tlink cross" href="04-predikaty-modeli.html#b34"><span class="n">34</span>Теорема Лося</a>
+    <a class="tlink cross" href="04-predikaty-modeli.html#b35"><span class="n">35</span>Гёделя–Мальцева (компактность)</a>
+    <div class="side-group">VI · Теория алгоритмов</div>
+    <a class="tlink" href="#b36"><span class="n">36</span>Машины Тьюринга. Тезис Чёрча</a>
+    <a class="tlink" href="#b37"><span class="n">37</span>Суперпозиция и прим. рекурсия</a>
+    <a class="tlink" href="#b38"><span class="n">38</span>Минимизация. Рекурс. функции</a>
+    <a class="tlink" href="#b39"><span class="n">39</span>Разрешимые и перечислимые</a>
+    <a class="tlink" href="#b40"><span class="n">40</span>Универсальные функции</a>
+    <a class="tlink" href="#b41"><span class="n">41</span>Перечисл. неразрешимое мн-во</a>
+    <a class="tlink" href="#b42"><span class="n">42</span>Проблема остановки</a>
+  </nav>
+
+  <main class="content">
+
+  <h1>Матлогика · Часть VI — Теория алгоритмов (36–42)</h1>
+  <p class="subtitle">Строгое определение → идея доказательства → объяснение «на пальцах» → типичные ловушки. Слева — оглавление по всем 5 файлам: текущий файл листается мгновенно, билеты других файлов (со стрелкой&nbsp;↗) открываются в своём файле. Файлы держите в одной папке.</p>
+
+  <h2 class="part" id="part6">Часть VI · Теория алгоритмов <span>(билеты 36–42)</span></h2>
+    <!-- Б36 -->
+  <article class="ticket" id="b36">
+    <div class="ticket-head"><span class="num">36</span><h3>Машины Тьюринга. Вычислимые функции. Тезис Чёрча.</h3></div>
+
+    <div class="box def"><span class="lab">машина Тьюринга</span>
+      <span class="f">M=⟨Q, Γ, δ, q<sub>0</sub>, F⟩</span>: конечное множество состояний <span class="f">Q</span>, ленточный алфавит <span class="f">Γ</span> (с пустым символом), функция перехода <span class="f">δ:Q×Γ→Q×Γ×{L,R}</span>, начальное <span class="f">q<sub>0</sub></span> и заключительные <span class="f">F</span>. Лента бесконечна; головка читает символ, пишет новый, сдвигается влево/вправо и меняет состояние по <span class="f">δ</span>.
+    </div>
+
+    <div class="box def"><span class="lab">вычислимая функция</span>
+      Частичная функция <span class="f">f:ℕ<sup>k</sup>→ℕ</span> <b>вычислима</b>, если существует МТ, которая на (кодированном) входе <span class="f">x̄</span> <i>останавливается</i> с <span class="f">f(x̄)</span> на ленте, когда <span class="f">f(x̄)</span> определено, и <i>не останавливается</i>, когда не определено.
+    </div>
+
+    <div class="box good"><span class="lab">тезис Чёрча–Тьюринга</span>
+      «Интуитивно вычислимое = вычислимое на машине Тьюринга» (= λ-определимое = частично рекурсивное, б.38). Это <b>тезис</b>, а не теорема: он связывает неформальное понятие «алгоритм» с формальным и подтверждается совпадением всех предложенных формализаций.
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      МТ — предельно примитивный «компьютер»: бесконечная клетчатая лента и крошечная инструкция «что делать, видя символ в состоянии». Тезис Чёрча утверждает, что эта примитивность <i>не теряет общности</i>: всё, что вообще можно вычислить алгоритмом, считается уже и на МТ.
+    </div>
+  </article>
+
+  <!-- Б37 -->
+  <article class="ticket" id="b37">
+    <div class="ticket-head"><span class="num">37</span><h3>Суперпозиция и примитивная рекурсия. Примитивно рекурсивные функции.</h3></div>
+
+    <div class="box def"><span class="lab">базовые функции</span>
+      Нуль <span class="f">O(x̄)=0</span>, следование <span class="f">S(x)=x+1</span>, проекции <span class="f">I<sup>n</sup><sub>k</sub>(x<sub>1</sub>,…,x<sub>n</sub>)=x<sub>k</sub></span>.
+    </div>
+
+    <div class="box def"><span class="lab">операторы</span>
+      <b>Суперпозиция (композиция):</b>
+      <div class="formula">h(x̄) = f(g<sub>1</sub>(x̄),…,g<sub>m</sub>(x̄)).</div>
+      <b>Примитивная рекурсия:</b>
+      <div class="formula">f(x̄,0)=g(x̄), &nbsp; f(x̄,y+1)=h(x̄,y,f(x̄,y)).</div>
+      <b>ПРФ</b> — наименьший класс, содержащий базовые и замкнутый под этими двумя операторами.
+    </div>
+
+    <div class="box good"><span class="lab">свойства и примеры</span>
+      Все ПРФ <b>всюду определены</b> и вычислимы. Примеры: <span class="f">x+y</span>, <span class="f">x·y</span>, <span class="f">x<sup>y</sup></span>, <span class="f">x!</span>, <span class="f">sg(x)</span>, ограниченные суммы/произведения, характеристические функции <span class="f">=,&lt;</span>. Класс замкнут относительно определения по случаям и ограниченных кванторов.
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      ПРФ — это «программы только с циклами <code>for</code>»: число итераций известно заранее (рекурсия по последнему аргументу = цикл «повторить <span class="f">y</span> раз»). Поэтому они никогда не зацикливаются и всегда дают ответ. Чего им не хватает — цикла <code>while</code> с неизвестным числом шагов (б.38).
+    </div>
+  </article>
+
+  <!-- Б38 -->
+  <article class="ticket" id="b38">
+    <div class="ticket-head"><span class="num">38</span><h3>Минимизация. Частично рекурсивные функции. Функция Аккермана.</h3></div>
+
+    <div class="box def"><span class="lab">μ-оператор (минимизация)</span>
+      <div class="formula">f(x̄) = μy[ g(x̄,y)=0 ]</div>
+      — наименьший <span class="f">y</span>, при котором <span class="f">g(x̄,y)=0</span> (и <span class="f">g(x̄,y′)</span> определено для всех <span class="f">y′&lt;y</span>); если такого <span class="f">y</span> нет, <span class="f">f(x̄)</span> не определено.
+    </div>
+
+    <div class="box def"><span class="lab">классы функций</span>
+      <b>Частично рекурсивные функции (ЧРФ)</b> — замыкание базовых под суперпозицией, примитивной рекурсией <i>и минимизацией</i>. <b>Общерекурсивные</b> — всюду определённые ЧРФ. <b>Теорема (Тьюринг–Чёрч–Клини):</b> ЧРФ = функции, вычислимые на МТ.
+    </div>
+
+    <div class="box good"><span class="lab">функция Аккермана</span>
+      Двойная рекурсия <span class="f">A(0,n)=n+1</span>, <span class="f">A(m+1,0)=A(m,1)</span>, <span class="f">A(m+1,n+1)=A(m,A(m+1,n))</span> — <b>всюду определена и вычислима, но не примитивно рекурсивна</b> (растёт быстрее любой ПРФ). Это доказывает: <span class="f">ПРФ ⊊ общерекурсивные</span> — минимизация (<code>while</code>) действительно расширяет класс.
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      <span class="f">μ</span> — это цикл <code>while (g≠0) y++;</code>: ищем подходящий <span class="f">y</span>, не зная заранее, найдём ли. Отсюда и <b>частичность</b>: поиск может не закончиться. Аккерман показывает, что без такого «неограниченного поиска» некоторые вполне законные функции не построить.
+    </div>
+  </article>
+
+  <!-- Б39 -->
+  <article class="ticket" id="b39">
+    <div class="ticket-head"><span class="num">39</span><h3>Разрешимые и перечислимые множества. Теорема Поста.</h3></div>
+
+    <div class="box def"><span class="lab">определения</span>
+      <span class="f">A⊆ℕ</span> <b>разрешимо (рекурсивно)</b>, если вычислима его характеристическая функция <span class="f">χ<sub>A</sub></span>. <span class="f">A</span> <b>перечислимо (р.п.)</b>, если выполнено одно из эквивалентных условий: <span class="f">A=∅</span> или <span class="f">A</span> — область значений вычислимой функции; <span class="f">A</span> — область определения вычислимой функции; <span class="f">A</span> <b>полуразрешимо</b> (есть алгоритм, останавливающийся <i>тогда и только тогда</i>, когда <span class="f">x∈A</span>).
+    </div>
+
+    <div class="box idea"><span class="lab">теорема Поста</span>
+      <span class="f">A</span> разрешимо <b>⟺</b> и <span class="f">A</span>, и его дополнение <span class="f">A̅</span> перечислимы. <b>«⟸»:</b> запускаем параллельно (с чередованием шагов) полуразрешающие алгоритмы для <span class="f">A</span> и для <span class="f">A̅</span>; ровно один из них остановится — он и даёт ответ «да/нет» за конечное время. <b>«⟹»:</b> разрешимое тривиально полуразрешимо, как и его дополнение. ∎
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      <b>Перечислимое</b> — «да»-ответ можно <i>подтвердить</i> за конечное время (дождавшись остановки), но «нет»-ответ можно ждать вечно. <b>Разрешимое</b> — подтверждаемы оба ответа. Пост: если умеешь подтверждать и «да», и «нет» — умеешь и решать (запусти обе проверки наперегонки).
+    </div>
+  </article>
+
+  <!-- Б40 -->
+  <article class="ticket" id="b40">
+    <div class="ticket-head"><span class="num">40</span><h3>Универсальные функции. Теорема о s-m-n.</h3></div>
+
+    <div class="box def"><span class="lab">нумерация и универсальная функция</span>
+      Зафиксируем эффективную нумерацию программ (МТ); <span class="f">φ<sub>e</sub></span> — частичная функция, вычисляемая <span class="f">e</span>-й машиной. <b>Универсальная функция</b>
+      <div class="formula">U(e,x) = φ<sub>e</sub>(x)</div>
+      сама <b>вычислима</b> — её считает <b>универсальная машина Тьюринга</b> (интерпретатор: по коду <span class="f">e</span> симулирует работу <span class="f">e</span>-й машины на <span class="f">x</span>).
+    </div>
+
+    <div class="box def"><span class="lab">теорема s-m-n</span>
+      Существует примитивно рекурсивная функция <span class="f">s</span>, такая что
+      <div class="formula">φ<sub>s(e,y)</sub>(x) = φ<sub>e</sub>(y,x).</div>
+      То есть часть входа можно «зашить» в код программы, эффективно получив новый код.
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      Универсальная функция — это <b>один интерпретатор для всех программ</b> (как виртуальная машина, исполняющая чужой код). Теорема s-m-n — «частичное применение»/каррирование на уровне программ: можно заранее подставить аргумент <span class="f">y</span> и автоматически получить специализированную программу. Эти два факта — фундамент всей теории вычислимости.
+    </div>
+  </article>
+
+  <!-- Б41 -->
+  <article class="ticket" id="b41">
+    <div class="ticket-head"><span class="num">41</span><h3>Существование перечислимого неразрешимого множества.</h3></div>
+
+    <div class="box def"><span class="lab">множество K</span>
+      <div class="formula">K = { e : φ<sub>e</sub>(e)↓ }</div>
+      — коды программ, останавливающихся на собственном коде.
+    </div>
+
+    <div class="box idea"><span class="lab">K перечислимо, но неразрешимо</span>
+      <b>Перечислимо:</b> универсальной машиной (б.40) симулируем <span class="f">φ<sub>e</sub>(e)</span>; если остановилась — <span class="f">e∈K</span>. Это полуразрешение.<br>
+      <b>Неразрешимо (диагональ):</b> допустим, <span class="f">χ<sub>K</sub></span> вычислима. Определим
+      <div class="formula">f(e) = ↑ (зацикливается), если e∈K; &nbsp; f(e)=0, если e∉K.</div>
+      <span class="f">f</span> вычислима, значит <span class="f">f=φ<sub>e<sub>0</sub></sub></span> для некоторого <span class="f">e<sub>0</sub></span>. Тогда
+      <div class="formula">e<sub>0</sub>∈K ⟺ φ<sub>e<sub>0</sub></sub>(e<sub>0</sub>)↓ ⟺ f(e<sub>0</sub>)↓ ⟺ e<sub>0</sub>∉K</div>
+      — противоречие. Значит <span class="f">χ<sub>K</sub></span> невычислима. ∎
+    </div>
+
+    <div class="box good"><span class="lab">следствие</span>
+      Дополнение <span class="f">K̅</span> <b>не перечислимо</b> (иначе по теореме Поста <span class="f">K</span> было бы разрешимо). Так разрешимое <span class="f">⊊</span> перечислимое: есть р.п. множества, которые не разрешить.
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      Тот же диагональный приём Кантора (как у «<span class="f">|X|&lt;|𝒫(X)|</span>», б.16), но применённый к <i>программам</i>: строим функцию, которая на каждом коде «делает наоборот» предполагаемого решателя — и она же где-то обязана встретить саму себя, что и рушит предположение.
+    </div>
+  </article>
+
+  <!-- Б42 -->
+  <article class="ticket" id="b42">
+    <div class="ticket-head"><span class="num">42</span><h3>Проблема остановки. Теорема Райса.</h3></div>
+
+    <div class="box def"><span class="lab">проблема остановки</span>
+      <div class="formula">HALT = { (e,x) : φ<sub>e</sub>(x)↓ }</div>
+      — «остановится ли программа <span class="f">e</span> на входе <span class="f">x</span>». <b>Утверждение:</b> HALT неразрешима.
+    </div>
+
+    <div class="box idea"><span class="lab">доказательство (сведение K к HALT)</span>
+      <span class="f">e∈K ⟺ φ<sub>e</sub>(e)↓ ⟺ (e,e)∈HALT</span>. Если бы HALT была разрешима, то и <span class="f">K</span> разрешалось бы (подставляя <span class="f">x=e</span>) — противоречие с б.41. Значит HALT неразрешима. ∎
+    </div>
+
+    <div class="box good"><span class="lab">теорема Райса</span>
+      Любое <b>нетривиальное</b> свойство вычислимых функций (зависящее только от вычисляемой функции, а не от текста программы; нетривиальное = выполнено не для всех и не ни для кого) — <b>неразрешимо</b>. Например, нельзя алгоритмически проверить «<span class="f">φ<sub>e</sub></span> всюду определена», «<span class="f">φ<sub>e</sub>≡0</span>», «<span class="f">φ<sub>e</sub></span> вычисляет данную функцию».
+    </div>
+
+    <div class="box intu"><span class="lab">на пальцах</span>
+      Фундаментальный предел: <b>по коду программы нельзя алгоритмически предсказать её поведение</b>. Остановка — простейший такой вопрос, и уже он неразрешим; Райс обобщает: <i>любое</i> содержательное свойство «что программа делает» алгоритмически непроверяемо. Единственный общий способ узнать — запустить и ждать (а ждать, возможно, придётся вечно).
+    </div>
+  </article>
+
+  <footer>Подготовка к экзамену по математической логике · 42 билета + шпаргалка · материал разбит на 5 связанных файлов для удобной навигации и заучивания за один день.</footer>
+  </main>
+</div>
+
+<script>
+(function(){
+  var prog=document.getElementById('progress');
+  var sidebar=document.getElementById('sidebar');
+  var btn=document.getElementById('menu-btn');
+  var overlay=document.getElementById('overlay');
+  // progress bar
+  function onScroll(){
+    var h=document.documentElement;
+    var max=(h.scrollHeight-h.clientHeight)||1;
+    prog.style.width=(100*h.scrollTop/max)+'%';
+  }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+  // mobile menu
+  function close(){ sidebar.classList.remove('open'); overlay.style.display='none'; }
+  if(btn){ btn.addEventListener('click',function(){
+      var open=sidebar.classList.toggle('open');
+      overlay.style.display=open?'block':'none'; }); }
+  if(overlay){ overlay.addEventListener('click',close); }
+  sidebar.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click',function(){ if(window.innerWidth<=960) close(); });
+  });
+  // scroll-spy (only same-file anchors: href starts with '#')
+  var map={};
+  sidebar.querySelectorAll('a[href^="#"]').forEach(function(a){
+    var id=a.getAttribute('href').slice(1); if(id) map[id]=a;
+  });
+  var targets=[];
+  Object.keys(map).forEach(function(id){
+    var el=document.getElementById(id); if(el) targets.push(el);
+  });
+  var current=null;
+  function spy(){
+    var best=null, bestTop=-1e9, line=120;
+    targets.forEach(function(el){
+      var t=el.getBoundingClientRect().top;
+      if(t-line<=0 && t>bestTop){ bestTop=t; best=el; }
+    });
+    if(best && best.id!==current){
+      if(current && map[current]) map[current].classList.remove('active');
+      current=best.id; map[current].classList.add('active');
+      var link=map[current];
+      var r=link.getBoundingClientRect(), sr=sidebar.getBoundingClientRect();
+      if(r.top<sr.top||r.bottom>sr.bottom) link.scrollIntoView({block:'center'});
+    }
+  }
+  window.addEventListener('scroll',spy,{passive:true});
+  window.addEventListener('resize',spy); spy();
+})();
+</script>
+</body>
+</html>
