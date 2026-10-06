@@ -22,6 +22,7 @@
 | [`otik`](./otik)                                       | Теория информации и кодирования (конспекты)                   |
 | [`parallel-programming`](./parallel-programming)       | Параллельное программирование                                 |
 | [`project-management`](./project-management)           | Основы управления проектами                                   |
+| [`russian-history`](./russian-history)                 | История России (доклады-презентации)                          |
 | [`software-architecture`](./software-architecture)     | Проектирование и архитектура программных систем               |
 | [`software-design`](./software-design)                 | Проектирование программного обеспечения                       |
 | [`software-quality`](./software-quality)               | Управление качеством программного обеспечения                 |
