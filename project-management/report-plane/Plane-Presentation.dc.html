@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+body{margin:0;background:#F2F4F7}
+a{color:#3F76FF;text-decoration:none}
+a:hover{color:#2B5BD7}
+</style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Титул" data-screen-label="01 Титул" data-speaker-notes="Здравствуйте. Тема моего доклада — информационные технологии в управлении проектами. Я выбрал систему Plane. Это открытая система для планирования и контроля работы команды: задачи, спринты, документация и отчёты в одном месте. Я расскажу, для чего она нужна, что умеет, какие функции и процессы управления проектом с ней можно автоматизировать, сколько она стоит, и в конце — плюсы и минусы." style="width:1920px;height:1080px;box-sizing:border-box;background:#FFFFFF;padding:80px 96px;display:flex;flex-direction:column;font-family:Onest,system-ui,sans-serif;color:#171A1F">
+  <div style="display:flex;align-items:center;gap:20px;font-size:26px;color:#60646C">
+    <span style="font-weight:600;color:#171A1F">Основы управления проектами</span>
+  </div>
+  <div style="margin:auto 0;display:flex;flex-direction:column;gap:36px">
+    <div style="font-size:34px;font-weight:500;color:#3F76FF">Информационные технологии в управлении проектами</div>
+    <h1 style="margin:0;font-size:150px;line-height:1;font-weight:800;letter-spacing:-0.035em">Plane</h1>
+    <div style="font-size:48px;line-height:1.25;font-weight:500;color:#3A3F47;max-width:24em;text-wrap:pretty">Открытая система управления проектами: назначение, функции, процессы и условия использования</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;border-top:1px solid #E4E7EC;padding-top:40px">
+    <div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:24px;color:#60646C">Выполнил</span><span style="font-size:36px;font-weight:600">Алешин Иван Кириллович</span></div>
+    <div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:24px;color:#60646C">Группа</span><span style="font-size:36px;font-weight:600">ПИН-41</span></div>
+  </div>
+</section>
+
+<section data-label="Назначение и специфика" data-screen-label="02 Назначение и специфика" data-speaker-notes="Plane — это система, в которой команда планирует работу и следит за её выполнением. Её часто называют открытой заменой Jira. Внутри три части: проекты с задачами, документация в виде вики и помощник на основе ИИ. Главная особенность — открытый код: систему можно поставить на свой сервер или даже в сеть без интернета, поэтому данные не уходят к стороннему сервису. Вторая особенность — функции включаются постепенно: сначала только задачи, а спринты, модули и автоматизации команда подключает, когда нужно. Применяют Plane в первую очередь в разработке программ, но также в дизайне, маркетинге и операционной работе. По данным разработчика, им пользуются более 50 тысяч команд." style="width:1920px;height:1080px;box-sizing:border-box;background:#FFFFFF;padding:80px 96px;display:flex;flex-direction:column;font-family:Onest,system-ui,sans-serif;color:#171A1F">
+  <div style="display:flex;align-items:center;gap:20px;font-size:24px;color:#60646C;margin-bottom:36px"><span style="font-weight:700;color:#3F76FF">Plane</span><span style="flex:1;height:1px;background:#E4E7EC"></span><span style="font-family:'JetBrains Mono',monospace;font-weight:500">02</span></div>
+  <h2 style="margin:0 0 16px;font-size:72px;font-weight:800;letter-spacing:-0.025em">Назначение и специфика</h2>
+  <p style="margin:0 0 22px;font-size:29px;line-height:1.4;color:#3A3F47;max-width:40em;text-wrap:pretty">Система, в которой команда планирует работу, ведёт задачи и документацию и следит за сроками. Открытый аналог Jira</p>
+  <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:28px;min-height:0">
+    <div style="display:flex;flex-direction:column;gap:12px;min-height:0">
+      <span style="font-size:26px;font-weight:600;color:#60646C">Из чего состоит</span>
+      <div style="background:#F7F8FA;border:1px solid #E4E7EC;border-radius:20px;padding:16px 28px;display:flex;flex-direction:column;gap:4px"><span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#3F76FF">Work</span><span style="font-size:28px;font-weight:700">Проекты и задачи</span><span style="font-size:23px;line-height:1.35;color:#3A3F47">задачи, спринты, доски, диаграмма Ганта</span></div>
+      <div style="background:#F7F8FA;border:1px solid #E4E7EC;border-radius:20px;padding:16px 28px;display:flex;flex-direction:column;gap:4px"><span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#3F76FF">Wiki</span><span style="font-size:28px;font-weight:700">Документация (Wiki)</span><span style="font-size:23px;line-height:1.35;color:#3A3F47">страницы с требованиями и регламентами, связанные с задачами</span></div>
+      <div style="background:#F7F8FA;border:1px solid #E4E7EC;border-radius:20px;padding:16px 28px;display:flex;flex-direction:column;gap:4px"><span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#3F76FF">AI</span><span style="font-size:28px;font-weight:700">Помощник и агенты</span><span style="font-size:23px;line-height:1.35;color:#3A3F47">создание задач из текста, сводки, поиск отстающих задач</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;min-height:0">
+      <span style="font-size:26px;font-weight:600;color:#60646C">Чем отличается</span>
+      <div style="background:#3F76FF;color:#FFFFFF;border-radius:20px;padding:16px 28px;display:flex;flex-direction:column;gap:4px"><span style="font-size:28px;font-weight:700">Открытый код</span><span style="font-size:23px;line-height:1.35;">можно развернуть на своём сервере или в сети без интернета</span></div>
+      <div style="border:1px solid #E4E7EC;border-radius:20px;padding:16px 28px;display:flex;flex-direction:column;gap:4px"><span style="font-size:28px;font-weight:700">Функции по мере надобности</span><span style="font-size:23px;line-height:1.35;color:#3A3F47">лишнее выключено, команда включает то, что ей нужно</span></div>
+      <div style="border:1px solid #E4E7EC;border-radius:20px;padding:16px 28px;display:flex;flex-direction:column;gap:4px"><span style="font-size:28px;font-weight:700">ИИ-агенты как исполнители</span><span style="font-size:23px;line-height:1.35;color:#3A3F47">задачу можно поручить агенту, результат проверяет человек</span></div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px;margin-top:22px;flex-wrap:wrap">
+    <span style="font-size:25px;font-weight:600;margin-right:6px">Области применения</span>
+    <span style="padding:10px 22px;border-radius:999px;background:#EDF2FF;color:#2B5BD7;font-size:24px;font-weight:500">Разработка ПО</span><span style="padding:10px 22px;border-radius:999px;background:#EDF2FF;color:#2B5BD7;font-size:24px;font-weight:500">Продукт и дизайн</span><span style="padding:10px 22px;border-radius:999px;background:#EDF2FF;color:#2B5BD7;font-size:24px;font-weight:500">Маркетинг</span><span style="padding:10px 22px;border-radius:999px;background:#EDF2FF;color:#2B5BD7;font-size:24px;font-weight:500">Операционная работа</span><span style="padding:10px 22px;border-radius:999px;background:#EDF2FF;color:#2B5BD7;font-size:24px;font-weight:500">Госсектор и закрытые сети</span>
+  </div>
+</section>
+
+
+
+<section data-label="Структура" data-screen-label="03 Структура" data-speaker-notes="Как устроен Plane — сверху вниз, как матрёшка. Первый уровень — рабочее пространство: это вся компания или команда, обычно одно на организацию. Внутри него — проекты: отдельный продукт или большая цель. Внутри проекта — задачи, в Plane они называются work items. У каждой задачи есть номер, например WEB-12, название и статус. Крупную задачу можно разбить на подзадачи. Дальше задачи удобно раскладывать по группам: циклы — это спринты, то есть работа на 1–2 недели; модули — части продукта, например «оплата» или «авторизация»; вехи — контрольные даты проекта. А рядом с задачами лежит документация — страницы вики. На скриншоте — настройки проекта: каждую из этих функций можно включить или выключить." style="width:1920px;height:1080px;box-sizing:border-box;background:#FFFFFF;padding:80px 96px;display:flex;flex-direction:column;font-family:Onest,system-ui,sans-serif;color:#171A1F">
+  <div style="display:flex;align-items:center;gap:20px;font-size:24px;color:#60646C;margin-bottom:36px"><span style="font-weight:700;color:#3F76FF">Plane</span><span style="flex:1;height:1px;background:#E4E7EC"></span><span style="font-family:'JetBrains Mono',monospace;font-weight:500">03</span></div>
+  <h2 style="margin:0 0 12px;font-size:72px;font-weight:800;letter-spacing:-0.025em">Как устроен Plane</h2>
+  <p style="margin:0 0 22px;font-size:28px;color:#3A3F47">Сверху вниз: компания → проект → задача. Внутри проекта задачи раскладываются по группам</p>
+  <div style="flex:1;display:grid;grid-template-columns:0.9fr 1.1fr;gap:44px;min-height:0">
+    <div style="display:flex;flex-direction:column;gap:10px;min-height:0">
+      <div style="display:grid;grid-template-columns:56px minmax(0,1fr);gap:20px;align-items:center;background:#F7F8FA;border:1px solid #E4E7EC;border-radius:16px;padding:11px 24px"><span style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:#3F76FF">01</span><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:30px;font-weight:700;color:#171A1F">Рабочее пространство</span><span style="font-size:22px;line-height:1.3;color:#3A3F47">вся компания или команда</span></div></div>
+      <div style="display:grid;grid-template-columns:56px minmax(0,1fr);gap:20px;align-items:center;background:#F7F8FA;border:1px solid #E4E7EC;border-radius:16px;padding:11px 24px"><span style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:#3F76FF">02</span><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:30px;font-weight:700;color:#171A1F">Проект</span><span style="font-size:22px;line-height:1.3;color:#3A3F47">отдельный продукт или цель, например «Сайт магазина»</span></div></div>
+      <div style="display:grid;grid-template-columns:56px minmax(0,1fr);gap:20px;align-items:center;background:#EDF2FF;border:1px solid #C9D8FF;border-radius:16px;padding:11px 24px"><span style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:#3F76FF">03</span><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:30px;font-weight:700;color:#2B5BD7">Задача (work item)</span><span style="font-size:22px;line-height:1.3;color:#2B5BD7">номер WEB-12, название, статус, исполнитель, срок</span></div></div>
+      <div style="display:grid;grid-template-columns:56px minmax(0,1fr);gap:20px;align-items:center;background:#F7F8FA;border:1px solid #E4E7EC;border-radius:16px;padding:11px 24px"><span style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:#3F76FF">04</span><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:30px;font-weight:700;color:#171A1F">Подзадача</span><span style="font-size:22px;line-height:1.3;color:#3A3F47">шаг большой задачи</span></div></div>
+      <div style="margin-top:4px;border:1px dashed #C4C8CF;border-radius:16px;padding:14px 22px;display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:23px;font-weight:600;color:#60646C">Внутри проекта задачи группируются</span>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><span style="padding:7px 16px;border-radius:999px;background:#EDF2FF;color:#2B5BD7;font-size:23px;font-weight:600">Циклы — спринты на 1–2 недели</span><span style="padding:7px 16px;border-radius:999px;background:#EDF2FF;color:#2B5BD7;font-size:23px;font-weight:600">Модули — части продукта</span><span style="padding:7px 16px;border-radius:999px;background:#EDF2FF;color:#2B5BD7;font-size:23px;font-weight:600">Вехи — контрольные даты</span><span style="padding:7px 16px;border-radius:999px;background:#F2F4F7;color:#3A3F47;font-size:23px;font-weight:600">Wiki — документация</span></div>
+      </div>
+    </div>
+    <figure style="margin:0;display:flex;flex-direction:column;gap:14px;min-height:0;min-width:0">
+      <div style="flex:1;min-height:0;background:#F2F4F7;border:1px solid #E4E7EC;border-radius:20px;overflow:hidden;display:flex">
+        <image-slot id="shot-structure" src="https://media.docs.plane.so/projects/project-features.webp" shape="rect" fit="contain" placeholder="Скриншот: настройки проекта → Features"></image-slot>
+      </div>
+      <figcaption style="font-size:22px;color:#60646C">Настройки проекта: циклы, модули, виды, страницы, Intake и учёт времени включаются переключателями · docs.plane.so</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section data-label="Карточка задачи" data-screen-label="04 Карточка задачи" data-speaker-notes="Так выглядит открытая задача. В центре — название и описание: это полноценный текст, можно вставить таблицу, код или ссылку на страницу документации. Под описанием — кнопки: добавить подзадачу, связь с другой задачей, ссылку, файл или страницу вики. Справа — панель свойств: статус, приоритет, исполнители, метки, даты начала и окончания, оценка трудоёмкости и учтённое время. Ниже там же — к какому циклу, модулю и вехе относится задача. А в самом низу — лента: комментарии, история изменений и записи о затраченном времени. Связи бывают двух видов: зависимости, например «блокирует», — они показываются стрелками на диаграмме Ганта, и простые связи вроде «дубликат»." style="width:1920px;height:1080px;box-sizing:border-box;background:#FFFFFF;padding:80px 96px;display:flex;flex-direction:column;font-family:Onest,system-ui,sans-serif;color:#171A1F">
+  <div style="display:flex;align-items:center;gap:20px;font-size:24px;color:#60646C;margin-bottom:36px"><span style="font-weight:700;color:#3F76FF">Plane</span><span style="flex:1;height:1px;background:#E4E7EC"></span><span style="font-family:'JetBrains Mono',monospace;font-weight:500">04</span></div>
+  <h2 style="margin:0 0 32px;font-size:72px;font-weight:800;letter-spacing:-0.025em">Карточка задачи</h2>
+  <div style="flex:1;display:grid;grid-template-columns:1.6fr 1fr;gap:44px;min-height:0">
+    <figure style="margin:0;display:flex;flex-direction:column;gap:14px;min-height:0;min-width:0">
+      <div style="flex:1;min-height:0;background:#F2F4F7;border:1px solid #E4E7EC;border-radius:20px;overflow:hidden;display:flex">
+        <image-slot id="shot-work-item2" src="https://media.docs.plane.so/work-items/work-item-detail.webp" shape="rect" fit="contain" placeholder="Скриншот: открытая задача с панелью свойств справа"></image-slot>
+      </div>
+      <figcaption style="font-size:22px;color:#60646C">Открытая задача: описание в центре, свойства справа · docs.plane.so</figcaption>
+    </figure>
+    <div style="display:flex;flex-direction:column">
+      <div style="font-size:22px;font-weight:700;letter-spacing:0.04em;color:#3F76FF;margin:14px 0 2px">ПАНЕЛЬ СПРАВА</div>
+      <div style="display:flex;gap:16px;padding:13px 0;border-bottom:1px solid #E4E7EC;font-size:26px;line-height:1.35"><span style="width:12px;height:12px;border-radius:50%;background:#F59E0B;flex:none;margin-top:10px"></span><span>статус, приоритет, исполнители, метки</span></div>
+      <div style="display:flex;gap:16px;padding:13px 0;border-bottom:1px solid #E4E7EC;font-size:26px;line-height:1.35"><span style="width:12px;height:12px;border-radius:50%;background:#16A34A;flex:none;margin-top:10px"></span><span>даты начала и срока, оценка, учтённое время</span></div>
+      <div style="display:flex;gap:16px;padding:13px 0;border-bottom:1px solid #E4E7EC;font-size:26px;line-height:1.35"><span style="width:12px;height:12px;border-radius:50%;background:#8B5CF6;flex:none;margin-top:10px"></span><span>цикл, модуль, веха, релиз</span></div>
+      <div style="font-size:22px;font-weight:700;letter-spacing:0.04em;color:#3F76FF;margin:14px 0 2px">ПОД ОПИСАНИЕМ</div>
+      <div style="display:flex;gap:16px;padding:13px 0;border-bottom:1px solid #E4E7EC;font-size:26px;line-height:1.35"><span style="width:12px;height:12px;border-radius:50%;background:#3F76FF;flex:none;margin-top:10px"></span><span>подзадачи, связи и зависимости</span></div>
+      <div style="display:flex;gap:16px;padding:13px 0;border-bottom:1px solid #E4E7EC;font-size:26px;line-height:1.35"><span style="width:12px;height:12px;border-radius:50%;background:#3F76FF;flex:none;margin-top:10px"></span><span>ссылки, файлы, страницы документации</span></div>
+      <div style="font-size:22px;font-weight:700;letter-spacing:0.04em;color:#3F76FF;margin:14px 0 2px">ВНИЗУ</div>
+      <div style="display:flex;gap:16px;padding:13px 0;border-bottom:1px solid #E4E7EC;font-size:26px;line-height:1.35"><span style="width:12px;height:12px;border-radius:50%;background:#A3A7AE;flex:none;margin-top:10px"></span><span>комментарии, история, учёт времени</span></div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Виды отображения" data-screen-label="05 Виды отображения" data-speaker-notes="Одни и те же задачи можно смотреть пятью способами: список, доска-канбан, календарь, таблица и Timeline — это диаграмма Ганта. Сами виды — встроенные, придумать шестой нельзя. Но их можно сильно настроить: выбрать фильтры, например «только срочные» или «только мои», сгруппировать задачи по статусу, исполнителю или приоритету, выбрать, какие поля показывать. Такую настройку можно сохранить под своим именем — это называется View, сохранённый вид. Например, «Баги этого спринта» или «Мои задачи на неделю». Виды бывают на уровне проекта и всей компании. На платных тарифах вид можно сделать личным, закрыть от изменений, опубликовать ссылкой для заказчика или выгрузить в Excel. А ещё можно добавлять свои поля и типы задач — например, у бага будет поле «версия»." style="width:1920px;height:1080px;box-sizing:border-box;background:#FFFFFF;padding:80px 96px;display:flex;flex-direction:column;font-family:Onest,system-ui,sans-serif;color:#171A1F">
+  <div style="display:flex;align-items:center;gap:20px;font-size:24px;color:#60646C;margin-bottom:36px"><span style="font-weight:700;color:#3F76FF">Plane</span><span style="flex:1;height:1px;background:#E4E7EC"></span><span style="font-family:'JetBrains Mono',monospace;font-weight:500">05</span></div>
+  <h2 style="margin:0 0 28px;font-size:72px;font-weight:800;letter-spacing:-0.025em">Виды отображения и свои представления</h2>
+  <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;margin-bottom:28px">
+    <div style="background:#F7F8FA;border:1px solid #E4E7EC;border-radius:16px;padding:18px 22px;display:flex;flex-direction:column;gap:4px"><span style="font-size:28px;font-weight:700;color:#171A1F">Список</span><span style="font-size:22px;line-height:1.35;color:#3A3F47">быстрый обзор</span></div><div style="background:#F7F8FA;border:1px solid #E4E7EC;border-radius:16px;padding:18px 22px;display:flex;flex-direction:column;gap:4px"><span style="font-size:28px;font-weight:700;color:#171A1F">Доска</span><span style="font-size:22px;line-height:1.35;color:#3A3F47">канбан по статусам</span></div><div style="background:#F7F8FA;border:1px solid #E4E7EC;border-radius:16px;padding:18px 22px;display:flex;flex-direction:column;gap:4px"><span style="font-size:28px;font-weight:700;color:#171A1F">Календарь</span><span style="font-size:22px;line-height:1.35;color:#3A3F47">задачи по датам</span></div><div style="background:#F7F8FA;border:1px solid #E4E7EC;border-radius:16px;padding:18px 22px;display:flex;flex-direction:column;gap:4px"><span style="font-size:28px;font-weight:700;color:#171A1F">Таблица</span><span style="font-size:22px;line-height:1.35;color:#3A3F47">массовая правка</span></div><div style="background:#EDF2FF;border:1px solid #C9D8FF;border-radius:16px;padding:18px 22px;display:flex;flex-direction:column;gap:4px"><span style="font-size:28px;font-weight:700;color:#2B5BD7">Timeline</span><span style="font-size:22px;line-height:1.35;color:#2B5BD7">Гант и зависимости</span></div>
+  </div>
+  <div style="flex:1;display:grid;grid-template-columns:0.9fr 1.3fr;gap:44px;min-height:0">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <span style="font-size:34px;font-weight:700">Свои виды (Views)</span>
+      <span style="font-size:25px;line-height:1.4;color:#3A3F47">Пять видов встроенные, но каждый настраивается и сохраняется под своим именем</span>
+      <div style="display:flex;gap:14px;font-size:26px;line-height:1.4"><span style="color:#3F76FF;font-weight:700">·</span><span>фильтры: «срочные», «мои», «срок на этой неделе»</span></div>
+      <div style="display:flex;gap:14px;font-size:26px;line-height:1.4"><span style="color:#3F76FF;font-weight:700">·</span><span>группировка по статусу, исполнителю, приоритету</span></div>
+      <div style="display:flex;gap:14px;font-size:26px;line-height:1.4"><span style="color:#3F76FF;font-weight:700">·</span><span>свои поля и типы задач — Pro</span></div>
+      <div style="display:flex;gap:14px;font-size:26px;line-height:1.4"><span style="color:#3F76FF;font-weight:700">·</span><span>личные, закрытые и публичные виды, выгрузка в Excel — Pro</span></div>
+    </div>
+    <figure style="margin:0;display:flex;flex-direction:column;gap:14px;min-height:0;min-width:0">
+      <div style="flex:1;min-height:0;background:#F2F4F7;border:1px solid #E4E7EC;border-radius:20px;overflow:hidden;display:flex">
+        <image-slot id="shot-views" src="https://media.docs.plane.so/views/views.webp" shape="rect" fit="contain" placeholder="Скриншот: список сохранённых видов (Views)"></image-slot>
+      </div>
+      <figcaption style="font-size:22px;color:#60646C">Сохранённые виды проекта · docs.plane.so</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section data-label="Циклы" data-screen-label="06 Циклы" data-speaker-notes="Этот слайд — про то, чем Plane заметно выделяется. Циклы — это спринты: команда берёт набор задач на фиксированный срок, например на две недели. В большинстве планировщиков спринт каждый раз создают вручную. В Plane достаточно один раз задать ритм, например две недели работы и два дня паузы, и дальше система сама создаёт следующие циклы. Незаконченные задачи переносятся в следующий цикл одной кнопкой. По каждому завершённому циклу Plane сохраняет, сколько команда реально успела, — это скорость команды. Следующий спринт планируют по этим данным, а не на глаз. Во время цикла виден график сгорания: успевает команда или отстаёт. А ИИ заранее подсвечивает задачи, которые рискуют не успеть. Автоматическое создание циклов доступно на платных тарифах." style="width:1920px;height:1080px;box-sizing:border-box;background:#FFFFFF;padding:80px 96px;display:flex;flex-direction:column;font-family:Onest,system-ui,sans-serif;color:#171A1F">
+  <div style="display:flex;align-items:center;gap:20px;font-size:24px;color:#60646C;margin-bottom:36px"><span style="font-weight:700;color:#3F76FF">Plane</span><span style="flex:1;height:1px;background:#E4E7EC"></span><span style="font-family:'JetBrains Mono',monospace;font-weight:500">06</span></div>
+  <h2 style="margin:0 0 28px;font-size:72px;font-weight:800;letter-spacing:-0.025em">Циклы: спринты, которые планируются сами</h2>
+  <div style="flex:1;display:grid;grid-template-columns:1.4fr 1fr;gap:44px;min-height:0">
+    <figure style="margin:0;display:flex;flex-direction:column;gap:14px;min-height:0;min-width:0">
+      <div style="flex:1;min-height:0;background:#F2F4F7;border:1px solid #E4E7EC;border-radius:20px;overflow:hidden;display:flex">
+        <image-slot id="shot-cycles" src="https://plane.so/api/media/file/screenshot-cycles-hero-8487f99b.webp" shape="rect" fit="contain" placeholder="Скриншот: страница цикла с графиком сгорания"></image-slot>
+      </div>
+      <figcaption style="font-size:22px;color:#60646C">Цикл с графиком прогресса · plane.so/cycles</figcaption>
+    </figure>
+    <div style="display:flex;flex-direction:column;gap:18px;min-height:0">
+      <div style="background:#3F76FF;color:#FFFFFF;border-radius:20px;padding:30px 34px;display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:23px;font-weight:600">Главное отличие</span>
+        <span style="font-size:29px;line-height:1.4;font-weight:500">Задаёте ритм, например 2 недели работы и 2 дня паузы, и Plane сам создаёт следующие циклы</span>
+      </div>
+      <div style="display:flex;flex-direction:column">
+        <div style="display:flex;gap:16px;padding:15px 0;border-bottom:1px solid #E4E7EC;font-size:27px;line-height:1.38"><span style="width:12px;height:12px;border-radius:50%;background:#3F76FF;flex:none;margin-top:11px"></span><span>незаконченное переносится в следующий цикл одной кнопкой</span></div>
+        <div style="display:flex;gap:16px;padding:15px 0;border-bottom:1px solid #E4E7EC;font-size:27px;line-height:1.38"><span style="width:12px;height:12px;border-radius:50%;background:#16A34A;flex:none;margin-top:11px"></span><span>скорость команды копится от цикла к циклу, по ней планируют следующий</span></div>
+        <div style="display:flex;gap:16px;padding:15px 0;border-bottom:1px solid #E4E7EC;font-size:27px;line-height:1.38"><span style="width:12px;height:12px;border-radius:50%;background:#F59E0B;flex:none;margin-top:11px"></span><span>график сгорания показывает, успевает ли команда</span></div>
+        <div style="display:flex;gap:16px;padding:15px 0;border-bottom:1px solid #E4E7EC;font-size:27px;line-height:1.38"><span style="width:12px;height:12px;border-radius:50%;background:#DC2626;flex:none;margin-top:11px"></span><span>ИИ заранее подсвечивает задачи под угрозой срыва</span></div>
+      </div>
+      <span style="font-size:21px;color:#60646C">Автосоздание циклов — на платных тарифах</span>
+    </div>
+  </div>
+</section>
+
+<section data-label="Заявки, документация и отчёты" data-screen-label="07 Заявки, документация и отчёты" data-speaker-notes="Здесь три модуля, которые обычно живут в отдельных сервисах. Первый — Intake, то есть входящие заявки. Идеи, баги и просьбы приходят не сразу в список задач, а в отдельную очередь: изнутри Plane, а на тарифе Business — ещё через форму на сайте или по почте. Ответственный смотрит каждую заявку и решает: принять — тогда она становится задачей, отклонить, отложить или отметить как дубликат. Так список задач не засоряется. Второй модуль — документация, или Wiki: страницы с требованиями, регламентами и протоколами встреч, которые редактируют вместе и которые можно привязать к задачам. Третий — дашборды: отчёты из графиков и цифр, например сколько задач просрочено или как идёт текущий спринт." style="width:1920px;height:1080px;box-sizing:border-box;background:#FFFFFF;padding:80px 96px;display:flex;flex-direction:column;font-family:Onest,system-ui,sans-serif;color:#171A1F">
+  <div style="display:flex;align-items:center;gap:20px;font-size:24px;color:#60646C;margin-bottom:36px"><span style="font-weight:700;color:#3F76FF">Plane</span><span style="flex:1;height:1px;background:#E4E7EC"></span><span style="font-family:'JetBrains Mono',monospace;font-weight:500">07</span></div>
+  <h2 style="margin:0 0 22px;font-size:64px;font-weight:800;letter-spacing:-0.025em">Заявки, документация и отчёты</h2>
+  <div style="display:flex;gap:12px;margin-bottom:22px">
+    <div style="flex:1;min-width:0;background:#F7F8FA;border:1px solid #E4E7EC;border-radius:14px;padding:12px 18px;display:flex;flex-direction:column;gap:2px"><span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#3F76FF">01</span><span style="font-size:25px;font-weight:700">Заявка</span><span style="font-size:22px;line-height:1.35;color:#3A3F47">из Plane, формы или почты</span></div><span style="font-size:30px;color:#A3A7AE;align-self:center">→</span><div style="flex:1;min-width:0;background:#EDF2FF;border:1px solid #C9D8FF;border-radius:14px;padding:12px 18px;display:flex;flex-direction:column;gap:2px"><span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#3F76FF">02</span><span style="font-size:25px;font-weight:700">Очередь Intake</span><span style="font-size:22px;line-height:1.35;color:#3A3F47">ждёт рассмотрения</span></div><span style="font-size:30px;color:#A3A7AE;align-self:center">→</span><div style="flex:1;min-width:0;background:#F7F8FA;border:1px solid #E4E7EC;border-radius:14px;padding:12px 18px;display:flex;flex-direction:column;gap:2px"><span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#3F76FF">03</span><span style="font-size:25px;font-weight:700">Решение</span><span style="font-size:22px;line-height:1.35;color:#3A3F47">принять · отклонить · отложить · дубликат</span></div><span style="font-size:30px;color:#A3A7AE;align-self:center">→</span><div style="flex:1;min-width:0;background:#F7F8FA;border:1px solid #E4E7EC;border-radius:14px;padding:12px 18px;display:flex;flex-direction:column;gap:2px"><span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#3F76FF">04</span><span style="font-size:25px;font-weight:700">Задача</span><span style="font-size:22px;line-height:1.35;color:#3A3F47">попадает в беклог проекта</span></div>
+  </div>
+  <div style="flex:1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:36px;min-height:0">
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div style="border:1px solid #E4E7EC;border-radius:20px;padding:22px 26px;display:flex;flex-direction:column;gap:6px;flex:1"><span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#3F76FF">Wiki</span><span style="font-size:30px;font-weight:700">Документация проекта</span><span style="font-size:25px;line-height:1.45;color:#3A3F47">страницы с требованиями, регламентами и протоколами встреч; совместное редактирование, версии, привязка к задачам</span></div>
+      <div style="border:1px solid #E4E7EC;border-radius:20px;padding:22px 26px;display:flex;flex-direction:column;gap:6px;flex:1"><span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#3F76FF">Dashboards</span><span style="font-size:30px;font-weight:700">Отчёты из виджетов</span><span style="font-size:25px;line-height:1.45;color:#3A3F47">графики и цифры по задачам: просрочки, загрузка, ход спринта</span></div>
+    </div>
+    <figure style="margin:0;display:flex;flex-direction:column;gap:14px;min-height:0;min-width:0">
+      <div style="width:530px;height:530px;flex:none;background:#F2F4F7;border:1px solid #E4E7EC;border-radius:20px;overflow:hidden;display:flex">
+        <image-slot id="shot-intake" src="https://plane.so/api/media/file/screenshot-intake-tabs-9ab1e0b0.webp" shape="rect" fit="contain" placeholder="Скриншот: очередь Intake"></image-slot>
+      </div>
+      <figcaption style="font-size:22px;color:#60646C">Очередь входящих заявок · plane.so</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section data-label="Новое в 2026" data-screen-label="08 Новое в 2026" data-speaker-notes="Plane быстро развивается, обновления выходят почти каждую неделю. Расскажу, что появилось летом 2026 года. Во-первых, задачу теперь можно поручить ИИ-агенту: он её выполняет, а человек проверяет результат. Во-вторых, появились Skills — сохранённые команды для ИИ. Например, один раз описать, как собирать еженедельный отчёт, и дальше запускать его одной кнопкой. В-третьих, журнал аудита: видно, кто и когда менял настройки и права доступа, — это важно для безопасности. Автоматизации теперь умеют работать с модулями, вехами и релизами. И дашбордами стало можно делиться со всей командой — пример такого дашборда на скриншоте." style="width:1920px;height:1080px;box-sizing:border-box;background:#FFFFFF;padding:80px 96px;display:flex;flex-direction:column;font-family:Onest,system-ui,sans-serif;color:#171A1F">
+  <div style="display:flex;align-items:center;gap:20px;font-size:24px;color:#60646C;margin-bottom:36px"><span style="font-weight:700;color:#3F76FF">Plane</span><span style="flex:1;height:1px;background:#E4E7EC"></span><span style="font-family:'JetBrains Mono',monospace;font-weight:500">08</span></div>
+  <h2 style="margin:0 0 24px;font-size:64px;font-weight:800;letter-spacing:-0.025em">Что появилось в 2026 году</h2>
+  <div style="flex:1;display:grid;grid-template-columns:1.75fr 1fr;gap:36px;min-height:0">
+    <figure style="margin:0;display:flex;flex-direction:column;gap:14px;min-height:0;min-width:0">
+      <div style="flex:1;min-height:0;background:#F2F4F7;border:1px solid #E4E7EC;border-radius:20px;overflow:hidden;display:flex">
+        <image-slot id="shot-ai" src="https://plane.so/api/media/file/screenshot-dashboards-hero-7345348e.webp" shape="rect" fit="contain" placeholder="Скриншот: дашборд в Plane"></image-slot>
+      </div>
+      <figcaption style="font-size:22px;color:#60646C">Дашборд из виджетов · plane.so/dashboards</figcaption>
+    </figure>
+    <div style="display:flex;flex-direction:column">
+      <div style="display:flex;gap:16px;padding:14px 0;border-bottom:1px solid #E4E7EC;font-size:25px;line-height:1.38"><span style="width:12px;height:12px;border-radius:50%;background:#3F76FF;flex:none;margin-top:11px"></span><span>Задачу можно поручить ИИ-агенту: он выполняет, человек проверяет</span></div>
+      <div style="display:flex;gap:16px;padding:14px 0;border-bottom:1px solid #E4E7EC;font-size:25px;line-height:1.38"><span style="width:12px;height:12px;border-radius:50%;background:#3F76FF;flex:none;margin-top:11px"></span><span>Skills: сохранённые команды для ИИ, например «собери отчёт за неделю»</span></div>
+      <div style="display:flex;gap:16px;padding:14px 0;border-bottom:1px solid #E4E7EC;font-size:25px;line-height:1.38"><span style="width:12px;height:12px;border-radius:50%;background:#16A34A;flex:none;margin-top:11px"></span><span>Журнал аудита: кто и когда менял настройки и права</span></div>
+      <div style="display:flex;gap:16px;padding:14px 0;border-bottom:1px solid #E4E7EC;font-size:25px;line-height:1.38"><span style="width:12px;height:12px;border-radius:50%;background:#F59E0B;flex:none;margin-top:11px"></span><span>Автоматизации для модулей, вех и релизов</span></div>
+      <div style="display:flex;gap:16px;padding:14px 0;border-bottom:1px solid #E4E7EC;font-size:25px;line-height:1.38"><span style="width:12px;height:12px;border-radius:50%;background:#8B5CF6;flex:none;margin-top:11px"></span><span>Общие дашборды для всей команды</span></div>
+      <span style="margin-top:18px;font-size:21px;color:#60646C">По журналу изменений plane.so/changelog, июль–август 2026</span>
+    </div>
+  </div>
+</section>
+
+<section data-label="Функции PMBOK" data-screen-label="09 Функции PMBOK" data-speaker-notes="Теперь главное по требованиям — какие функции управления проектом по PMBOK Plane автоматизирует. Лучше всего закрыты содержание, сроки, коммуникации и интеграция: задачи, эпики, спринты, диаграмма Ганта, комментарии и вики. Частично — качество, персонал и риски: есть типы задач для багов, согласования, роли, связи-блокировки и подсветка отстающих задач, но нет, например, реестра рисков. Стоимость — только косвенно, через оценки и учёт времени: деньги и бюджет Plane не считает. Закупок нет совсем." style="width:1920px;height:1080px;box-sizing:border-box;background:#FFFFFF;padding:72px 96px;display:flex;flex-direction:column;font-family:Onest,system-ui,sans-serif;color:#171A1F">
+  <div style="display:flex;align-items:center;gap:20px;font-size:24px;color:#60646C;margin-bottom:32px"><span style="font-weight:700;color:#3F76FF">Plane</span><span style="flex:1;height:1px;background:#E4E7EC"></span><span style="font-family:'JetBrains Mono',monospace;font-weight:500">09</span></div>
+  <h2 style="margin:0 0 28px;font-size:64px;font-weight:800;letter-spacing:-0.025em">Функции управления проектом (PMBOK 5)</h2>
+  <div style="flex:1;border:1px solid #E4E7EC;border-radius:20px;overflow:hidden;display:grid;grid-template-rows:auto repeat(9,1fr);min-height:0">
+    <div style="display:grid;grid-template-columns:400px 1fr 210px;background:#F7F8FA;border-bottom:1px solid #E4E7EC;font-size:24px;font-weight:600;color:#60646C"><span style="padding:14px 28px">Функция</span><span style="padding:14px 28px">Средства Plane</span><span style="padding:14px 28px">Степень</span></div>
+    <div style="display:grid;grid-template-columns:400px 1fr 210px;align-items:center;border-bottom:1px solid #E4E7EC;font-size:26px"><span style="padding:0 28px;font-weight:600">Интеграция</span><span style="padding:0 28px;color:#3A3F47">единое пространство, инициативы, дашборды</span><span style="padding:0 28px"><span style="padding:6px 16px;border-radius:999px;background:#DCFCE7;color:#15803D;font-size:23px;font-weight:600">высокая</span></span></div>
+    <div style="display:grid;grid-template-columns:400px 1fr 210px;align-items:center;border-bottom:1px solid #E4E7EC;font-size:26px"><span style="padding:0 28px;font-weight:600">Содержание</span><span style="padding:0 28px;color:#3A3F47">задачи, эпики, подзадачи, модули, Intake</span><span style="padding:0 28px"><span style="padding:6px 16px;border-radius:999px;background:#DCFCE7;color:#15803D;font-size:23px;font-weight:600">высокая</span></span></div>
+    <div style="display:grid;grid-template-columns:400px 1fr 210px;align-items:center;border-bottom:1px solid #E4E7EC;font-size:26px"><span style="padding:0 28px;font-weight:600">Сроки</span><span style="padding:0 28px;color:#3A3F47">циклы, Гант с зависимостями, вехи, календарь</span><span style="padding:0 28px"><span style="padding:6px 16px;border-radius:999px;background:#DCFCE7;color:#15803D;font-size:23px;font-weight:600">высокая</span></span></div>
+    <div style="display:grid;grid-template-columns:400px 1fr 210px;align-items:center;border-bottom:1px solid #E4E7EC;font-size:26px"><span style="padding:0 28px;font-weight:600">Стоимость</span><span style="padding:0 28px;color:#3A3F47">оценки трудоёмкости и учёт времени; бюджета нет</span><span style="padding:0 28px"><span style="padding:6px 16px;border-radius:999px;background:#FEE2E2;color:#B91C1C;font-size:23px;font-weight:600">низкая</span></span></div>
+    <div style="display:grid;grid-template-columns:400px 1fr 210px;align-items:center;border-bottom:1px solid #E4E7EC;font-size:26px"><span style="padding:0 28px;font-weight:600">Качество</span><span style="padding:0 28px;color:#3A3F47">типы задач для багов, согласования, связь с Git</span><span style="padding:0 28px"><span style="padding:6px 16px;border-radius:999px;background:#FEF3C7;color:#B45309;font-size:23px;font-weight:600">частично</span></span></div>
+    <div style="display:grid;grid-template-columns:400px 1fr 210px;align-items:center;border-bottom:1px solid #E4E7EC;font-size:26px"><span style="padding:0 28px;font-weight:600">Персонал</span><span style="padding:0 28px;color:#3A3F47">исполнители, роли, команды, учёт времени</span><span style="padding:0 28px"><span style="padding:6px 16px;border-radius:999px;background:#FEF3C7;color:#B45309;font-size:23px;font-weight:600">частично</span></span></div>
+    <div style="display:grid;grid-template-columns:400px 1fr 210px;align-items:center;border-bottom:1px solid #E4E7EC;font-size:26px"><span style="padding:0 28px;font-weight:600">Коммуникации</span><span style="padding:0 28px;color:#3A3F47">комментарии, упоминания, вики, обновления, Slack</span><span style="padding:0 28px"><span style="padding:6px 16px;border-radius:999px;background:#DCFCE7;color:#15803D;font-size:23px;font-weight:600">высокая</span></span></div>
+    <div style="display:grid;grid-template-columns:400px 1fr 210px;align-items:center;border-bottom:1px solid #E4E7EC;font-size:26px"><span style="padding:0 28px;font-weight:600">Риски</span><span style="padding:0 28px;color:#3A3F47">приоритеты, блокировки, ИИ отмечает отстающие задачи</span><span style="padding:0 28px"><span style="padding:6px 16px;border-radius:999px;background:#FEF3C7;color:#B45309;font-size:23px;font-weight:600">частично</span></span></div>
+    <div style="display:grid;grid-template-columns:400px 1fr 210px;align-items:center;font-size:26px"><span style="padding:0 28px;font-weight:600">Закупки</span><span style="padding:0 28px;color:#3A3F47">встроенных средств нет</span><span style="padding:0 28px"><span style="padding:6px 16px;border-radius:999px;background:#F2F4F7;color:#60646C;font-size:23px;font-weight:600">нет</span></span></div>
+  </div>
+</section>
+
+<section data-label="Процессы" data-screen-label="10 Процессы" data-speaker-notes="Теперь процессы управления проектом. По методичке их пять групп, и Plane так или иначе участвует во всех. Инициация — частично: можно завести проект с целью и руководителем, собрать заявки через Intake и описать проект на странице документации, но формального устава проекта нет. Планирование — полностью: беклог, разбивка на эпики и подзадачи, оценки трудоёмкости, сроки на диаграмме Ганта и спринты. Исполнение — полностью: доска задач, смена статусов, обсуждения, учёт времени. Мониторинг и контроль — тоже полностью: график сгорания, дашборды, статус проекта «в графике» или «под угрозой», история всех изменений. Завершение — частично: цикл закрывается с переносом остатка, выпускается релиз, проект архивируется, а итоги пишут на странице документации. Отдельного процесса приёмки нет." style="width:1920px;height:1080px;box-sizing:border-box;background:#FFFFFF;padding:80px 96px;display:flex;flex-direction:column;font-family:Onest,system-ui,sans-serif;color:#171A1F">
+  <div style="display:flex;align-items:center;gap:20px;font-size:24px;color:#60646C;margin-bottom:36px"><span style="font-weight:700;color:#3F76FF">Plane</span><span style="flex:1;height:1px;background:#E4E7EC"></span><span style="font-family:'JetBrains Mono',monospace;font-weight:500">10</span></div>
+  <h2 style="margin:0 0 12px;font-size:72px;font-weight:800;letter-spacing:-0.025em">Процессы управления проектом</h2>
+  <p style="margin:0 0 36px;font-size:30px;line-height:1.4;color:#3A3F47;max-width:40em;text-wrap:pretty">Какие процессы Plane автоматизирует полностью, а какие частично</p>
+  <div style="flex:1;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;min-height:0">
+    <div style="border:1px solid #E4E7EC;border-radius:20px;padding:30px 26px;display:flex;flex-direction:column;gap:14px"><span style="display:flex;align-items:center;gap:12px;font-size:23px;font-weight:600;color:#60646C"><span style="width:16px;height:16px;border-radius:50%;border:2px dashed #A3A7AE"></span>01</span><span style="font-size:31px;font-weight:700;line-height:1.15">Инициация</span><span style="font-size:24px;line-height:1.45;color:#3A3F47">проект с целью и руководителем, заявки в Intake, описание в документации</span><span style="margin-top:auto;font-size:23px;font-weight:700;color:#B45309">частичная</span></div>
+    <div style="border:1px solid #E4E7EC;border-radius:20px;padding:30px 26px;display:flex;flex-direction:column;gap:14px"><span style="display:flex;align-items:center;gap:12px;font-size:23px;font-weight:600;color:#60646C"><span style="width:16px;height:16px;border-radius:50%;border:2px solid #A3A7AE"></span>02</span><span style="font-size:31px;font-weight:700;line-height:1.15">Планирование</span><span style="font-size:24px;line-height:1.45;color:#3A3F47">беклог, эпики и подзадачи, оценки, Гант, спринты</span><span style="margin-top:auto;font-size:23px;font-weight:700;color:#15803D">полная</span></div>
+    <div style="border:1px solid #E4E7EC;border-radius:20px;padding:30px 26px;display:flex;flex-direction:column;gap:14px"><span style="display:flex;align-items:center;gap:12px;font-size:23px;font-weight:600;color:#60646C"><span style="width:16px;height:16px;border-radius:50%;background:#F59E0B"></span>03</span><span style="font-size:31px;font-weight:700;line-height:1.15">Исполнение</span><span style="font-size:24px;line-height:1.45;color:#3A3F47">доска задач, статусы, обсуждения, учёт времени</span><span style="margin-top:auto;font-size:23px;font-weight:700;color:#15803D">полная</span></div>
+    <div style="background:#3F76FF;color:#FFFFFF;border-radius:20px;padding:30px 26px;display:flex;flex-direction:column;gap:14px"><span style="display:flex;align-items:center;gap:12px;font-size:23px;font-weight:600;"><span style="width:16px;height:16px;border-radius:50%;background:#FFFFFF"></span>04</span><span style="font-size:31px;font-weight:700;line-height:1.15">Мониторинг и контроль</span><span style="font-size:24px;line-height:1.45;">график сгорания, дашборды, статус «в графике / под угрозой», история</span><span style="margin-top:auto;font-size:23px;font-weight:700;">полная</span></div>
+    <div style="border:1px solid #E4E7EC;border-radius:20px;padding:30px 26px;display:flex;flex-direction:column;gap:14px"><span style="display:flex;align-items:center;gap:12px;font-size:23px;font-weight:600;color:#60646C"><span style="width:16px;height:16px;border-radius:50%;background:#16A34A"></span>05</span><span style="font-size:31px;font-weight:700;line-height:1.15">Завершение</span><span style="font-size:24px;line-height:1.45;color:#3A3F47">закрытие цикла, релиз, архив проекта, итоги в документации</span><span style="margin-top:auto;font-size:23px;font-weight:700;color:#B45309">частичная</span></div>
+  </div>
+</section>
+
+<section data-label="Условия доступа" data-screen-label="11 Условия доступа" data-speaker-notes="Условия доступа. Есть два способа пользоваться Plane: в облаке разработчика или на своём сервере. В облаке бесплатный тариф рассчитан на команду до 12 человек и включает задачи, циклы, модули, Intake и страницы. Pro стоит 6 долларов за человека в месяц при оплате за год — добавляются учёт времени, общая документация, эпики, инициативы и ИИ. Business — 13 долларов: автоматизации, workflow с согласованиями, формы заявок. Enterprise — по договорённости. На своём сервере есть бесплатная Community Edition: открытый код, без ограничения числа пользователей, но только базовые функции, как на бесплатном тарифе. Commercial Edition бесплатна до 12 человек, а дальше покупается лицензия Pro или Business по тем же ценам, что и в облаке. Для сетей без интернета есть версия Airgapped. Цены указаны в долларах." style="width:1920px;height:1080px;box-sizing:border-box;background:#FFFFFF;padding:80px 96px;display:flex;flex-direction:column;font-family:Onest,system-ui,sans-serif;color:#171A1F">
+  <div style="display:flex;align-items:center;gap:20px;font-size:24px;color:#60646C;margin-bottom:36px"><span style="font-weight:700;color:#3F76FF">Plane</span><span style="flex:1;height:1px;background:#E4E7EC"></span><span style="font-family:'JetBrains Mono',monospace;font-weight:500">11</span></div>
+  <h2 style="margin:0 0 24px;font-size:72px;font-weight:800;letter-spacing:-0.025em">Условия доступа</h2>
+  <div style="font-size:25px;font-weight:600;color:#60646C;margin-bottom:14px">В облаке · за пользователя в месяц при оплате за год</div>
+  <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px">
+    <div style="border:1px solid #E4E7EC;border-radius:20px;padding:26px 30px;display:flex;flex-direction:column;gap:8px"><span style="font-size:27px;font-weight:700">Free</span><span style="font-size:56px;font-weight:800;letter-spacing:-0.02em;line-height:1.15">$0</span><span style="font-size:23px;line-height:1.4;color:#3A3F47">до 12 человек: задачи, циклы, модули, Intake, страницы</span></div>
+    <div style="background:#3F76FF;color:#FFFFFF;border-radius:20px;padding:26px 30px;display:flex;flex-direction:column;gap:8px"><span style="font-size:27px;font-weight:700">Pro</span><span style="font-size:56px;font-weight:800;letter-spacing:-0.02em;line-height:1.15">$6</span><span style="font-size:23px;line-height:1.4;">учёт времени, общая Wiki, эпики, инициативы, ИИ</span></div>
+    <div style="border:1px solid #E4E7EC;border-radius:20px;padding:26px 30px;display:flex;flex-direction:column;gap:8px"><span style="font-size:27px;font-weight:700">Business</span><span style="font-size:56px;font-weight:800;letter-spacing:-0.02em;line-height:1.15">$13</span><span style="font-size:23px;line-height:1.4;color:#3A3F47">автоматизации, согласования, формы заявок</span></div>
+    <div style="border:1px solid #E4E7EC;border-radius:20px;padding:26px 30px;display:flex;flex-direction:column;gap:8px"><span style="font-size:27px;font-weight:700">Enterprise</span><span style="font-size:40px;font-weight:800;letter-spacing:-0.02em;line-height:1.15">по запросу</span><span style="font-size:23px;line-height:1.4;color:#3A3F47">LDAP, тонкие права доступа, сопровождение</span></div>
+  </div>
+  <div style="font-size:25px;font-weight:600;color:#60646C;margin:28px 0 14px">На своём сервере</div>
+  <div style="flex:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;min-height:0">
+    <div style="background:#F7F8FA;border:1px solid #E4E7EC;border-radius:20px;padding:26px 32px;display:flex;flex-direction:column;gap:8px"><span style="font-size:28px;font-weight:700">Community · бесплатно</span><span style="font-size:23px;line-height:1.4;color:#3A3F47">открытый код (AGPL-3.0), без ограничения пользователей, функции как в Free</span></div>
+    <div style="background:#F7F8FA;border:1px solid #E4E7EC;border-radius:20px;padding:26px 32px;display:flex;flex-direction:column;gap:8px"><span style="font-size:28px;font-weight:700">Commercial · до 12 человек бесплатно</span><span style="font-size:23px;line-height:1.4;color:#3A3F47">дальше лицензия Pro или Business по ценам облака</span></div>
+    <div style="background:#F7F8FA;border:1px solid #E4E7EC;border-radius:20px;padding:26px 32px;display:flex;flex-direction:column;gap:8px"><span style="font-size:28px;font-weight:700">Airgapped</span><span style="font-size:23px;line-height:1.4;color:#3A3F47">версия Commercial для сети без доступа в интернет</span></div>
+  </div>
+  <div style="margin-top:18px;font-size:21px;color:#60646C">Цены в долларах США · помесячная оплата дороже · источник: plane.so/pricing, developers.plane.so</div>
+</section>
+
+<section data-label="Интеграции" data-screen-label="12 Интеграции" data-speaker-notes="Plane подключается к другим инструментам. С Git-платформами — GitHub, GitLab и Bitbucket: коммит или пул-реквест сам меняет статус задачи. Уведомления уходят в Slack, ошибки из Sentry превращаются в задачи. Перейти на Plane несложно: есть готовый импорт из Jira, Linear, Asana, ClickUp, Confluence, Notion и из CSV-файла. Переносятся задачи, комментарии, вложения и связи, а поля, которые Plane не поддерживает, пропускаются. Интересный пример — связка Plane и Forgejo, которой я пользуюсь сам. Обе системы с открытым кодом и ставятся на свой сервер. Получается полностью свой контур: код, задачи и документация не покидают сеть компании. Это важно для тех, кто ценит конфиденциальность, — банков, госсектора, медицины. Готовой интеграции между ними нет, связь настраивается через API и вебхуки." style="width:1920px;height:1080px;box-sizing:border-box;background:#FFFFFF;padding:80px 96px;display:flex;flex-direction:column;font-family:Onest,system-ui,sans-serif;color:#171A1F">
+  <div style="display:flex;align-items:center;gap:20px;font-size:24px;color:#60646C;margin-bottom:36px"><span style="font-weight:700;color:#3F76FF">Plane</span><span style="flex:1;height:1px;background:#E4E7EC"></span><span style="font-family:'JetBrains Mono',monospace;font-weight:500">12</span></div>
+  <h2 style="margin:0 0 32px;font-size:72px;font-weight:800;letter-spacing:-0.025em">Интеграции и переход из других систем</h2>
+  <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:28px;min-height:0">
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div style="border:1px solid #E4E7EC;border-radius:20px;padding:26px 32px;display:flex;flex-direction:column;gap:14px"><span style="font-size:25px;font-weight:600;color:#60646C">Git, уведомления, ошибки</span><div style="display:flex;gap:10px;flex-wrap:wrap"><span style="padding:9px 20px;border-radius:12px;background:#F2F4F7;font-size:25px;font-weight:600">GitHub</span><span style="padding:9px 20px;border-radius:12px;background:#F2F4F7;font-size:25px;font-weight:600">GitLab</span><span style="padding:9px 20px;border-radius:12px;background:#F2F4F7;font-size:25px;font-weight:600">Bitbucket</span><span style="padding:9px 20px;border-radius:12px;background:#F2F4F7;font-size:25px;font-weight:600">Slack</span><span style="padding:9px 20px;border-radius:12px;background:#F2F4F7;font-size:25px;font-weight:600">Sentry</span></div><span style="font-size:24px;line-height:1.4;color:#3A3F47">коммит или pull request сам меняет статус задачи</span></div>
+      <div style="border:1px solid #E4E7EC;border-radius:20px;padding:26px 32px;display:flex;flex-direction:column;gap:14px;flex:1"><span style="font-size:25px;font-weight:600;color:#60646C">Переход на Plane</span><div style="display:flex;gap:10px;flex-wrap:wrap"><span style="padding:9px 20px;border-radius:12px;background:#F2F4F7;font-size:25px;font-weight:600">Jira</span><span style="padding:9px 20px;border-radius:12px;background:#F2F4F7;font-size:25px;font-weight:600">Linear</span><span style="padding:9px 20px;border-radius:12px;background:#F2F4F7;font-size:25px;font-weight:600">Asana</span><span style="padding:9px 20px;border-radius:12px;background:#F2F4F7;font-size:25px;font-weight:600">ClickUp</span><span style="padding:9px 20px;border-radius:12px;background:#F2F4F7;font-size:25px;font-weight:600">Confluence</span><span style="padding:9px 20px;border-radius:12px;background:#F2F4F7;font-size:25px;font-weight:600">Notion</span><span style="padding:9px 20px;border-radius:12px;background:#F2F4F7;font-size:25px;font-weight:600">CSV</span></div><span style="font-size:24px;line-height:1.4;color:#3A3F47">переносятся задачи, комментарии, вложения и связи; неподдерживаемые поля пропускаются</span></div>
+    </div>
+    <div style="background:#F7F8FA;border:1px solid #E4E7EC;border-radius:20px;padding:40px 44px;display:flex;flex-direction:column;gap:20px">
+      <span style="font-size:25px;font-weight:600;color:#3F76FF">Пример: свой контур на open source</span>
+      <span style="font-size:40px;line-height:1.2;font-weight:700">Plane + Forgejo</span>
+      <span style="font-size:27px;line-height:1.5;color:#3A3F47">Обе системы с открытым кодом и ставятся на свой сервер. Задачи, документация и код не покидают сеть компании.</span>
+      <span style="font-size:27px;line-height:1.5;color:#3A3F47">Это ценят там, где важна конфиденциальность: банки, госсектор, медицина.</span>
+      <div style="margin-top:auto;border-top:1px solid #E4E7EC;padding-top:20px;display:flex;flex-direction:column;gap:8px"><div style="display:flex;align-items:center;gap:16px;font-size:27px;font-weight:600"><span>Планирование — Plane</span><span style="color:#A3A7AE">↔</span><span>Код и сборки — Forgejo</span></div><span style="font-size:22px;color:#60646C">связь через API и вебхуки</span></div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Плюсы и минусы" data-screen-label="13 Плюсы и минусы" data-speaker-notes="Подведу плюсы и минусы. Плюсы: открытый код — систему можно проверить, доработать и развернуть у себя. Задачи, спринты, диаграмма Ганта, документация и отчёты собраны в одном месте. Циклы создаются автоматически, и копится статистика скорости команды. Интерфейс простой, есть русский язык, а лишние функции можно не включать. Минусы: нет учёта бюджета и закупок. Бесплатно доступны только базовые функции, а учёт времени, общая документация и дашборды — на платных тарифах, цены в долларах. Свой сервер нужно обслуживать, а для ИИ нужны дополнительные ресурсы. И из-за частых обновлений интерфейс постоянно меняется, а документация есть только на английском." style="width:1920px;height:1080px;box-sizing:border-box;background:#FFFFFF;padding:80px 96px;display:flex;flex-direction:column;font-family:Onest,system-ui,sans-serif;color:#171A1F">
+  <div style="display:flex;align-items:center;gap:20px;font-size:24px;color:#60646C;margin-bottom:36px"><span style="font-weight:700;color:#3F76FF">Plane</span><span style="flex:1;height:1px;background:#E4E7EC"></span><span style="font-family:'JetBrains Mono',monospace;font-weight:500">13</span></div>
+  <h2 style="margin:0 0 32px;font-size:72px;font-weight:800;letter-spacing:-0.025em">Преимущества и недостатки</h2>
+  <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:28px;min-height:0">
+    <div style="border:1px solid #E4E7EC;border-radius:20px;padding:32px 40px;display:flex;flex-direction:column">
+      <span style="display:flex;align-items:center;gap:14px;font-size:33px;font-weight:700;margin-bottom:8px"><span style="width:18px;height:18px;border-radius:50%;background:#16A34A"></span>Преимущества</span>
+      <div style="display:flex;gap:16px;padding:15px 0;border-bottom:1px solid #E4E7EC;font-size:27px;line-height:1.38"><span style="width:12px;height:12px;border-radius:50%;background:#16A34A;flex:none;margin-top:11px"></span><span>Открытый код: можно проверить, доработать и развернуть у себя</span></div>
+      <div style="display:flex;gap:16px;padding:15px 0;border-bottom:1px solid #E4E7EC;font-size:27px;line-height:1.38"><span style="width:12px;height:12px;border-radius:50%;background:#16A34A;flex:none;margin-top:11px"></span><span>Задачи, спринты, Гант, документация и отчёты в одной системе</span></div>
+      <div style="display:flex;gap:16px;padding:15px 0;border-bottom:1px solid #E4E7EC;font-size:27px;line-height:1.38"><span style="width:12px;height:12px;border-radius:50%;background:#16A34A;flex:none;margin-top:11px"></span><span>Циклы создаются сами, копится статистика скорости команды</span></div>
+      <div style="display:flex;gap:16px;padding:15px 0;border-bottom:1px solid #E4E7EC;font-size:27px;line-height:1.38"><span style="width:12px;height:12px;border-radius:50%;background:#16A34A;flex:none;margin-top:11px"></span><span>Простой интерфейс на русском, лишнее можно не включать</span></div>
+      <div style="display:flex;gap:16px;padding:15px 0;border-bottom:1px solid #E4E7EC;font-size:27px;line-height:1.38"><span style="width:12px;height:12px;border-radius:50%;background:#16A34A;flex:none;margin-top:11px"></span><span>Готовый импорт из Jira и других систем</span></div>
+    </div>
+    <div style="border:1px solid #E4E7EC;border-radius:20px;padding:32px 40px;display:flex;flex-direction:column">
+      <span style="display:flex;align-items:center;gap:14px;font-size:33px;font-weight:700;margin-bottom:8px"><span style="width:18px;height:18px;border-radius:50%;background:#DC2626"></span>Недостатки</span>
+      <div style="display:flex;gap:16px;padding:15px 0;border-bottom:1px solid #E4E7EC;font-size:27px;line-height:1.38"><span style="width:12px;height:12px;border-radius:50%;background:#DC2626;flex:none;margin-top:11px"></span><span>Нет учёта бюджета и закупок</span></div>
+      <div style="display:flex;gap:16px;padding:15px 0;border-bottom:1px solid #E4E7EC;font-size:27px;line-height:1.38"><span style="width:12px;height:12px;border-radius:50%;background:#DC2626;flex:none;margin-top:11px"></span><span>Бесплатно — только базовые функции; учёт времени, Wiki и дашборды платные, цены в долларах</span></div>
+      <div style="display:flex;gap:16px;padding:15px 0;border-bottom:1px solid #E4E7EC;font-size:27px;line-height:1.38"><span style="width:12px;height:12px;border-radius:50%;background:#DC2626;flex:none;margin-top:11px"></span><span>Свой сервер нужно обслуживать, ИИ требует ресурсов</span></div>
+      <div style="display:flex;gap:16px;padding:15px 0;border-bottom:1px solid #E4E7EC;font-size:27px;line-height:1.38"><span style="width:12px;height:12px;border-radius:50%;background:#DC2626;flex:none;margin-top:11px"></span><span>Интерфейс часто меняется, документация на английском</span></div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Вывод" data-screen-label="14 Вывод" data-speaker-notes="Вывод. Plane хорошо подходит командам разработки и продуктовым командам любого размера, особенно тем, кому важно хранить данные у себя. Он автоматизирует планирование, исполнение и контроль: задачи, спринты, сроки и общение команды. Условие успеха — команда должна регулярно обновлять статусы задач, иначе отчёты теряют смысл. А бюджет и закупки придётся вести в другой системе. Кто хочет попробовать сам — есть бесплатное облако на app.plane.so и исходный код на GitHub. Спасибо за внимание, готов ответить на вопросы." style="width:1920px;height:1080px;box-sizing:border-box;background:#FFFFFF;padding:80px 96px;display:flex;flex-direction:column;font-family:Onest,system-ui,sans-serif;color:#171A1F">
+  <div style="display:flex;align-items:center;gap:20px;font-size:24px;color:#60646C;margin-bottom:36px"><span style="font-weight:700;color:#3F76FF">Plane</span><span style="flex:1;height:1px;background:#E4E7EC"></span><span style="font-family:'JetBrains Mono',monospace;font-weight:500">14</span></div>
+  <h2 style="margin:0 0 24px;font-size:72px;font-weight:800;letter-spacing:-0.025em">Вывод</h2>
+  <p style="margin:0 0 44px;font-size:44px;line-height:1.3;font-weight:600;max-width:30em;text-wrap:pretty">Plane подходит командам разработки и продукта любого размера, особенно тем, кому важно хранить данные у себя</p>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px">
+    <div style="border:1px solid #E4E7EC;border-radius:20px;padding:32px 36px;display:flex;flex-direction:column;gap:12px"><span style="font-size:25px;font-weight:600;color:#16A34A">Сильная сторона</span><span style="font-size:29px;line-height:1.4">планирование, исполнение и контроль задач и сроков</span></div>
+    <div style="border:1px solid #E4E7EC;border-radius:20px;padding:32px 36px;display:flex;flex-direction:column;gap:12px"><span style="font-size:25px;font-weight:600;color:#B45309">Условие успеха</span><span style="font-size:29px;line-height:1.4">команда регулярно обновляет статусы и оценки</span></div>
+    <div style="border:1px solid #E4E7EC;border-radius:20px;padding:32px 36px;display:flex;flex-direction:column;gap:12px"><span style="font-size:25px;font-weight:600;color:#DC2626">Граница применения</span><span style="font-size:29px;line-height:1.4">бюджет и закупки ведутся в других системах</span></div>
+  </div>
+  <div style="margin-top:auto;background:#F7F8FA;border:1px solid #E4E7EC;border-radius:20px;padding:30px 40px;display:flex;align-items:center;gap:36px;flex-wrap:wrap">
+    <span style="font-size:27px;font-weight:600;color:#60646C">Попробовать самостоятельно</span>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:#3F76FF">app.plane.so</span>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:#3F76FF">github.com/makeplane/plane</span>
+  </div>
+</section>
+
+<section data-label="Вклад и источники" data-screen-label="15 Вклад и источники" data-speaker-notes="Работа выполнена индивидуально. Источники — официальный сайт Plane, страница тарифов, журнал изменений и документация для разработчиков. Спасибо за внимание." style="width:1920px;height:1080px;box-sizing:border-box;background:#FFFFFF;padding:80px 96px;display:flex;flex-direction:column;font-family:Onest,system-ui,sans-serif;color:#171A1F">
+  <div style="display:flex;align-items:center;gap:20px;font-size:24px;color:#60646C;margin-bottom:40px"><span style="font-weight:700;color:#3F76FF">Plane</span><span style="flex:1;height:1px;background:#E4E7EC"></span><span style="font-family:'JetBrains Mono',monospace;font-weight:500">15</span></div>
+  <h2 style="margin:0 0 44px;font-size:72px;font-weight:800;letter-spacing:-0.025em">Вклад и источники</h2>
+  <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:28px;min-height:0">
+    <div style="border:1px solid #E4E7EC;border-radius:20px;padding:40px 44px;display:flex;flex-direction:column;gap:12px">
+      <span style="font-size:26px;font-weight:600;color:#60646C">Вклад в СРС · работа выполнена индивидуально</span>
+      <span style="font-size:40px;font-weight:700;margin-bottom:12px">Алешин И.К.</span>
+      <span style="padding:14px 0;border-top:1px solid #E4E7EC;font-size:28px">выбор и анализ программного продукта</span>
+      <span style="padding:14px 0;border-top:1px solid #E4E7EC;font-size:28px">сопоставление с PMBOK и процессами</span>
+      <span style="padding:14px 0;border-top:1px solid #E4E7EC;font-size:28px">анализ условий доступа</span>
+      <span style="padding:14px 0;border-top:1px solid #E4E7EC;font-size:28px">подготовка презентации и доклада</span>
+    </div>
+    <div style="border:1px solid #E4E7EC;border-radius:20px;padding:40px 44px;display:flex;flex-direction:column;gap:12px">
+      <span style="font-size:26px;font-weight:600;color:#60646C">Основные источники</span>
+      <span style="padding:14px 0;border-top:1px solid #E4E7EC;font-size:28px"><span style="font-family:'JetBrains Mono',monospace;color:#3F76FF;font-size:25px">plane.so</span> — официальный сайт</span>
+      <span style="padding:14px 0;border-top:1px solid #E4E7EC;font-size:28px"><span style="font-family:'JetBrains Mono',monospace;color:#3F76FF;font-size:25px">plane.so/pricing</span> — тарифы</span>
+      <span style="padding:14px 0;border-top:1px solid #E4E7EC;font-size:28px"><span style="font-family:'JetBrains Mono',monospace;color:#3F76FF;font-size:25px">plane.so/changelog</span> — обновления</span>
+      <span style="padding:14px 0;border-top:1px solid #E4E7EC;font-size:28px"><span style="font-family:'JetBrains Mono',monospace;color:#3F76FF;font-size:25px">developers.plane.so</span> — установка и API</span>
+      <span style="padding:14px 0;border-top:1px solid #E4E7EC;font-size:28px"><span style="font-family:'JetBrains Mono',monospace;color:#3F76FF;font-size:25px">github.com/makeplane/plane</span> — исходный код</span>
+    </div>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>
