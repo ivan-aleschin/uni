@@ -16,6 +16,7 @@
 | [`information-theory`](./information-theory)           | Теория информации и кодирование                               |
 | [`internet-programming`](./internet-programming)       | Интернет-программирование                                     |
 | [`logic-programming`](./logic-programming)             | Функциональное и логическое программирование (Prolog, Erlang) |
+| [`market-economy`](./market-economy)                   | Основы рыночной экономики                                     |
 | [`math-logic`](./math-logic)                           | Математическая логика и теория алгоритмов                     |
 | [`microprocessor-systems`](./microprocessor-systems)   | Микропроцессорные средства и системы                          |
 | [`os-and-networks`](./os-and-networks)                 | Операционные системы и сети                                   |

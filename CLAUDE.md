@@ -47,7 +47,7 @@ nix shell nixpkgs#poppler-utils -c pdftotext file.pdf out.txt
 | `software-quality/lab-*` | C# (.NET 8) | `dotnet run` в директории лабы; только C# (требование преподавателя), вариант 1 |
 | `software-testing/{tlabs-main,testing-java-lab-*}` | Java 11 + Maven (JUnit 5, Mockito, JaCoCo) | `mvn test` |
 
-Предметы, в которых только `*.md`-отчёты (`electronics/`, `human-machine-interface/`, `internet-programming/`, `math-logic/`, `otik/`, `software-design/`), кода для сборки не содержат.
+Предметы, в которых только `*.md`-отчёты (`electronics/`, `human-machine-interface/`, `internet-programming/`, `market-economy/`, `math-logic/`, `otik/`, `software-design/`), кода для сборки не содержат.
 
 ### Workflow для БД (`databases/pgcli/`)
 
