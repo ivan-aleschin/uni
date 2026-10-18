@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="90mm" height="33.5mm" viewBox="0 0 90 33.5" font-family="Libertinus Serif, serif">
+<defs><pattern id="h" width="1.6" height="1.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="1.6" stroke="black" stroke-width="0.25"/></pattern></defs>
+<line x1="10.00" y1="15.50" x2="86.00" y2="15.50" stroke="black" stroke-width="0.4"/>
+<text x="6.00" y="14.00" font-size="3.4" text-anchor="middle">+</text>
+<text x="6.00" y="19.00" font-size="3.4" text-anchor="middle">−</text>
+<text x="9.00" y="16.70" font-size="3.2" text-anchor="end">0</text>
+<rect x="30.00" y="15.50" width="16.00" height="5.00" fill="url(#h)" stroke="black" stroke-width="0.5"/>
+<rect x="56.00" y="13.00" width="16.00" height="5.00" fill="none" stroke="black" stroke-width="0.5"/>
+<text x="38.00" y="14.00" font-size="3.2" text-anchor="middle" font-style="italic">L5</text>
+<text x="64.00" y="11.50" font-size="3.2" text-anchor="middle" font-style="italic">js5</text>
+<text x="29.00" y="16.70" font-size="2.8" text-anchor="end">0</text>
+<text x="29.00" y="21.70" font-size="2.8" text-anchor="end">−5</text>
+<text x="73.00" y="14.20" font-size="2.8" text-anchor="start">+2,5</text>
+<text x="73.00" y="19.20" font-size="2.8" text-anchor="start">−2,5</text>
+<text x="45.00" y="32.50" font-size="3.0" text-anchor="middle">∅4 L5-js5, мкм</text>
+</svg>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100mm" height="42mm" viewBox="0 0 100 42" font-family="Libertinus Serif, serif">
+<line x1="4" y1="22" x2="14" y2="22" stroke="black" stroke-width="0.35"/>
+<rect x="14" y="19" width="14" height="6" fill="none" stroke="black" stroke-width="0.35"/>
+<text x="21.0" y="17.5" font-size="3.6" text-anchor="middle" font-style="italic">r*</text>
+<line x1="16" y1="27" x2="27" y2="16" stroke="black" stroke-width="0.3"/>
+<path d="M27,16 l-2.2,0.8 l1.2,1.2 z" fill="black"/>
+<line x1="28" y1="22" x2="36" y2="22" stroke="black" stroke-width="0.35"/>
+<rect x="36" y="19" width="14" height="6" fill="none" stroke="black" stroke-width="0.35"/>
+<text x="43.0" y="17.5" font-size="3.6" text-anchor="middle" font-style="italic">r₁</text>
+<line x1="50" y1="22" x2="60" y2="22" stroke="black" stroke-width="0.35"/>
+<line x1="60" y1="8" x2="66" y2="8" stroke="black" stroke-width="0.35"/>
+<rect x="66" y="5" width="14" height="6" fill="none" stroke="black" stroke-width="0.35"/>
+<text x="73.0" y="3.5" font-size="3.6" text-anchor="middle" font-style="italic">r₂</text>
+<line x1="80" y1="8" x2="86" y2="8" stroke="black" stroke-width="0.35"/>
+<line x1="60" y1="22" x2="66" y2="22" stroke="black" stroke-width="0.35"/>
+<rect x="66" y="19" width="14" height="6" fill="none" stroke="black" stroke-width="0.35"/>
+<text x="73.0" y="17.5" font-size="3.6" text-anchor="middle" font-style="italic">r₃</text>
+<line x1="80" y1="22" x2="86" y2="22" stroke="black" stroke-width="0.35"/>
+<line x1="60" y1="36" x2="66" y2="36" stroke="black" stroke-width="0.35"/>
+<rect x="66" y="33" width="14" height="6" fill="none" stroke="black" stroke-width="0.35"/>
+<text x="73.0" y="31.5" font-size="3.6" text-anchor="middle" font-style="italic">r₄</text>
+<line x1="80" y1="36" x2="86" y2="36" stroke="black" stroke-width="0.35"/>
+<line x1="60" y1="8" x2="60" y2="36" stroke="black" stroke-width="0.35"/>
+<line x1="86" y1="8" x2="86" y2="36" stroke="black" stroke-width="0.35"/>
+<line x1="86" y1="22" x2="96" y2="22" stroke="black" stroke-width="0.35"/>
+<circle cx="60" cy="22" r="0.9" fill="black"/>
+<text x="57.5" y="20.5" font-size="3.6" font-style="italic">a</text>
+<circle cx="86" cy="22" r="0.9" fill="black"/>
+<text x="83.5" y="20.5" font-size="3.6" font-style="italic">b</text>
+</svg>

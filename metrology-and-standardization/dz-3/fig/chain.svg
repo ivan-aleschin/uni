@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="86mm" height="40mm" viewBox="0 0 86 40" font-family="Libertinus Serif, serif">
+<line x1="10" y1="4" x2="10" y2="34" stroke="black" stroke-width="0.25"/>
+<line x1="70" y1="4" x2="70" y2="34" stroke="black" stroke-width="0.25"/>
+<line x1="76" y1="4" x2="76" y2="34" stroke="black" stroke-width="0.25"/>
+<line x1="10" y1="12" x2="76" y2="12" stroke="black" stroke-width="0.35"/>
+<path d="M76,12 l-2.2,-0.9 v1.8 z" fill="black"/>
+<text x="43.0" y="10.4" font-size="3.8" text-anchor="middle" font-style="italic">A₁ (D)</text>
+<line x1="10" y1="24" x2="70" y2="24" stroke="black" stroke-width="0.35"/>
+<path d="M70,24 l-2.2,-0.9 v1.8 z" fill="black"/>
+<text x="40.0" y="22.4" font-size="3.8" text-anchor="middle" font-style="italic">A₂ (d)</text>
+<line x1="70" y1="32" x2="76" y2="32" stroke="black" stroke-width="0.35"/>
+<path d="M76,32 l-2.2,-0.9 v1.8 z" fill="black"/>
+<text x="73.0" y="36.4" font-size="3.8" text-anchor="middle" font-style="italic">A<tspan baseline-shift="sub" font-size="2.8">Δ</tspan> (S)</text>
+</svg>

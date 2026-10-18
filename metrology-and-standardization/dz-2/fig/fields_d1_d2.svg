@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="90mm" height="42mm" viewBox="0 0 90 42" font-family="Libertinus Serif, serif">
+<line x1="10.00" y1="21.00" x2="86.00" y2="21.00" stroke="black" stroke-width="0.4"/>
+<text x="6.00" y="19.50" font-size="3.4" text-anchor="middle">+</text>
+<text x="6.00" y="24.50" font-size="3.4" text-anchor="middle">−</text>
+<text x="9.00" y="22.20" font-size="3.2" text-anchor="end">0</text>
+<rect x="26.00" y="21.00" width="16.00" height="8.00" fill="none" stroke="black" stroke-width="0.5"/>
+<text x="34.00" y="19.50" font-size="3.2" text-anchor="middle" font-style="italic">h6</text>
+<text x="43.00" y="22.20" font-size="2.8" text-anchor="start">0</text>
+<text x="43.00" y="30.20" font-size="2.8" text-anchor="start">−8</text>
+<rect x="56.00" y="12.00" width="16.00" height="18.00" fill="none" stroke="black" stroke-width="0.5"/>
+<text x="64.00" y="10.50" font-size="3.2" text-anchor="middle" font-style="italic">js8</text>
+<text x="73.00" y="13.20" font-size="2.8" text-anchor="start">+9</text>
+<text x="73.00" y="31.20" font-size="2.8" text-anchor="start">−9</text>
+<text x="48.00" y="41.00" font-size="3.0" text-anchor="middle">∅3,6h6 и ∅4js8, мкм</text>
+</svg>

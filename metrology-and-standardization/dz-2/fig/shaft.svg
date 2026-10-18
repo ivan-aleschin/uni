@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="165mm" height="120mm" viewBox="0 0 165 120" font-family="Libertinus Serif, serif">
+<defs><pattern id="h" width="1.6" height="1.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="1.6" stroke="black" stroke-width="0.25"/></pattern></defs>
+<rect x="12.00" y="54.60" width="18.00" height="10.80" fill="none" stroke="black" stroke-width="0.45"/>
+<rect x="30.00" y="54.00" width="48.00" height="12.00" fill="none" stroke="black" stroke-width="0.45"/>
+<rect x="78.00" y="53.25" width="48.00" height="13.50" fill="none" stroke="black" stroke-width="0.45"/>
+<rect x="126.00" y="54.00" width="24.00" height="12.00" fill="none" stroke="black" stroke-width="0.45"/>
+<rect x="15.00" y="58.50" width="12.00" height="3.00" fill="none" stroke="black" stroke-width="0.25"/>
+<rect x="97.50" y="58.50" width="24.00" height="3.00" fill="none" stroke="black" stroke-width="0.25"/>
+<line x1="8.00" y1="60.00" x2="154.00" y2="60.00" stroke="black" stroke-width="0.2" stroke-dasharray="4 1 1 1"/>
+<line x1="63.00" y1="54.00" x2="63.00" y2="66.00" stroke="black" stroke-width="0.2"/>
+<line x1="21.00" y1="54.60" x2="21.00" y2="35.20" stroke="black" stroke-width="0.25"/>
+<path d="M21.0,54.6 l-0.45,-1.2 h0.9 z" fill="black"/>
+<line x1="21.00" y1="54.60" x2="21.00" y2="65.40" stroke="black" stroke-width="0.25"/>
+<path d="M21.0,65.4 l-0.45,1.2 h0.9 z" fill="black"/>
+<text x="22.65" y="34.00" font-size="3.6" text-anchor="end">∅3,6h6(</text>
+<text x="22.85" y="32.40" font-size="2.6" text-anchor="start">0</text>
+<text x="22.85" y="35.20" font-size="2.6" text-anchor="start">−0,008</text>
+<text x="31.63" y="34.00" font-size="3.6" text-anchor="start">)</text>
+<line x1="48.00" y1="54.00" x2="48.00" y2="43.20" stroke="black" stroke-width="0.25"/>
+<path d="M48.0,54.0 l-0.45,-1.2 h0.9 z" fill="black"/>
+<line x1="48.00" y1="54.00" x2="48.00" y2="66.00" stroke="black" stroke-width="0.25"/>
+<path d="M48.0,66.0 l-0.45,1.2 h0.9 z" fill="black"/>
+<text x="48.00" y="42.00" font-size="3.6" text-anchor="middle">∅4js8(±0,009)</text>
+<line x1="70.50" y1="54.00" x2="70.50" y2="31.20" stroke="black" stroke-width="0.25"/>
+<path d="M70.5,54.0 l-0.45,-1.2 h0.9 z" fill="black"/>
+<line x1="70.50" y1="54.00" x2="70.50" y2="66.00" stroke="black" stroke-width="0.25"/>
+<path d="M70.5,66.0 l-0.45,1.2 h0.9 z" fill="black"/>
+<text x="70.50" y="30.00" font-size="3.6" text-anchor="middle">∅4js5(±0,0025)</text>
+<line x1="102.00" y1="53.25" x2="102.00" y2="35.20" stroke="black" stroke-width="0.25"/>
+<path d="M102.0,53.25 l-0.45,-1.2 h0.9 z" fill="black"/>
+<line x1="102.00" y1="53.25" x2="102.00" y2="66.75" stroke="black" stroke-width="0.25"/>
+<path d="M102.0,66.75 l-0.45,1.2 h0.9 z" fill="black"/>
+<text x="103.65" y="34.00" font-size="3.6" text-anchor="end">∅4,5m5(</text>
+<text x="103.85" y="32.40" font-size="2.6" text-anchor="start">+0,009</text>
+<text x="103.85" y="35.20" font-size="2.6" text-anchor="start">+0,004</text>
+<text x="112.63" y="34.00" font-size="3.6" text-anchor="start">)</text>
+<line x1="138.00" y1="54.00" x2="138.00" y2="31.20" stroke="black" stroke-width="0.25"/>
+<path d="M138.0,54.0 l-0.45,-1.2 h0.9 z" fill="black"/>
+<line x1="138.00" y1="54.00" x2="138.00" y2="66.00" stroke="black" stroke-width="0.25"/>
+<path d="M138.0,66.0 l-0.45,1.2 h0.9 z" fill="black"/>
+<text x="138.00" y="30.00" font-size="3.6" text-anchor="middle">∅4js5(±0,0025)</text>
+<rect x="61.50" y="17.00" width="6.00" height="5.00" fill="none" stroke="black" stroke-width="0.3"/>
+<circle cx="64.5" cy="19.5" r="1.6" fill="none" stroke="black" stroke-width="0.3"/>
+<rect x="67.50" y="17.00" width="12.00" height="5.00" fill="none" stroke="black" stroke-width="0.3"/>
+<text x="73.50" y="20.70" font-size="2.8" text-anchor="middle">0,0006</text>
+<line x1="70.50" y1="22.00" x2="70.50" y2="25.00" stroke="black" stroke-width="0.2"/>
+<rect x="129.00" y="17.00" width="6.00" height="5.00" fill="none" stroke="black" stroke-width="0.3"/>
+<circle cx="132.0" cy="19.5" r="1.6" fill="none" stroke="black" stroke-width="0.3"/>
+<rect x="135.00" y="17.00" width="12.00" height="5.00" fill="none" stroke="black" stroke-width="0.3"/>
+<text x="141.00" y="20.70" font-size="2.8" text-anchor="middle">0,0006</text>
+<line x1="138.00" y1="22.00" x2="138.00" y2="25.00" stroke="black" stroke-width="0.2"/>
+<path d="M12.4,70.75 L14.4,67.75 L15.6,69.75 L24.4,69.75" fill="none" stroke="black" stroke-width="0.25"/>
+<text x="16.00" y="69.35" font-size="3.0" text-anchor="start">Ra 0,32</text>
+<path d="M37.0,70.75 L39.0,67.75 L40.2,69.75 L49.0,69.75" fill="none" stroke="black" stroke-width="0.25"/>
+<text x="40.60" y="69.35" font-size="3.0" text-anchor="start">Ra 0,63</text>
+<path d="M61.300000000000004,70.75 L63.300000000000004,67.75 L64.5,69.75 L73.30000000000001,69.75" fill="none" stroke="black" stroke-width="0.25"/>
+<text x="64.90" y="69.35" font-size="3.0" text-anchor="start">Ra 0,04</text>
+<path d="M88.0,70.75 L90.0,67.75 L91.2,69.75 L100.0,69.75" fill="none" stroke="black" stroke-width="0.25"/>
+<text x="91.60" y="69.35" font-size="3.0" text-anchor="start">Ra 0,16</text>
+<path d="M139.60000000000002,70.75 L141.60000000000002,67.75 L142.8,69.75 L151.60000000000002,69.75" fill="none" stroke="black" stroke-width="0.25"/>
+<text x="143.20" y="69.35" font-size="3.0" text-anchor="start">Ra 0,04</text>
+<line x1="78.00" y1="54.75" x2="64.60" y2="49.75" stroke="black" stroke-width="0.2"/>
+<path d="M62.99999999999999,47.15 L64.6,49.75 L67.6,44.55 L77.6,44.55" fill="none" stroke="black" stroke-width="0.25"/>
+<text x="68.00" y="43.85" font-size="2.8" text-anchor="start">Ra 0,08</text>
+<line x1="126.00" y1="54.75" x2="130.60" y2="49.75" stroke="black" stroke-width="0.2"/>
+<path d="M129.0,47.15 L130.6,49.75 L133.6,44.55 L143.6,44.55" fill="none" stroke="black" stroke-width="0.25"/>
+<text x="134.00" y="43.85" font-size="2.8" text-anchor="start">Ra 0,08</text>
+<line x1="12.00" y1="66.00" x2="12.00" y2="106.00" stroke="black" stroke-width="0.2"/>
+<line x1="30.00" y1="66.00" x2="30.00" y2="82.00" stroke="black" stroke-width="0.2"/>
+<line x1="12.00" y1="80.00" x2="30.00" y2="80.00" stroke="black" stroke-width="0.25"/>
+<path d="M12,80 l1.4,-0.4666666666666666 v0.9333333333333332 z" fill="black"/>
+<path d="M30.0,80 l-1.4,-0.4666666666666666 v0.9333333333333332 z" fill="black"/>
+<text x="21.00" y="79.20" font-size="3.6" text-anchor="middle">6±0,06</text>
+<line x1="78.00" y1="66.00" x2="78.00" y2="90.00" stroke="black" stroke-width="0.2"/>
+<line x1="12.00" y1="88.00" x2="78.00" y2="88.00" stroke="black" stroke-width="0.25"/>
+<path d="M12,88 l1.4,-0.4666666666666666 v0.9333333333333332 z" fill="black"/>
+<path d="M78.0,88 l-1.4,-0.4666666666666666 v0.9333333333333332 z" fill="black"/>
+<text x="45.00" y="87.20" font-size="3.6" text-anchor="middle">22±0,105</text>
+<line x1="126.00" y1="66.00" x2="126.00" y2="98.00" stroke="black" stroke-width="0.2"/>
+<line x1="12.00" y1="96.00" x2="126.00" y2="96.00" stroke="black" stroke-width="0.25"/>
+<path d="M12,96 l1.4,-0.4666666666666666 v0.9333333333333332 z" fill="black"/>
+<path d="M126.0,96 l-1.4,-0.4666666666666666 v0.9333333333333332 z" fill="black"/>
+<text x="69.00" y="95.20" font-size="3.6" text-anchor="middle">38±0,125</text>
+<line x1="150.00" y1="66.00" x2="150.00" y2="106.00" stroke="black" stroke-width="0.2"/>
+<line x1="12.00" y1="104.00" x2="150.00" y2="104.00" stroke="black" stroke-width="0.25"/>
+<path d="M12,104 l1.4,-0.4666666666666666 v0.9333333333333332 z" fill="black"/>
+<path d="M150.0,104 l-1.4,-0.4666666666666666 v0.9333333333333332 z" fill="black"/>
+<text x="81.00" y="103.20" font-size="3.6" text-anchor="middle">46<tspan baseline-shift="sub" font-size="2.6">−0,25</tspan></text>
+<path d="M134.4,8.4 L136,11 L139,5.8 L149,5.8" fill="none" stroke="black" stroke-width="0.25"/>
+<text x="139.40" y="5.10" font-size="3.2" text-anchor="start">Ra 5</text>
+<text x="160.00" y="9.00" font-size="3.2" text-anchor="end">(√)</text>
+<text x="148.00" y="114.00" font-size="3.6" text-anchor="end">М 3:1</text>
+</svg>
