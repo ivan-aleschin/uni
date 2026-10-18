@@ -1,0 +1,51 @@
+// Шаблон pandoc → typst для отчётов по ДЗ (общий для всех dz-*).
+// Шапка берётся из YAML отчёта: title, subtitle, discipline, author, variant.
+// Название и подзаголовок — по центру, «Дисциплина», «Выполнил» и «Вариант» —
+// каждая на своей строке.
+#let horizontalrule = line(start: (25%,0%), end: (75%,0%))
+
+#show terms: it => {
+  it.children
+    .map(child => [
+      #strong[#child.term]
+      #block(inset: (left: 1.5em, top: -0.4em))[#child.description]
+      ])
+    .join()
+}
+
+#set table(
+  inset: 6pt,
+  stroke: none
+)
+
+#show figure.where(kind: table): set figure.caption(position: top)
+#show figure.where(kind: image): set figure.caption(position: bottom)
+
+#set document(title: [$title$]$if(author)$, author: "$author$"$endif$)
+#set page(paper: "a4", margin: (x: 2cm, y: 2cm), numbering: "1")
+#set par(justify: true)
+#set text(lang: "ru", font: ("Libertinus Serif",), size: 12pt)
+
+#align(center)[
+  #text(weight: "bold", size: 1.5em)[$title$]
+$if(subtitle)$
+  #v(0.2em)
+  #text(weight: "bold", size: 1.25em)[$subtitle$]
+$endif$
+]
+#v(1em)
+#block[
+  #set par(justify: false)
+$if(discipline)$
+  Дисциплина: «$discipline$» \
+$endif$
+$if(author)$
+  Выполнил: $author$ \
+$endif$
+$if(variant)$
+  Вариант: $variant$
+$endif$
+]
+#v(0.5em)
+
+$body$
