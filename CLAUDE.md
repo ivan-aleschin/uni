@@ -38,6 +38,7 @@ nix shell nixpkgs#poppler-utils -c pdftotext file.pdf out.txt
 | `information-security/lab-*` | Python | `python3 main.py` в директории лабы |
 | `information-theory/otik-lab-*` | Python | каждая лаба — отдельный скрипт |
 | `logic-programming/lab-*` | SWI-Prolog | `swipl -s lab-N.pl -g "run_lab_tests, halt."` |
+| `metrology-and-standardization/dz-*` | Python + pandoc/typst | `python3 main.py` (проверочный расчёт), `make` → `report.pdf`; методичка `УМП_ОМиС_2025.pdf` в корне предмета |
 | `microprocessor-systems/lab-*` | SystemVerilog | см. ниже |
 | `os-and-networks/lab*` | bash | `bash src/<script>.sh` |
 | `parallel-programming/` | C# (.NET) + C++ AVX | `dotnet build *.sln`; SIMD-проекты изначально под Windows/MSVC |
