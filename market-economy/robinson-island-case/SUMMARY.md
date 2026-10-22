@@ -1,6 +1,6 @@
 # «Остров Робинзона» — коротко
 
-Шпаргалка для защиты. Полное решение — [solution.md](solution.md).
+Шпаргалка для защиты. Полное решение — [solution.pdf](solution.pdf) (исходник [solution.typ](solution.typ)).
 
 ## Суть
 
