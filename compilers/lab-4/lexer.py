@@ -66,6 +66,9 @@ def is_digit(c: int) -> bool:
 
 
 class Lexer:
+    # Односимвольные токены-знаки; ArrayLexer (arrays.py) добавляет к ним "[ ] ,".
+    punct = b"(){};"
+
     def __init__(self, source: bytes):
         self.s = source
         self.pos = 0
@@ -148,7 +151,7 @@ class Lexer:
                 t.kind = "num"
                 if bad:
                     error(t.line, t.col, "неверное число", f"'{t.text}': число может содержать только цифры")
-            elif c in b"(){};":
+            elif c in self.punct:
                 t.text = t.kind = chr(c)
                 self.advance()
             elif c == ord("="):  # '=' или '=='

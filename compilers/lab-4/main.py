@@ -3,22 +3,24 @@
 предиктивный анализатор со стеком и восстановлением после ошибок.
 Результат — вывод в консоль и таблицы хода разбора в файлах .md.
 
-Запуск:  python3 main.py [--phrase] [--ext] [--out DIR] файл.cl
-         python3 main.py --table [--ext] [--out DIR]
+Запуск:  python3 main.py [--phrase] [--ext | --arrays] [--out DIR] файл.cl
+         python3 main.py --table [--ext | --arrays] [--out DIR]
   --phrase  восстановление в режиме фразы (по умолчанию — режим паники)
   --ext     расширенная грамматика: в { } последовательность операторов
+  --arrays  --ext + массивы: объявление, инициализация, обращение к ячейкам (arrays.py)
   --out     куда писать таблицы (по умолчанию results/ рядом с main.py)
   --table   только построить таблицу предиктивного анализа
 
 Файлы:  DIR/<имя>.trace.md         — ход разбора (как пример 4), режим паники
         DIR/<имя>.phrase.trace.md  — то же в режиме фразы
-        DIR/parse_table.md (parse_table_ext.md) — FIRST, FOLLOW, synch, M[A, a]
+        DIR/parse_table.md (parse_table_ext.md, parse_table_arrays.md) — FIRST, FOLLOW, synch, M[A, a]
 Код возврата: 0 — ошибок нет, 1 — найдены ошибки, 2 — неверный запуск.
 """
 
 import os
 import sys
 
+from arrays import ArrayLexer, add_arrays, check_arrays
 from grammar import EPS, Grammar, build_tables, make_grammar
 from lexer import Diagnostic, Lexer, text_of
 from parser import Parser
@@ -66,7 +68,8 @@ def join_set(s: set[str], order: list[str]) -> str:
 def write_parse_table(g: Grammar, file: str) -> None:
     """Файл с грамматикой, FIRST/FOLLOW/synch и таблицей M[A, a]."""
     out = []
-    out.append("# Таблица предиктивного анализа C-light" + (" (расширенная грамматика, --ext)" if g.ext else "")
+    title = " (массивы, --arrays)" if g.arrays else " (расширенная грамматика, --ext)" if g.ext else ""
+    out.append("# Таблица предиктивного анализа C-light" + title
                + "\n\nСгенерировано программой ЛР4 (`main.py`) по грамматике\n"
                "из `grammar.py`.\n"
                "Нетерминалы — в угловых скобках, `id` и `num` — токены лексера (`<identifier>` и `<number>`).\n\n")
@@ -146,7 +149,7 @@ def source_line(lines: list[bytes], line: int, col: int) -> str:
 
 def main() -> int:
     argv = sys.argv
-    phrase = ext = table_only = False
+    phrase = ext = arrays = table_only = False
     # По умолчанию пишем в results/ рядом с main.py (а не в текущую папку),
     # так результат один и тот же, откуда бы ни запускали.
     out_dir = os.path.normpath(os.path.join(os.path.dirname(argv[0]), "results"))
@@ -158,6 +161,8 @@ def main() -> int:
             phrase = True
         elif a == "--ext":
             ext = True
+        elif a == "--arrays":
+            ext = arrays = True
         elif a == "--table":
             table_only = True
         elif a == "--out" and i + 1 < len(argv):
@@ -170,8 +175,8 @@ def main() -> int:
             return 2
         i += 1
     if not table_only and not input_path:
-        print(f"Использование: {argv[0]} [--phrase] [--ext] [--out DIR] файл.cl\n"
-              f"               {argv[0]} --table [--ext] [--out DIR]", file=sys.stderr)
+        print(f"Использование: {argv[0]} [--phrase] [--ext | --arrays] [--out DIR] файл.cl\n"
+              f"               {argv[0]} --table [--ext | --arrays] [--out DIR]", file=sys.stderr)
         return 2
 
     stdout = []  # всё, что идёт в консоль; пишем одним куском в конце, байтами
@@ -182,9 +187,12 @@ def main() -> int:
 
     # 1. Грамматика → FIRST, FOLLOW, таблица M, synch.
     g = make_grammar(ext)
+    if arrays:
+        add_arrays(g)
     build_tables(g)
     os.makedirs(out_dir, exist_ok=True)
-    table_file = os.path.join(out_dir, "parse_table_ext.md" if ext else "parse_table.md")
+    table_name = "parse_table_arrays.md" if arrays else "parse_table_ext.md" if ext else "parse_table.md"
+    table_file = os.path.join(out_dir, table_name)
     write_parse_table(g, table_file)
     if g.conflicts:
         print("Грамматика не LL(1):", file=sys.stderr)
@@ -205,14 +213,17 @@ def main() -> int:
 
     # 2. Лексический анализ.
     lex_errors: list[Diagnostic] = []
-    tokens = Lexer(source).tokenize(lex_errors)
+    tokens = (ArrayLexer if arrays else Lexer)(source).tokenize(lex_errors)
 
     # 3. Синтаксический анализ с восстановлением.
     parser = Parser(g, tokens, phrase)
     parser.run()
 
+    # 3а. Семантические проверки массивов (только с --arrays).
+    sem_errors = check_arrays(tokens) if arrays else []
+
     # 4. Сводим ошибки в один список по порядку в тексте (sorted устойчив, как stable_sort).
-    all_errors = sorted(lex_errors + parser.errors, key=lambda d: (d.line, d.col))
+    all_errors = sorted(lex_errors + parser.errors + sem_errors, key=lambda d: (d.line, d.col))
 
     # Строки исходника, как при построчном чтении: последний '\n' не даёт пустой строки, '\r' в конце срезаем.
     lines = source.split(b"\n")
@@ -221,7 +232,7 @@ def main() -> int:
     lines = [l[:-1] if l.endswith(b"\r") else l for l in lines]
 
     mode_name = "режим фразы" if phrase else "режим паники"
-    grammar_name = "расширенная (--ext)" if ext else "из методички"
+    grammar_name = "с массивами (--arrays)" if arrays else "расширенная (--ext)" if ext else "из методички"
     stdout.append(f"Файл: {input_path}\nГрамматика: {grammar_name}, восстановление: {mode_name}\n\n")
     for d in all_errors:  # ЦИКЛ по найденным ошибкам
         stdout.append(f"{input_path}:{d.line}:{d.col}: {d.category} ошибка [{d.type}]: {d.message}\n")
@@ -233,7 +244,8 @@ def main() -> int:
     if not all_errors:
         stdout.append("Программа корректна.\n")
     stdout.append(("\n" if all_errors else "") + f"Итого ошибок: {len(all_errors)} (лексических: {len(lex_errors)}"
-                  f", синтаксических: {len(parser.errors)})\n")
+                  f", синтаксических: {len(parser.errors)}"
+                  + (f", семантических: {len(sem_errors)}" if arrays else "") + ")\n")
 
     # 5. Таблица хода разбора, как в примере 4 методички.
     name = os.path.basename(input_path)
@@ -254,6 +266,10 @@ def main() -> int:
         out.append("\n")
     for i, d in enumerate(parser.errors, 1):
         out.append(f"{i}. {d.line}:{d.col} — синтаксическая [{d.type}]: {d.message}\n")
+    if sem_errors:
+        out.append("\n")
+    for d in sem_errors:
+        out.append(f"- {d.line}:{d.col} — семантическая [{d.type}]: {d.message}\n")
     out.append("\n## Таблица разбора\n\nСтек: дно `$` слева, вершина справа. Вход: текущий токен первый, "
                "длинный хвост сокращён до 10 токенов.\n\n")
     rows = [[str(i), f"`{r.stack}`", f"`{r.input}`", r.note] for i, r in enumerate(parser.trace, 1)]

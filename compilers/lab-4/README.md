@@ -2,7 +2,7 @@
 
 **Предмет:** Теория алгоритмических языков и компиляторов (ТАЯК)
 **Студент:** Алешин Иван Кириллович
-**Вариант задания:** максимум (число ошибок, место и тип каждой ошибки, файл с таблицей хода разбора как в примере 4) + оба дополнения: восстановление в режиме фразы и файл с таблицей предиктивного анализа.
+**Вариант задания:** максимум (число ошибок, место и тип каждой ошибки, файл с таблицей хода разбора как в примере 4) + оба дополнения: восстановление в режиме фразы и файл с таблицей предиктивного анализа + дополнительное задание преподавателя: массивы (флаг `--arrays`).
 
 Методичка — [`ТАЯК_ЛР4.docx`](ТАЯК_ЛР4.docx). Шпаргалка к защите — [SUMMARY.md](SUMMARY.md), теория — [THEORY.md](THEORY.md).
 
@@ -353,6 +353,163 @@ A → α | β: FIRST(α) ∩ FIRST(β) = ∅, а если одна из них �
 синтаксическую. Комментарии `//` и `/* */` разрешены: в C они считаются пробельными символами, а методичка
 говорит, что пробельные символы в C-light такие же, как в C.
 
+## Дополнительное задание: массивы (флаг `--arrays`)
+
+Задание преподавателя: объявление и инициализация массивов, обращение к ячейкам, в обоих случаях
+с обработкой ошибок. Всё сделано в отдельном модуле [`arrays.py`](arrays.py) и включается флагом
+`--arrays`. Без флага анализатор работает как раньше. Массивы добавлены к расширенной грамматике
+(`--ext`): без последовательности операторов нельзя написать объявление массива и обращение к нему
+подряд.
+
+**Что добавлено в язык:**
+
+```c
+int a[3];                 // объявление
+int b[5] = {1, x, 0};     // объявление с инициализацией
+int c[] = {4, 5};         // размер по числу значений
+a[0] = 7;  a[n] = b[1];   // присваивание ячейке
+int y = c[1];             // ячейка справа от '='
+if (a[i] == b[i]) ...     // ячейка в условии if / for
+```
+
+**Новые и изменённые продукции.** Остальные 27 продукций те же, что в `--ext`. Полный список —
+в [`results/parse_table_arrays.md`](results/parse_table_arrays.md).
+
+```
+<declaration>     → <type> id <decl_tail>                       (было: <type> id <assign>)
+<decl_tail>       → <assign> | [ <size> ] <array_init>
+<size>            → num | ε
+<array_init>      → ε | = { <init_list> }
+<init_list>       → <assign_end> <init_rest>
+<init_rest>       → , <assign_end> <init_rest> | ε
+<assign_end>      → id <index> | num                            (было: id | num)
+<bool_expression> → id <index> <relop> id <index> | num <relop> id <index>
+<index>           → ε | [ <subscript> ]
+<subscript>       → id | num
+<statement>       → id <index> = <assign_end> ;                 (новая альтернатива: присваивание)
+```
+
+Грамматика остаётся **LL(1)**: альтернативы различаются по первому токену (`[` или `=`/`;` после
+имени, `,` или `}` в списке значений). Это проверяет тот же `build_tables`: 40 продукций,
+конфликтов нет. Из этих продукций автоматически строятся FIRST, FOLLOW, synch и таблица M, поэтому
+синтаксические ошибки в массивах находит и восстанавливает тот же анализатор, в режиме паники или фразы.
+
+**Обработка ошибок.**
+
+| Вид | Ошибка | Пример | Как обнаруживается |
+| --- | --- | --- | --- |
+| синтаксическая | пропущена `]` | `int a[3 = {…}`, `a[1 = 5;` | терминал `]` на вершине ≠ `=` → «пропущен символ» |
+| синтаксическая | нет индекса | `a[] = 2;` | M[`<subscript>`, `]`] = synch → «неполная конструкция» |
+| синтаксическая | двойной индекс | `a[1][2]` | второй `[` не ожидается → «неожиданный символ» |
+| синтаксическая | пропущена `,` между значениями | `{1 2, 3}` | паника: `2` пропускается; фраза: вставляется `,` |
+| синтаксическая | пропущена `}` | `{1, 2;` | M[`<init_rest>`, `;`] = synch → «неполная конструкция» |
+| синтаксическая | пустой список или `,` перед `}` | `{}`, `{1, 2,}` | перед `}` нет значения, ячейка = synch → «неполная конструкция» |
+| синтаксическая | размер не число | `int d[x];` | паника: «неполная конструкция»; фраза: `x` считается размером, «неверный размер массива» |
+| семантическая | размер 0 | `int a[0];` | `check_arrays` |
+| семантическая | значений больше размера | `int b[2] = {1, 2, 3};` | `check_arrays` |
+| семантическая | нет ни размера, ни инициализации | `int c[];` | `check_arrays` |
+| семантическая | индекс за границами | `d[3]` у `int d[3]` | `check_arrays`, только для индекса-числа |
+| семантическая | индексация не массива | `y[0]` у `int y` | `check_arrays` |
+| семантическая | массив без индекса | `int z = d;` | `check_arrays` |
+
+Семантические ошибки грамматикой не выражаются: `int a[0]` и `int a[5]` синтаксически одинаковы.
+Поэтому после разбора `check_arrays` проходит по токенам, запоминает объявленные массивы с размерами
+и проверяет каждое обращение. Области видимости не учитываются, имя относится к последнему объявлению
+выше по тексту.
+
+**Что изменено в существующих файлах** (только точки подключения):
+
+| Файл | Изменение |
+| --- | --- |
+| `lexer.py` | односимвольные знаки вынесены в атрибут `Lexer.punct`; `ArrayLexer` из `arrays.py` добавляет к ним `[ ] ,` |
+| `grammar.py` | поле `Grammar.arrays` |
+| `parser.py` | список `PHRASE_PROCEDURES`: процедуры режима фразы из расширений, `arrays.py` кладёт туда свои |
+| `main.py` | флаг `--arrays`, вызов `add_arrays` и `check_arrays`, счётчик семантических ошибок |
+| `tests.sh` | примеры из `examples/arrays/`, проверка LL(1) грамматики `--arrays` |
+
+**Тесты** — [`examples/arrays/`](examples/arrays), запуск только их: `bash tests.sh examples/arrays`.
+
+| Пример | Что проверяет | Паника | Фраза |
+| --- | --- | --- | --- |
+| `arr_ok.cl` | все конструкции без ошибок | 0 | 0 |
+| `arr_init.cl` | синтаксические ошибки объявления и инициализации | 6 | 6 |
+| `arr_access.cl` | синтаксические ошибки обращения к ячейкам | 5 | 5 |
+| `arr_semantic.cl` | все шесть семантических ошибок | 6 | 6 |
+
+```
+$ bash tests.sh examples/arrays
+  ok    examples/arrays/arr_access.cl    panic  ошибок: 5
+  ok    examples/arrays/arr_access.cl    phrase ошибок: 5
+  ok    examples/arrays/arr_init.cl      panic  ошибок: 6
+  ok    examples/arrays/arr_init.cl      phrase ошибок: 6
+  ok    examples/arrays/arr_ok.cl        panic  ошибок: 0
+  ok    examples/arrays/arr_ok.cl        phrase ошибок: 0
+  ok    examples/arrays/arr_semantic.cl  panic  ошибок: 6
+  ok    examples/arrays/arr_semantic.cl  phrase ошибок: 6
+  ok    грамматика из методички — LL(1)
+  ok    грамматика --ext — LL(1)
+  ok    грамматика --arrays — LL(1)
+Пройдено: 11, не пройдено: 0
+```
+
+Ошибки инициализации в режиме фразы:
+
+```
+$ python3 main.py --arrays --phrase examples/arrays/arr_init.cl
+Файл: examples/arrays/arr_init.cl
+Грамматика: с массивами (--arrays), восстановление: режим фразы
+
+examples/arrays/arr_init.cl:5:12: синтаксическая ошибка [пропущен символ]: ожидалось: ']' перед '='
+  5 |     int a[3 = {1, 2, 3};
+    |            ^
+examples/arrays/arr_init.cl:6:18: синтаксическая ошибка [пропущен символ]: ожидалось: ',' перед '2'
+  6 |     int b[4] = {1 2, 3};
+    |                  ^
+examples/arrays/arr_init.cl:7:21: синтаксическая ошибка [неполная конструкция]: перед ';' ожидалось: продолжение списка значений ('}', ',')
+  7 |     int c[2] = {1, 2;
+    |                     ^
+examples/arrays/arr_init.cl:8:11: синтаксическая ошибка [неверный размер массива]: 'x': размер массива должен быть числом
+  8 |     int d[x];
+    |           ^
+examples/arrays/arr_init.cl:9:17: синтаксическая ошибка [неполная конструкция]: перед '}' ожидалось: значение (идентификатор, число)
+  9 |     int e[3] = {};
+    |                 ^
+examples/arrays/arr_init.cl:10:22: синтаксическая ошибка [неполная конструкция]: перед '}' ожидалось: значение (идентификатор, число)
+  10 |     int f[2] = {1, 2,};
+     |                      ^
+
+Итого ошибок: 6 (лексических: 0, синтаксических: 6, семантических: 0)
+```
+
+Семантические ошибки:
+
+```
+$ python3 main.py --arrays examples/arrays/arr_semantic.cl
+Файл: examples/arrays/arr_semantic.cl
+Грамматика: с массивами (--arrays), восстановление: режим паники
+
+examples/arrays/arr_semantic.cl:5:11: семантическая ошибка [неверный размер массива]: размер массива 'a' должен быть больше нуля
+  5 |     int a[0];
+    |           ^
+examples/arrays/arr_semantic.cl:6:14: семантическая ошибка [слишком много инициализаторов]: размер массива 'b' — 2, а значений в списке — 3
+  6 |     int b[2] = {1, 2, 3};
+    |              ^
+examples/arrays/arr_semantic.cl:7:9: семантическая ошибка [не указан размер массива]: у массива 'c' нет ни размера, ни списка инициализации
+  7 |     int c[];
+    |         ^
+examples/arrays/arr_semantic.cl:9:15: семантическая ошибка [индекс за границами массива]: 'd[3]': допустимые индексы массива 'd' — от 0 до 2
+  9 |     int x = d[3];
+    |               ^
+examples/arrays/arr_semantic.cl:11:5: семантическая ошибка [индексация не массива]: 'y' объявлена как переменная, а не массив
+  11 |     y[0] = 1;
+     |     ^
+examples/arrays/arr_semantic.cl:12:13: семантическая ошибка [массив без индекса]: 'd' — массив, к нему можно обращаться только по индексу: d[i]
+  12 |     int z = d;
+     |             ^
+
+Итого ошибок: 6 (лексических: 0, синтаксических: 0, семантических: 6)
+```
+
 ## Архитектура кода
 
 Программа на Python 3, только стандартная библиотека, запускается без сборки.
@@ -362,9 +519,10 @@ A → α | β: FIRST(α) ∩ FIRST(β) = ∅, а если одна из них �
 | [`lexer.py`](lexer.py) | `Token`, `Diagnostic`, класс `Lexer`: текст → токены с позициями (строка, столбец в символах UTF-8), лексические ошибки |
 | [`grammar.py`](grammar.py) | грамматика как данные (`make_grammar`), `first_of`, `build_tables`: FIRST, FOLLOW, таблица M, проверка конфликтов, synch |
 | [`parser.py`](parser.py) | класс `Parser`: стек, цикл разбора по рис. 1, режим паники (`panic_terminal`, `panic_nonterminal`), режим фразы (`phrase_terminal`, `phrase_nonterminal`), запись хода разбора |
+| [`arrays.py`](arrays.py) | дополнительное задание: продукции для массивов (`add_arrays`), `ArrayLexer`, процедуры режима фразы, семантические проверки (`check_arrays`) |
 | [`main.py`](main.py) | разбор аргументов, вывод ошибок со строкой исходника и стрелкой, запись файлов таблиц |
-| [`tests.sh`](tests.sh) | прогон всех примеров в обоих режимах со сверкой числа ошибок, проверка LL(1) обеих грамматик |
-| [`examples/`](examples) | примеры программ: `ok*` — правильные, `err*` — с ошибками, `ext_*` — для `--ext` |
+| [`tests.sh`](tests.sh) | прогон всех примеров в обоих режимах со сверкой числа ошибок, проверка LL(1) всех трёх грамматик; `bash tests.sh examples/arrays` — только массивы |
+| [`examples/`](examples) | примеры программ: `ok*` — правильные, `err*` — с ошибками, `ext_*` — для `--ext`, `arrays/arr_*` — для `--arrays` |
 | [`results/`](results) | сгенерированные таблицы (их пересоздаёт `bash tests.sh`) |
 
 Ничего в таблице не забито вручную: если поменять продукции в `make_grammar`, FIRST, FOLLOW, M и synch пересчитаются.
@@ -390,13 +548,15 @@ cd compilers/lab-4
 python3 main.py examples/ok.cl                     # режим паники, грамматика из методички
 python3 main.py --phrase examples/err_multi.cl     # режим фразы
 python3 main.py --ext examples/ext_errors.cl       # расширенная грамматика
+python3 main.py --arrays examples/arrays/arr_init.cl   # массивы (дополнительное задание)
 python3 main.py --table                            # только таблица M → results/parse_table.md
 bash tests.sh                                      # все примеры
+bash tests.sh examples/arrays                      # только массивы
 ```
 
 Без direnv: `nix develop -c python3 main.py examples/ok.cl` и `nix develop -c bash tests.sh` (из `compilers/lab-4`).
 
-Ключи: `--phrase` — режим фразы, `--ext` — расширенная грамматика, `--out DIR` — куда писать файлы (по умолчанию
+Ключи: `--phrase` — режим фразы, `--ext` — расширенная грамматика, `--arrays` — `--ext` + массивы, `--out DIR` — куда писать файлы (по умолчанию
 `results/` рядом с `main.py`, откуда бы ни запускали), `--table` — только построить таблицу. Код возврата 0 — ошибок
 нет, 1 — есть ошибки, 2 — неверный запуск.
 
@@ -405,7 +565,7 @@ bash tests.sh                                      # все примеры
 - `results/<имя>.trace.md` — таблица хода разбора (как в примере 4) в режиме паники, `results/<имя>.phrase.trace.md` —
   в режиме фразы. В начале файла — исходный текст и список ошибок, дальше таблица «№ / Стек / Вход / Примечание».
   Стек записан как в методичке: дно `$` слева, вершина справа. Вход показан лексемами, длинный хвост сокращён до 10 токенов;
-- `results/parse_table.md` (`parse_table_ext.md` для `--ext`) — продукции, FIRST, FOLLOW, synch, таблица M,
+- `results/parse_table.md` (`parse_table_ext.md` для `--ext`, `parse_table_arrays.md` для `--arrays`) — продукции, FIRST, FOLLOW, synch, таблица M,
   результат проверки LL(1), описание процедур режима фразы.
 
 ## Результаты
@@ -414,35 +574,44 @@ bash tests.sh                                      # все примеры
 
 ```
 $ bash tests.sh
-  ok    examples/err_block.cl    panic  ошибок: 1
-  ok    examples/err_block.cl    phrase ошибок: 1
-  ok    examples/err_brace.cl    panic  ошибок: 1
-  ok    examples/err_brace.cl    phrase ошибок: 1
-  ok    examples/err_empty.cl    panic  ошибок: 1
-  ok    examples/err_empty.cl    phrase ошибок: 1
-  ok    examples/err_eof.cl      panic  ошибок: 1
-  ok    examples/err_eof.cl      phrase ошибок: 1
-  ok    examples/err_header.cl   panic  ошибок: 2
-  ok    examples/err_header.cl   phrase ошибок: 2
-  ok    examples/err_lexical.cl  panic  ошибок: 6
-  ok    examples/err_lexical.cl  phrase ошибок: 6
-  ok    examples/err_missing.cl  panic  ошибок: 3
-  ok    examples/err_missing.cl  phrase ошибок: 3
-  ok    examples/err_multi.cl    panic  ошибок: 8
-  ok    examples/err_multi.cl    phrase ошибок: 7
-  ok    examples/ext_errors.cl   panic  ошибок: 8
-  ok    examples/ext_errors.cl   phrase ошибок: 8
-  ok    examples/ext_ok.cl       panic  ошибок: 0
-  ok    examples/ext_ok.cl       phrase ошибок: 0
-  ok    examples/ok.cl           panic  ошибок: 0
-  ok    examples/ok.cl           phrase ошибок: 0
-  ok    examples/ok_decl.cl      panic  ошибок: 0
-  ok    examples/ok_decl.cl      phrase ошибок: 0
-  ok    examples/ok_min.cl       panic  ошибок: 0
-  ok    examples/ok_min.cl       phrase ошибок: 0
+  ok    examples/err_block.cl            panic  ошибок: 1
+  ok    examples/err_block.cl            phrase ошибок: 1
+  ok    examples/err_brace.cl            panic  ошибок: 1
+  ok    examples/err_brace.cl            phrase ошибок: 1
+  ok    examples/err_empty.cl            panic  ошибок: 1
+  ok    examples/err_empty.cl            phrase ошибок: 1
+  ok    examples/err_eof.cl              panic  ошибок: 1
+  ok    examples/err_eof.cl              phrase ошибок: 1
+  ok    examples/err_header.cl           panic  ошибок: 2
+  ok    examples/err_header.cl           phrase ошибок: 2
+  ok    examples/err_lexical.cl          panic  ошибок: 6
+  ok    examples/err_lexical.cl          phrase ошибок: 6
+  ok    examples/err_missing.cl          panic  ошибок: 3
+  ok    examples/err_missing.cl          phrase ошибок: 3
+  ok    examples/err_multi.cl            panic  ошибок: 8
+  ok    examples/err_multi.cl            phrase ошибок: 7
+  ok    examples/ext_errors.cl           panic  ошибок: 8
+  ok    examples/ext_errors.cl           phrase ошибок: 8
+  ok    examples/ext_ok.cl               panic  ошибок: 0
+  ok    examples/ext_ok.cl               phrase ошибок: 0
+  ok    examples/ok.cl                   panic  ошибок: 0
+  ok    examples/ok.cl                   phrase ошибок: 0
+  ok    examples/ok_decl.cl              panic  ошибок: 0
+  ok    examples/ok_decl.cl              phrase ошибок: 0
+  ok    examples/ok_min.cl               panic  ошибок: 0
+  ok    examples/ok_min.cl               phrase ошибок: 0
+  ok    examples/arrays/arr_access.cl    panic  ошибок: 5
+  ok    examples/arrays/arr_access.cl    phrase ошибок: 5
+  ok    examples/arrays/arr_init.cl      panic  ошибок: 6
+  ok    examples/arrays/arr_init.cl      phrase ошибок: 6
+  ok    examples/arrays/arr_ok.cl        panic  ошибок: 0
+  ok    examples/arrays/arr_ok.cl        phrase ошибок: 0
+  ok    examples/arrays/arr_semantic.cl  panic  ошибок: 6
+  ok    examples/arrays/arr_semantic.cl  phrase ошибок: 6
   ok    грамматика из методички — LL(1)
   ok    грамматика --ext — LL(1)
-Пройдено: 28, не пройдено: 0
+  ok    грамматика --arrays — LL(1)
+Пройдено: 37, не пройдено: 0
 ```
 
 | Пример | Что проверяет | Паника | Фраза |

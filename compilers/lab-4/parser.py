@@ -197,6 +197,10 @@ class Parser:
     def phrase_nonterminal(self, A: str, a: Token) -> str:
         b = self.next().kind
         stack = self.stack
+        for proc in PHRASE_PROCEDURES:  # ЦИКЛ по процедурам расширений
+            note = proc(self, A, a, b)
+            if note is not None:
+                return note
         # Процедура для M[<relop>, =]: типичная ошибка «= вместо ==».
         if A == "<relop>" and a.kind == "=":
             n = self.report(a, "замена символа", "в сравнении '=' вместо '=='")
@@ -326,3 +330,10 @@ class Parser:
         if self.toks[i].kind != "$":
             r += "… "
         return r + "$"
+
+
+# Дополнительные процедуры режима фразы для расширений языка (их добавляет
+# arrays.py). Процедура получает (parser, A, a, b) — нетерминал на вершине,
+# текущий и следующий токен — и возвращает примечание для таблицы хода
+# разбора, если исправила ошибку, или None, если ошибка не её.
+PHRASE_PROCEDURES = []

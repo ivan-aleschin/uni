@@ -26,6 +26,7 @@ class Production:
 @dataclass
 class Grammar:
     ext: bool = False                       # расширенный вариант (последовательности операторов)
+    arrays: bool = False                    # дополнение: массивы (arrays.py, флаг --arrays)
     start: str = ""
     prods: list[Production] = field(default_factory=list)
     nonterminals: list[str] = field(default_factory=list)  # в порядке появления

@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-# Прогон всех примеров из examples/ в обоих режимах восстановления.
+# Прогон примеров в обоих режимах восстановления.
+#   bash tests.sh                  — все примеры: examples/ и examples/arrays/
+#   bash tests.sh examples/arrays  — только примеры из указанных папок (здесь — массивы)
 # В начале каждого примера записано, сколько ошибок должно найтись:
 #   // ожидается: panic=N phrase=M
-#   // флаги: --ext            (необязательно)
+#   // флаги: --ext или --arrays   (необязательно)
 # Для каждого запуска проверяется, что число ошибок совпадает с ожидаемым.
 # Таблицы хода разбора складываются в results/.
 cd "$(dirname "$0")" || exit 2
@@ -18,14 +20,16 @@ check() {
     got=$("${prog[@]}" "$@" --out results | sed -n 's/^Итого ошибок: \([0-9]*\).*/\1/p')
     if [ "$got" = "$want" ]; then
         pass=$((pass + 1))
-        printf '  ok    %-24s %-6s ошибок: %s\n' "$name" "$mode" "$got"
+        printf '  ok    %-32s %-6s ошибок: %s\n' "$name" "$mode" "$got"
     else
         fail=$((fail + 1))
-        printf '  FAIL  %-24s %-6s ошибок: %s, ожидалось: %s\n' "$name" "$mode" "$got" "$want"
+        printf '  FAIL  %-32s %-6s ошибок: %s, ожидалось: %s\n' "$name" "$mode" "$got" "$want"
     fi
 }
 
-for f in examples/*.cl; do
+dirs=("$@")
+[ ${#dirs[@]} -eq 0 ] && dirs=(examples examples/arrays)
+for f in $(for d in "${dirs[@]}"; do echo "$d"/*.cl; done); do
     flags=$(sed -n 's|^// флаги: ||p' "$f")
     for mode in panic phrase; do
         want=$(sed -n "s|^// ожидается:.*$mode=\([0-9]*\).*|\1|p" "$f")
@@ -36,8 +40,8 @@ for f in examples/*.cl; do
     done
 done
 
-# Обе грамматики должны быть LL(1): в таблице нет ячеек с двумя продукциями.
-for g in "" --ext; do
+# Все три грамматики должны быть LL(1): в таблице нет ячеек с двумя продукциями.
+for g in "" --ext --arrays; do
     # shellcheck disable=SC2086
     if "${prog[@]}" --table $g --out results | grep -q "конфликтов нет"; then
         pass=$((pass + 1)); echo "  ok    грамматика ${g:-из методички} — LL(1)"
