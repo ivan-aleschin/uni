@@ -29,7 +29,12 @@ check() {
 
 dirs=("$@")
 [ ${#dirs[@]} -eq 0 ] && dirs=(examples examples/arrays)
-for f in $(for d in "${dirs[@]}"; do echo "$d"/*.cl; done); do
+files=()
+for d in "${dirs[@]}"; do files+=("$d"/*.cl); done
+for f in "${files[@]}"; do
+    if [ ! -f "$f" ]; then  # пустая или несуществующая папка: glob остался как есть
+        fail=$((fail + 1)); echo "  FAIL  нет примеров: $f"; continue
+    fi
     flags=$(sed -n 's|^// флаги: ||p' "$f")
     for mode in panic phrase; do
         want=$(sed -n "s|^// ожидается:.*$mode=\([0-9]*\).*|\1|p" "$f")

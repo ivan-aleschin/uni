@@ -194,7 +194,10 @@ def build_tables(g: Grammar) -> None:
     # 2) для конструкций ниже уровня оператора добавляем символы, с которых
     #    начинается оператор, и '}' — иначе пропущенная ';' перед "if"
     #    заставит выбросить весь следующий оператор;
-    # 3) FIRST(A) добавлять не нужно: на этих символах в M[A,a] уже стоит продукция.
+    # 3) FIRST(A) добавлять не нужно: на этих символах в M[A,a] уже стоит продукция;
+    # 4) с --arrays оператор может начинаться с id (присваивание). У нетерминала
+    #    с продукцией по умолчанию (<declaration>) id в synch не кладём: «x i = 0»
+    #    должно раскрыться в объявление, чтобы ошибку нашёл <type>.
     stmt_first = set(g.first["<statement>"])
     for A in g.nonterminals:
         s = set(g.follow[A])
@@ -202,4 +205,6 @@ def build_tables(g: Grammar) -> None:
         if A not in ("<program>", "<statement>", "<stmts>"):
             s |= stmt_first - {EPS}
             s.add("}")
+            if g.default_production(A) >= 0 and "id" not in g.follow[A]:
+                s.discard("id")
         g.synch[A] = s

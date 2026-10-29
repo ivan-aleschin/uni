@@ -100,6 +100,7 @@ def phrase_arrays(p: Parser, A: str, a: Token, b: str) -> str | None:
     M[<init_rest>, id/num] — «{1 2}»: между значениями пропущена ',', вставляем её:
       вместо <init_rest> кладём <init_rest> <assign_end>, и следующим шагом
       <assign_end> разбирает текущее значение — токен не теряется.
+    M[<init_rest>, ;] — «{1, 2;»: пропущена '}', вставляем её (снимаем <init_rest> и '}').
     M[<size>, id] — «int d[x]»: размер массива должен быть числом; считаем
       идентификатор размером (заменяем его на num) и разбираем дальше."""
     if A == "<init_rest>" and a.kind in ("id", "num"):
@@ -107,6 +108,11 @@ def phrase_arrays(p: Parser, A: str, a: Token, b: str) -> str | None:
         p.stack.pop()
         p.stack.extend(["<init_rest>", "<assign_end>"])
         return f"{n} → вставляем ','"
+    if A == "<init_rest>" and a.kind == ";" and p.stack[-2] == "}":
+        n = p.report_missing("}", a)
+        p.stack.pop()
+        p.stack.pop()
+        return f"{n} → вставляем '}}'"
     if A == "<size>" and a.kind == "id" and b == "]":
         n = p.report(a, "неверный размер массива", f"'{a.text}': размер массива должен быть числом")
         p.stack.pop()
@@ -116,15 +122,14 @@ def phrase_arrays(p: Parser, A: str, a: Token, b: str) -> str | None:
 
 
 def check_arrays(tokens: list[Token]) -> list[Diagnostic]:
-    """Семантические проверки массивов по потоку токенов (после синтаксического разбора).
-
-    Проверки сделаны по шаблонам токенов, а не по дереву: так они работают и в
-    программе с синтаксическими ошибками, а каждая смотрит только на свою
-    конструкцию. Области видимости не учитываются: имя относится к последнему
-    объявлению выше по тексту (в C-light нет функций, кроме main)."""
+    """Семантические проверки массивов. Грамматикой их не выразить: int a[0]
+    и int a[5] синтаксически одинаковы. Идём по токенам, запоминаем объявления
+    и проверяем каждое обращение. Проверки смотрят только на соседние токены,
+    поэтому работают и в программе с синтаксическими ошибками. Области
+    видимости не учитываются: имя относится к последнему объявлению выше."""
     errors = []
-    arrays: dict[str, int | None] = {}   # имя массива → размер (None — неизвестен)
-    scalars: set[str] = set()
+    sizes: dict[str, int | None] = {}   # массив → размер (None — неизвестен)
+    scalars: set[str] = set()           # обычные переменные
 
     def error(t, type_, msg):
         errors.append(Diagnostic(t.line, t.col, "семантическая", type_, msg))
@@ -132,69 +137,60 @@ def check_arrays(tokens: list[Token]) -> list[Diagnostic]:
     def kind(j):
         return tokens[j].kind if j < len(tokens) else "$"
 
+    def number(j):
+        """Значение токена-числа на позиции j, если это правильное число, иначе None."""
+        return int(tokens[j].text) if kind(j) == "num" and tokens[j].text.isdigit() else None
+
     i = 0
     while i < len(tokens):  # ЦИКЛ по токенам
         t = tokens[i]
-        # --- Объявление: <type> id ...
         if t.kind in TYPES and kind(i + 1) == "id":
-            name_tok = tokens[i + 1]
+            # --- Объявление: <type> id ...
+            name = tokens[i + 1].text
             i += 2
             if kind(i) != "[":  # РАЗВИЛКА: обычная переменная
-                scalars.add(name_tok.text)
-                arrays.pop(name_tok.text, None)
+                if kind(i) in ("=", ";"):  # сломанное объявление («int a 3];») не запоминаем
+                    scalars.add(name)
+                    sizes.pop(name, None)
                 continue
-            # int a [ N ] = { v1, v2 }
-            size = None
-            if kind(i + 1) == "num" and kind(i + 2) == "]":
-                size = int(tokens[i + 1].text) if tokens[i + 1].text.isdigit() else None
-                if size == 0:
-                    error(tokens[i + 1], "неверный размер массива",
-                          f"размер массива '{name_tok.text}' должен быть больше нуля")
-                    size = None
-            j = i + 1
-            while kind(j) not in ("]", ";", "=", "$"):
+            scalars.discard(name)
+            # int name [ size ] = { v1 , v2 , ... }
+            size = number(i + 1)
+            if size == 0:
+                error(tokens[i + 1], "неверный размер массива", f"размер массива '{name}' должен быть больше нуля")
+            j = i + 1                  # за '[': шагаем через «num ]»; пропущенную ']' терпим (int a[3 = {...})
+            if kind(j) == "num":
                 j += 1
             if kind(j) == "]":
                 j += 1
             count = None
             if kind(j) == "=" and kind(j + 1) == "{":
-                count, depth, k = 0, 0, j + 2
-                had_value = False
-                while kind(k) not in ("}", ";", "$"):  # ЦИКЛ по значениям инициализатора
-                    if kind(k) == "[":
-                        depth += 1
-                    elif kind(k) == "]":
-                        depth -= 1
-                    elif kind(k) == "," and depth == 0:
-                        count += had_value
-                        had_value = False
-                    elif kind(k) in ("id", "num") and depth == 0:
-                        had_value = True
+                # Значение — это id или num, кроме стоящих в индексе (a[1]: '1' идёт за '[').
+                k = j + 2
+                count = 0
+                while kind(k) not in ("}", ";", "$"):
+                    count += kind(k) in ("id", "num") and kind(k - 1) != "["
                     k += 1
-                count += had_value
-                if size is not None and count > size:
+                if size and count > size:
                     error(tokens[j], "слишком много инициализаторов",
-                          f"размер массива '{name_tok.text}' — {size}, а значений в списке — {count}")
-            no_size = not (kind(i + 1) == "num" and kind(i + 2) == "]")
-            if no_size and kind(i + 1) == "]" and count is None:
-                error(name_tok, "не указан размер массива",
-                      f"у массива '{name_tok.text}' нет ни размера, ни списка инициализации")
-            arrays[name_tok.text] = size if size is not None else count
-            scalars.discard(name_tok.text)
+                          f"размер массива '{name}' — {size}, а значений в списке — {count}")
+            elif kind(i + 1) == "]" and kind(j) != "=":  # «int a[] = 5;» — уже синтаксическая ошибка
+                error(tokens[i - 1], "не указан размер массива",
+                      f"у массива '{name}' нет ни размера, ни списка инициализации")
+            sizes[name] = size or count or None   # 0 (ошибка уже выдана) — размер неизвестен
             continue
-        # --- Использование имени: id [ ... ] или просто id
         if t.kind == "id":
+            # --- Использование имени: name [ ... ] или просто name
             name = t.text
             if kind(i + 1) == "[":
+                n = sizes.get(name)
+                idx = number(i + 2) if kind(i + 3) == "]" else None
                 if name in scalars:
                     error(t, "индексация не массива", f"'{name}' объявлена как переменная, а не массив")
-                elif (n := arrays.get(name)) is not None and kind(i + 2) == "num" \
-                        and kind(i + 3) == "]" and tokens[i + 2].text.isdigit():
-                    idx = int(tokens[i + 2].text)
-                    if idx >= n:
-                        error(tokens[i + 2], "индекс за границами массива",
-                              f"'{name}[{idx}]': допустимые индексы массива '{name}' — от 0 до {n - 1}")
-            elif name in arrays:
+                elif n is not None and idx is not None and idx >= n:
+                    error(tokens[i + 2], "индекс за границами массива",
+                          f"'{name}[{idx}]': допустимые индексы массива '{name}' — от 0 до {n - 1}")
+            elif name in sizes:
                 error(t, "массив без индекса",
                       f"'{name}' — массив, к нему можно обращаться только по индексу: {name}[i]")
         i += 1

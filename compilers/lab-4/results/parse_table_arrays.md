@@ -57,7 +57,7 @@
 | `<type>`            | `int bool void`                        | `main id`                              | `int bool void main for if return { } ; id $`            |
 | `<stmts>`           | `int bool void for if return { ; id ε` | `}`                                    | `} $`                                                    |
 | `<statement>`       | `int bool void for if return { ; id`   | `int bool void for if return { } ; id` | `int bool void for if return { } ; id $`                 |
-| `<declaration>`     | `int bool void`                        | `;`                                    | `int bool void for if return { } ; id $`                 |
+| `<declaration>`     | `int bool void`                        | `;`                                    | `int bool void for if return { } ; $`                    |
 | `<assign>`          | `= ε`                                  | `;`                                    | `int bool void for if return { } ; id $`                 |
 | `<assign_end>`      | `id num`                               | `} ; ,`                                | `int bool void for if return { } ; , id $`               |
 | `<for>`             | `for`                                  | `int bool void for if return { ; id`   | `int bool void for if return { } ; id $`                 |
@@ -68,7 +68,7 @@
 | `<decl_tail>`       | `= [ ε`                                | `;`                                    | `int bool void for if return { } ; id $`                 |
 | `<size>`            | `num ε`                                | `]`                                    | `int bool void for if return { } ; ] id $`               |
 | `<array_init>`      | `= ε`                                  | `;`                                    | `int bool void for if return { } ; id $`                 |
-| `<init_list>`       | `id num`                               | `}`                                    | `int bool void for if return { } ; id $`                 |
+| `<init_list>`       | `id num`                               | `}`                                    | `int bool void for if return { } ; $`                    |
 | `<init_rest>`       | `, ε`                                  | `}`                                    | `int bool void for if return { } ; id $`                 |
 | `<index>`           | `[ ε`                                  | `) } ; = < > == != ,`                  | `int bool void for if return ) { } ; = < > == != , id $` |
 | `<subscript>`       | `id num`                               | `]`                                    | `int bool void for if return { } ; ] id $`               |
@@ -83,7 +83,7 @@
 | `<type>`            | 2     | 3      | 4      | synch  | synch | synch | synch    |      |       | synch | synch | synch |      |      |      |      |      |      |       |       | synch |       | synch |
 | `<stmts>`           | 5     | 5      | 5      |        | 5     | 5     | 5        |      |       | 5     | 6     | 5     |      |      |      |      |      |      |       |       | 5     |       | synch |
 | `<statement>`       | 7     | 7      | 7      |        | 9     | 10    | 11       |      |       | 8     | synch | 12    |      |      |      |      |      |      |       |       | 13    |       | synch |
-| `<declaration>`     | 14    | 14     | 14     | (14)   | synch | synch | synch    | (14) | (14)  | synch | synch | synch | (14) | (14) | (14) | (14) | (14) | (14) | (14)  | (14)  | synch | (14)  | synch |
+| `<declaration>`     | 14    | 14     | 14     | (14)   | synch | synch | synch    | (14) | (14)  | synch | synch | synch | (14) | (14) | (14) | (14) | (14) | (14) | (14)  | (14)  | (14)  | (14)  | synch |
 | `<assign>`          | synch | synch  | synch  |        | synch | synch | synch    |      |       | synch | synch | 15    | 16   |      |      |      |      |      |       |       | synch |       | synch |
 | `<assign_end>`      | synch | synch  | synch  |        | synch | synch | synch    |      |       | synch | synch | synch |      |      |      |      |      |      |       | synch | 17    | 18    | synch |
 | `<for>`             | synch | synch  | synch  |        | 19    | synch | synch    |      |       | synch | synch | synch |      |      |      |      |      |      |       |       | synch |       | synch |
@@ -109,8 +109,10 @@
 
 1. `M[<relop>, =]` — замена `=` на `==`;
 2. `M[<type>, id]`, если за ним снова id, — неизвестный тип, считаем его типом;
-3. `M[<statement>, id]` (и `M[<stmts>, id]`): если за id идёт `=` или `;` — объявление без типа,
-   если ещё один id — неизвестный тип; дальше разбираем как `id <assign> ;`;
+3. массивы: `M[<init_rest>, id/num]` — между значениями пропущена `,`, вставляем её;
+   `M[<init_rest>, ;]` — список не закрыт, вставляем `}`;
+   `M[<size>, id]` перед `]` — размер не число, считаем идентификатор размером
+   (процедуры для `M[<statement>, id]` не нужны: с `--arrays` это присваивание);
 4. если следующий токен b подходит (`M[A, b]` не пусто) — текущий токен лишний, удаляем его;
 5. иначе — как в режиме паники (synch → снять A, пусто → пропустить токен).
 
