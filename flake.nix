@@ -63,6 +63,8 @@
               # --- Документы: Markdown → PDF (project-management) ---
               pandoc
               typst         # движок PDF для pandoc: маленькие файлы, кириллица из коробки
+              oxipng        # пережатие PNG внутри .docx без потерь (life-safety)
+              zip           # пересборка .docx после пережатия
               # --- LSP серверы для Neovim ---
               lua-language-server    # Lua (конфиг Neovim / скрипты)
               pyright                # Python (статический анализ + LSP)
