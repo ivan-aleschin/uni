@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="300" font-family="sans-serif" font-size="11">
+<rect width="520" height="300" fill="white"/>
+<line x1="50.0" y1="20" x2="50.0" y2="260" stroke="#eee"/>
+<text x="50.0" y="274" text-anchor="middle">0</text>
+<line x1="114.28571428571428" y1="20" x2="114.28571428571428" y2="260" stroke="#eee"/>
+<text x="114.28571428571428" y="274" text-anchor="middle">1</text>
+<line x1="178.57142857142856" y1="20" x2="178.57142857142856" y2="260" stroke="#eee"/>
+<text x="178.57142857142856" y="274" text-anchor="middle">2</text>
+<line x1="242.85714285714283" y1="20" x2="242.85714285714283" y2="260" stroke="#eee"/>
+<text x="242.85714285714283" y="274" text-anchor="middle">3</text>
+<line x1="307.1428571428571" y1="20" x2="307.1428571428571" y2="260" stroke="#eee"/>
+<text x="307.1428571428571" y="274" text-anchor="middle">4</text>
+<line x1="371.42857142857144" y1="20" x2="371.42857142857144" y2="260" stroke="#eee"/>
+<text x="371.42857142857144" y="274" text-anchor="middle">5</text>
+<line x1="435.71428571428567" y1="20" x2="435.71428571428567" y2="260" stroke="#eee"/>
+<text x="435.71428571428567" y="274" text-anchor="middle">6</text>
+<line x1="500.0" y1="20" x2="500.0" y2="260" stroke="#eee"/>
+<text x="500.0" y="274" text-anchor="middle">7</text>
+<line x1="50" y1="260.0" x2="500" y2="260.0" stroke="#eee"/>
+<text x="45" y="264.0" text-anchor="end">-4</text>
+<line x1="50" y1="233.33333333333334" x2="500" y2="233.33333333333334" stroke="#eee"/>
+<text x="45" y="237.33333333333334" text-anchor="end">0</text>
+<line x1="50" y1="166.66666666666669" x2="500" y2="166.66666666666669" stroke="#eee"/>
+<text x="45" y="170.66666666666669" text-anchor="end">10</text>
+<line x1="50" y1="100.0" x2="500" y2="100.0" stroke="#eee"/>
+<text x="45" y="104.0" text-anchor="end">20</text>
+<line x1="50" y1="33.33333333333334" x2="500" y2="33.33333333333334" stroke="#eee"/>
+<text x="45" y="37.33333333333334" text-anchor="end">30</text>
+<line x1="50" y1="233.33333333333334" x2="500" y2="233.33333333333334" stroke="black"/>
+<line x1="50" y1="20" x2="50" y2="260" stroke="black"/>
+<text x="275.0" y="294" text-anchor="middle">Q, пирожные</text>
+<text x="12" y="140.0" text-anchor="middle" transform="rotate(-90 12 140.0)">ютили</text>
+<polyline points="50.0,233.3 114.3,166.7 178.6,113.3 242.9,73.3 307.1,46.7 371.4,33.3 435.7,33.3 500.0,46.7" fill="none" stroke="#1f77b4" stroke-width="2"/>
+<line x1="325" y1="130" x2="345" y2="130" stroke="#1f77b4" stroke-width="2"/>
+<text x="350" y="134">TU — общая</text>
+<polyline points="114.3,166.7 178.6,180.0 242.9,193.3 307.1,206.7 371.4,220.0 435.7,233.3 500.0,246.7" fill="none" stroke="#d62728" stroke-width="2"/>
+<line x1="325" y1="145" x2="345" y2="145" stroke="#d62728" stroke-width="2"/>
+<text x="350" y="149">MU — предельная</text>
+<circle cx="371.42857142857144" cy="33.33333333333334" r="3.5"/>
+<text x="377.42857142857144" y="27.333333333333343">насыщение</text>
+<circle cx="435.71428571428567" cy="233.33333333333334" r="3.5"/>
+<text x="441.71428571428567" y="227.33333333333334">MU = 0</text>
+</svg>
