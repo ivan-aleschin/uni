@@ -28,31 +28,30 @@
 
 #text(size: 19pt, weight: "bold")[Продажи устройств Apple]
 
-#text(fill: muted)[Мировые продажи Mac, iPod, iPhone и iPad]
+#text(fill: muted)[Мировые продажи Mac, iPod, iPhone и iPad · 1996–2010]
 
 #let x(year) = 34pt + (year - years.first()) / (years.last() - years.first()) * 288pt
-#let y(value) = 192pt - value / 180 * 169pt
+#let y(value) = 192pt - value / 125 * 169pt
 #let points = years.zip(total).map(((year, value)) => (x(year), y(value)))
 
 #box(width: 100%, height: 223pt)[
   #label([$Q$, млн устройств за год], (0pt, 4pt), weight: "bold")
 
-  #for tick in (0, 40, 80, 120, 160) {
-    segment((x(1996), y(tick)), (x(2011), y(tick)), 0.5pt + grid-color)
+  #for tick in (0, 30, 60, 90, 120) {
+    segment((x(1996), y(tick)), (x(years.last()), y(tick)), 0.5pt + grid-color)
     label(str(tick), (9pt, y(tick) - 5pt))
   }
-  #segment((x(1996), y(180)), (x(1996), y(0)), 0.75pt + ink)
-  #segment((x(1996), y(0)), (x(2011), y(0)), 0.75pt + ink)
+  #segment((x(1996), y(125)), (x(1996), y(0)), 0.75pt + ink)
+  #segment((x(1996), y(0)), (x(years.last()), y(0)), 0.75pt + ink)
 
-  #for year in (1996, 2000, 2004, 2007, 2011) {
+  #for year in (1996, 2000, 2004, 2007, years.last()) {
     segment((x(year), y(0)), (x(year), y(0) + 4pt), 0.65pt + ink)
     label(str(year), (x(year) - 10pt, y(0) + 7pt))
   }
 
   #series(points, 1.6pt, 1.7pt)
-  #for year in (2007, 2010, 2011) {
+  #for (year, offset) in ((2007, -18pt), (years.last(), 5pt)) {
     let value = total.at(year - years.first())
-    let offset = if year == 2011 { 5pt } else { -18pt }
     label(str(calc.round(value)), (x(year) + offset, y(value) - 9pt), fill: accent, weight: "bold")
   }
   #label([$t$, финансовый год], (255pt, 211pt), weight: "bold")
@@ -95,8 +94,8 @@
   [*1985–1997*], [Джобс развивал NeXT и Pixar. На фоне конкуренции Windows Apple купила NeXT ради новой ОС.],
   [*1997–1999*], [Apple сократила ассортимент. Продажи Mac упали до 2,8 млн в 1998-м и восстановились до 3,4 млн в 1999-м после выхода iMac.],
   [*2001–2005*], [iPod, совместимость с Windows и магазин iTunes расширили рынок цифровой музыки.],
-  [*2007–2011*], [iPhone и iPad ускорили рост продаж устройств. Анонс iCloud показал, как Apple связывает их через общий сервис.],
+  [*2007–2011*], [iPhone и iPad ускорили рост продаж. В июне 2011-го Apple анонсировала iCloud для синхронизации устройств.],
 )
 
 #v(3pt)
-#text(size: 7.5pt, fill: muted)[По фильму CNBC «Титаны. Стив Джобс» и годовым отчётам Apple (10-K).]
+#text(size: 7.5pt, fill: muted)[По фильму CNBC «Титаны. Стив Джобс» и отчётам Apple (10-K). График охватывает завершённые к июню 2011 года финансовые годы.]
